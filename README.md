@@ -17,3 +17,5 @@ Para iniciar el servidor de producción:
 ```bash
 bun start
 ```
+
+## NOTA: Habría que crear Dockerfile y docker-compose.yml
