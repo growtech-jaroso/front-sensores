@@ -1,34 +1,109 @@
-import SensorCard from "../components/SensorCard";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import PlantationTable from "../components/PlantationTable";
+import SummaryCard from "../components/SummaryCard";
+import PlantationDonut from "../components/PlantationDonut";
+import ProgressBar from "../components/ProgressBar";
+import PlantationChart from "../components/PlantationChart";
 
-const sensorData = [
-  { time: "08:00", temp: 22, humidity: 75 },
-  { time: "10:00", temp: 24, humidity: 70 },
-  { time: "12:00", temp: 27, humidity: 65 },
-  { time: "14:00", temp: 29, humidity: 60 },
+const plantations = [
+  {
+    id: "1",
+    nombre: "Tomates",
+    ubicacion: "Invernadero 1",
+    estado: "Activa",
+    temperatura: 25,
+    humedad: 70,
+    hora: "08:00",
+  },
+  {
+    id: "2",
+    nombre: "Lechugas",
+    ubicacion: "Invernadero 2",
+    estado: "Alerta",
+    temperatura: 30,
+    humedad: 50,
+    hora: "09:00",
+  },
+
+  {
+    id: "3",
+    nombre: "Fresas",
+    ubicacion: "Invernadero 3",
+    estado: "Inactiva",
+    temperatura: 20,
+    humedad: 60,
+    hora: "10:00",
+  },
+  {
+    id: "4",
+    nombre: "Pepinos",
+    ubicacion: "Invernadero 4",
+    estado: "Inactiva",
+    temperatura: 22,
+    humedad: 65,
+    hora: "11:00",
+  },
+
+  {
+    id: "5",
+    nombre: "Tomates",
+    ubicacion: "Invernadero 5",
+    estado: "Activa",
+    temperatura: 25,
+    humedad: 70,
+    hora: "12:00",
+  },
+
+  {
+    id: "6",
+    nombre: "Lechugas",
+    ubicacion: "Invernadero 6",
+    estado: "Activa",
+    temperatura: 30,
+    humedad: 50,
+    hora: "13:00",
+  },
+
+  {
+    id: "7",
+    nombre: "Fresas",
+    ubicacion: "Invernadero 7",
+    estado: "Activa",
+    temperatura: 20,
+    humedad: 60,
+    hora: "14:00",
+  },
+  {
+    id: "8",
+    nombre: "Pepinos",
+    ubicacion: "Invernadero 8",
+    estado: "Activa",
+    temperatura: 22,
+    humedad: 65,
+    hora: "15:00",
+  },
 ];
 
 export default function Dashboard() {
   return (
-    <main className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Panel de Sensores</h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <SensorCard title="Temperatura" value="27°C" icon="🌡️" />
-        <SensorCard title="Humedad" value="60%" icon="💧" />
-        <SensorCard title="Luz Solar" value="780 lux" icon="☀️" />
+    <main className="p-6 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <SummaryCard title="Total Plantaciones" value="12" />
+        <SummaryCard title="Activas" value="8" />
+        <SummaryCard title="Inactivas" value="3" />
+        <SummaryCard title="Alertas" value="1" />
       </div>
 
-      <div className="bg-white rounded-2xl shadow p-4">
-        <h3 className="text-lg font-semibold mb-2">Gráfico de Temperatura</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={sensorData}>
-            <XAxis dataKey="time" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="temp" stroke="#10B981" strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <PlantationTable plantations={plantations} />
+          <PlantationChart data={plantations} />
+        </div>
+        <div className="flex flex-col gap-6">
+          <PlantationDonut />
+          <ProgressBar label="Humedad Promedia" value={68} />
+          <ProgressBar label="Temperatura Promedia" value={75} />
+          <ProgressBar label="Luz Solar Promedia" value={82} />
+        </div>
       </div>
     </main>
   );
