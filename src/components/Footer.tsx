@@ -1,8 +1,7 @@
 export default function Footer() {
-    return (
-      <footer className="bg-gray-100 text-center text-sm text-gray-500 py-4 mt-8">
-        © {new Date().getFullYear()} AgroTech - Todos los derechos reservados
-      </footer>
-    );
-  }
-  
+  return (
+    <div className="text-xs text-gray-500 border-t border-gray-700 pt-4">
+      <p className="text-sm">&copy; 2025 GrowTech Jaroso</p>
+    </div>
+  );
+}

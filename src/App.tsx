@@ -1,21 +1,26 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Dashboard from "./pages/Dashboard";
+// App.tsx
+import Layout from "./layout/Layout";
+import SensorCard from "./components/SensorCard";
+import { Thermometer, Droplets } from "lucide-react";
 
-function App() {
+export default function App() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="ml-64 w-full flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow p-6 bg-gray-100">
-          <Dashboard />
-        </main>
-        <Footer />
-      </div>
-    </div>
+    <Layout>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <SensorCard
+          title="Temperatura"
+          value="26°C"
+          icon={<Thermometer className="w-6 h-6" />}
+          color="bg-red-100 text-red-600"
+        />
+        <SensorCard
+          title="Humedad"
+          value="52%"
+          icon={<Droplets className="w-6 h-6" />}
+          color="bg-blue-100 text-blue-600"
+        />
+        {/* He puesto dos de ejemplo*/}
+      </div> 
+    </Layout>
   );
 }
-
-export default App;

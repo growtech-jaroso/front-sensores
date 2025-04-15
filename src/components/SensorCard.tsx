@@ -4,7 +4,7 @@ type SensorCardProps = {
   title: string;
   value: string;
   icon: React.ReactNode;
-  color?: string; // Ej: "bg-green-100 text-green-600"
+  color?: string; 
 };
 
 export default function SensorCard({
