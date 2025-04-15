@@ -35,12 +35,12 @@ export default function Sidebar({ isOpen, toggle }: SidebarProps) {
           </div>
 
           {/* Navegación */}
-          <nav className="space-y-2">
+          <nav className="space-y-5">
             {sidebarLinks.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors ${
                   !isOpen ? "opacity-0 invisible" : "opacity-100 visible"
                 }`}
               >
