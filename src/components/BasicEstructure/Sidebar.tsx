@@ -1,5 +1,5 @@
 import Footer from "./Footer"
-import { sidebarLinks } from "./SidebarLinks";
+import { sidebarLinks } from "../Links/LinksSidebar";
 import { Menu, X } from "lucide-react";
 
 type SidebarProps = {
