@@ -1,4 +1,4 @@
-import Footer from "./Footer";
+import Footer from "./Footer"
 import { sidebarLinks } from "./SidebarLinks";
 import { Menu, X } from "lucide-react";
 

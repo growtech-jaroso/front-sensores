@@ -1,7 +1,6 @@
-// components/Layout.tsx
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import Sidebar from "../components/BasicEstructure/Sidebar";
+import Header from "../components/BasicEstructure/Header";
 
 type LayoutProps = {
   children: React.ReactNode;

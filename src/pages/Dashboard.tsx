@@ -1,8 +1,8 @@
-import PlantationTable from "../components/PlantationTable";
-import SummaryCard from "../components/SummaryCard";
-import PlantationDonut from "../components/PlantationDonut";
-import ProgressBar from "../components/ProgressBar";
-import PlantationChart from "../components/PlantationChart";
+import PlantationTable from "../components/Plantation/PlantationTable";
+import SummaryCard from "../components/DashboardWidgets/SummaryCard";
+//import PlantationDonut from "../components/PlantationDonut";
+import ProgressBar from "../components/DashboardWidgets/ProgressBar";
+import PlantationChart from "../components/Plantation/PlantationChart";
 
 const plantations = [
   {
@@ -99,7 +99,6 @@ export default function Dashboard() {
           <PlantationChart data={plantations} />
         </div>
         <div className="flex flex-col gap-6">
-          <PlantationDonut />
           <ProgressBar label="Humedad Promedia" value={68} />
           <ProgressBar label="Temperatura Promedia" value={75} />
           <ProgressBar label="Luz Solar Promedia" value={82} />

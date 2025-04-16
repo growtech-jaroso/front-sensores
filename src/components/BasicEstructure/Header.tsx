@@ -1,6 +1,6 @@
 // Header.tsx
 import { Bell, LineChart } from "lucide-react";
-import UserMenu from "./UserMenu";
+import UserMenu from "../User/UserMenu";
 
 export default function Header() {
   return (
