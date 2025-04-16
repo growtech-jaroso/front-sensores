@@ -10,16 +10,27 @@ import {
   Legend,
 } from "recharts";
 
+// Interfaz para los datos
 type PlantationReading = {
   id: string;
-  nombre: string;
-  hora: string;
-  temperatura: number;
-  humedad: number;
+  name: string;
+  time: string;
+  temperature: number;
+  humidity: number;
 };
 
+// Props del componente
 type PlantationChartProps = {
   data: PlantationReading[];
+};
+
+// Formatear la hora al estilo español (HH:mm)
+const formatTimeToSpanish = (isoString: string) => {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 const PlantationChart: React.FC<PlantationChartProps> = ({ data }) => {
@@ -31,7 +42,7 @@ const PlantationChart: React.FC<PlantationChartProps> = ({ data }) => {
           <defs>
             <linearGradient id="tempColor" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="red" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#red" stopOpacity={0} />
+              <stop offset="95%" stopColor="red" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="humColor" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
@@ -40,25 +51,40 @@ const PlantationChart: React.FC<PlantationChartProps> = ({ data }) => {
           </defs>
 
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="hora" />
+          <XAxis dataKey="time" tickFormatter={formatTimeToSpanish} />
           <YAxis />
-          <Tooltip />
-          <Legend />
-          <Area
-            type="monotone"
-            dataKey="temperatura"
-            stroke="red"
-            fillOpacity={1}
-            fill="url(#tempColor)"
-            name="Temperatura (°C)"
+          <Tooltip
+            labelFormatter={(label) => `Hora: ${formatTimeToSpanish(label)}`}
+            formatter={(value: number, name: string) => {
+              const labelMap: Record<string, string> = {
+                temperature: "Temperatura (°C)",
+                humidity: "Humedad (%)",
+              };
+              return [`${value}`, labelMap[name] || name];
+            }}
+          />
+          <Legend
+            formatter={(value) => {
+              const labelMap: Record<string, string> = {
+                temperature: "Temperatura (°C)",
+                humidity: "Humedad (%)",
+              };
+              return labelMap[value] || value;
+            }}
           />
           <Area
             type="monotone"
-            dataKey="humedad"
+            dataKey="temperature"
+            stroke="red"
+            fillOpacity={1}
+            fill="url(#tempColor)"
+          />
+          <Area
+            type="monotone"
+            dataKey="humidity"
             stroke="#3b82f6"
             fillOpacity={1}
             fill="url(#humColor)"
-            name="Humedad (%)"
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -1,109 +1,77 @@
+import React, { useState } from "react";
+import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
-//import PlantationDonut from "../components/PlantationDonut";
 import ProgressBar from "../components/DashboardWidgets/ProgressBar";
 import PlantationChart from "../components/Plantation/PlantationChart";
+import type { Plantation } from "../interfaces/Plantation";
 
-const plantations = [
-  {
-    id: "1",
-    nombre: "Tomates",
-    ubicacion: "Invernadero 1",
-    estado: "Activa",
-    temperatura: 25,
-    humedad: 70,
-    hora: "08:00",
-  },
-  {
-    id: "2",
-    nombre: "Lechugas",
-    ubicacion: "Invernadero 2",
-    estado: "Alerta",
-    temperatura: 30,
-    humedad: 50,
-    hora: "09:00",
-  },
+const Dashboard = () => {
+  const [plantations, setPlantations] = useState<Plantation[]>([]);
 
-  {
-    id: "3",
-    nombre: "Fresas",
-    ubicacion: "Invernadero 3",
-    estado: "Inactiva",
-    temperatura: 20,
-    humedad: 60,
-    hora: "10:00",
-  },
-  {
-    id: "4",
-    nombre: "Pepinos",
-    ubicacion: "Invernadero 4",
-    estado: "Inactiva",
-    temperatura: 22,
-    humedad: 65,
-    hora: "11:00",
-  },
+  // Función para contar plantaciones por estado
+  const contarPorEstado = (estado: string): number => {
+    return plantations.filter((p) => p.status === estado).length;
+  };
 
-  {
-    id: "5",
-    nombre: "Tomates",
-    ubicacion: "Invernadero 5",
-    estado: "Activa",
-    temperatura: 25,
-    humedad: 70,
-    hora: "12:00",
-  },
+  // Función para manejar acción de ver sensores
+  const handleVerSensor = (plantacion: Plantation) => {
+    console.log("Ver sensor de:", plantacion.name);
+  };
 
-  {
-    id: "6",
-    nombre: "Lechugas",
-    ubicacion: "Invernadero 6",
-    estado: "Activa",
-    temperatura: 30,
-    humedad: 50,
-    hora: "13:00",
-  },
+  // Datos para las tarjetas resumen
+  const resumenes = [
+    { titulo: "Total de Plantaciones", valor: plantations.length, tipo: "total" },
+    { titulo: "Activas", valor: contarPorEstado("Activa"), tipo: "activas" },
+    { titulo: "Inactivas", valor: contarPorEstado("Inactiva"), tipo: "inactivas" },
+    { titulo: "En Alerta", valor: contarPorEstado("Alerta"), tipo: "alertas" },
+  ];
 
-  {
-    id: "7",
-    nombre: "Fresas",
-    ubicacion: "Invernadero 7",
-    estado: "Activa",
-    temperatura: 20,
-    humedad: 60,
-    hora: "14:00",
-  },
-  {
-    id: "8",
-    nombre: "Pepinos",
-    ubicacion: "Invernadero 8",
-    estado: "Activa",
-    temperatura: 22,
-    humedad: 65,
-    hora: "15:00",
-  },
-];
-
-export default function Dashboard() {
   return (
-    <main className="p-6 space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <SummaryCard title="Total Plantaciones" value="12" />
-        <SummaryCard title="Activas" value="8" />
-        <SummaryCard title="Inactivas" value="3" />
-        <SummaryCard title="Alertas" value="1" />
-      </div>
+    <>
+      {!plantations.length ? (
+        <LoadingPlantations onDataReady={setPlantations} />
+      ) : (
+        <main className="p-6 space-y-6">
+          {/* Tarjetas resumen */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {resumenes.map((item) => (
+              <SummaryCard
+                key={item.titulo}
+                title={item.titulo}
+                value={item.valor.toString()}
+                type={item.tipo as "total" | "activas" | "inactivas" | "alertas"}
+              />
+            ))}
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <PlantationTable plantations={plantations} />
-          <PlantationChart data={plantations} />
-        </div>
-        <div className="flex flex-col gap-6">
-          <ProgressBar label="Humedad Promedia" value={68} />
-          <ProgressBar label="Temperatura Promedia" value={75} />
-          <ProgressBar label="Luz Solar Promedia" value={82} />
-        </div>
-      </div>
-    </main>
+          {/* Tabla + Gráfico */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <PlantationTable plantations={plantations} onVerSensor={handleVerSensor} />
+              <PlantationChart
+                data={plantations.map((plantation) => ({
+                  ...plantation,
+                  time: new Date().toISOString(),
+                }))}
+              />
+            </div>
+
+            {/* Indicadores de progreso */}
+            <div className="flex flex-col gap-6">
+              <ProgressBar label="Humedad Promedia" value={68} type={"humidity"} />
+              <ProgressBar label="Temperatura Promedia" value={75} type={"temperature"} />
+              <ProgressBar label="Luz Solar Promedia" value={90} type={"light"} />
+              <ProgressBar label="Presión Promedia" value={80} type={"pressure"} />
+              <ProgressBar label="Velocidad Viento Promedia" value={85} type={"windSpeed"} />
+              <ProgressBar label="CO2 Promedio" value={70} type={"co2"} />
+              <ProgressBar label="Luminosidad Promedio" value={80} type={"luminosity"} />
+            </div>
+          </div>
+        </main>
+      )}
+    </>
   );
-}
+};
+
+export default Dashboard;
