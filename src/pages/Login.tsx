@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "animate.css/animate.min.css";
 import Logo from "../components/Logo/Logo";
 import Formulario from "../components/Forms/FormularioLogin";
@@ -6,16 +5,6 @@ import ImagenFlotante from "../components/FloatImage/FloatImage";
 import Enlaces from "../components/Links/LinksLogin";
 
 const Login: React.FC = () => {
-  // Removed unused state variables
-  const [error, setError] = useState("");
-
-  const handleSubmit = (email: string, password: string) => {
-    if (email === "test@example.com" && password === "password123") {
-      alert("Inicio de sesión exitoso");
-    } else {
-      setError("Credenciales incorrectas");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center items-center px-4">
@@ -27,7 +16,7 @@ const Login: React.FC = () => {
           <div className="w-full lg:w-1/2 flex flex-col items-center space-y-8">
             <Logo />
 
-            <Formulario onSubmit={handleSubmit} error={error} />
+            <Formulario />
             <Enlaces />
           </div>
 
