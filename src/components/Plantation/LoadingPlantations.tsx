@@ -51,7 +51,7 @@ const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
       {
         id: "4",
         name: "Huerto Rural",
-        status: "Activa",
+        status: "Alerta",
         temperature: 25,
         humidity: 70,
         country: "Argentina",
