@@ -1,24 +1,27 @@
+import { IndicatorStatus } from "../../types/indicatorStatus";
+
 interface SummaryCardProps {
   title: string;
   value: string;
-  type?: "total" | "activas" | "inactivas" | "alertas"; 
+  type?: IndicatorStatus
 }
 
 const SummaryCard = ({ title, value, type }: SummaryCardProps) => {
   // Función para determinar el color del texto según el tipo
-  const obtenerColorTexto = (type?: SummaryCardProps["type"]) => {
+  const getDinamicColorText = (type?: SummaryCardProps["type"]) => {
     switch (type) {
-      case "activas":
+      case IndicatorStatus.ACTIVE:
         return "text-green-600";
-      case "inactivas":
+      case IndicatorStatus.INACTIVE:
         return "text-gray-500";
-      case "alertas":
+      case IndicatorStatus.ALERT:
         return "text-red-600";
-      case "total":
+      case IndicatorStatus.TOTAL:
         return "text-green-600";
       default:
         return "text-green-600";
     }
+  
   };
 
   return (
@@ -27,7 +30,7 @@ const SummaryCard = ({ title, value, type }: SummaryCardProps) => {
       <span className="text-sm text-gray-500">{title}</span>
 
       {/* Valor mostrado con color dinámico */}
-      <span className={`text-2xl font-bold ${obtenerColorTexto(type)}`}>{value}</span>
+      <span className={`text-2xl font-bold ${getDinamicColorText(type)}`}>{value}</span>
     </div>
   );
 };

@@ -1,31 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
 import ProgressBar from "../components/DashboardWidgets/ProgressBar";
 import PlantationChart from "../components/Plantation/PlantationChart";
 import type { Plantation } from "../interfaces/Plantation";
+import { IndicatorType } from "../types/indicatorTypes";
+import { IndicatorStatus } from "../types/indicatorStatus";
 
 const Dashboard = () => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
 
-  // Función para contar plantaciones por estado
-  const contarPorEstado = (estado: string): number => {
+  // Función para contar plantaciones por estado con tipado correcto
+  const contarPorEstado = (estado: IndicatorStatus): number => {
     return plantations.filter((p) => p.status === estado).length;
-  };
-
-  // Función para manejar acción de ver sensores
-  const handleVerSensor = (plantacion: Plantation) => {
-    console.log("Ver sensor de:", plantacion.name);
   };
 
   // Datos para las tarjetas resumen
   const resumenes = [
-    { titulo: "Total de Plantaciones", valor: plantations.length, tipo: "total" },
-    { titulo: "Activas", valor: contarPorEstado("Activa"), tipo: "activas" },
-    { titulo: "Inactivas", valor: contarPorEstado("Inactiva"), tipo: "inactivas" },
-    { titulo: "En Alerta", valor: contarPorEstado("Alerta"), tipo: "alertas" },
+    { titulo: "Plantaciones Totales", valor: plantations.length, tipo: IndicatorStatus.TOTAL },
+    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE), tipo: IndicatorStatus.ACTIVE },
+    { titulo: "Inactivas", valor: contarPorEstado(IndicatorStatus.INACTIVE), tipo: IndicatorStatus.INACTIVE },
+    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT), tipo: IndicatorStatus.ALERT },
   ];
+
+  // Acción de ver sensor
+  const handleVerSensor = (plantacion: Plantation) => {
+    console.log("Ver sensor de:", plantacion.name);
+  };
 
   return (
     <>
@@ -40,7 +42,7 @@ const Dashboard = () => {
                 key={item.titulo}
                 title={item.titulo}
                 value={item.valor.toString()}
-                type={item.tipo as "total" | "activas" | "inactivas" | "alertas"}
+                type={item.tipo}
               />
             ))}
           </div>
@@ -59,13 +61,13 @@ const Dashboard = () => {
 
             {/* Indicadores de progreso */}
             <div className="flex flex-col gap-6">
-              <ProgressBar label="Humedad Promedia" value={68} type={"humidity"} />
-              <ProgressBar label="Temperatura Promedia" value={75} type={"temperature"} />
-              <ProgressBar label="Luz Solar Promedia" value={90} type={"light"} />
-              <ProgressBar label="Presión Promedia" value={80} type={"pressure"} />
-              <ProgressBar label="Velocidad Viento Promedia" value={85} type={"windSpeed"} />
-              <ProgressBar label="CO2 Promedio" value={70} type={"co2"} />
-              <ProgressBar label="Luminosidad Promedio" value={80} type={"luminosity"} />
+              <ProgressBar label="Humedad Promedia" value={68} type={IndicatorType.HUMIDITY} />
+              <ProgressBar label="Temperatura Promedia" value={75} type={IndicatorType.TEMPERATURE} />
+              <ProgressBar label="Luz Solar Promedia" value={90} type={IndicatorType.LIGHT} />
+              <ProgressBar label="Presión Promedia" value={80} type={IndicatorType.PRESSURE} />
+              <ProgressBar label="Velocidad Viento Promedia" value={85} type={IndicatorType.WINDSPEED} />
+              <ProgressBar label="CO2 Promedio" value={70} type={IndicatorType.CO2} />
+              <ProgressBar label="Luminosidad Promedio" value={80} type={IndicatorType.LUMINOSITY} />
             </div>
           </div>
         </main>

@@ -1,10 +1,10 @@
 import "animate.css/animate.min.css";
 import Logo from "../components/Logo/Logo";
-import Formulario from "../components/Forms/FormularioLogin";
+import FormLogin from "../components/Forms/FormLogin";
 import ImagenFlotante from "../components/FloatImage/FloatImage";
 import Enlaces from "../components/Links/LinksLogin";
 
-const Login: React.FC = () => {
+const Login  = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center items-center px-4">
@@ -15,8 +15,7 @@ const Login: React.FC = () => {
           {/* Formulario y logo */}
           <div className="w-full lg:w-1/2 flex flex-col items-center space-y-8">
             <Logo />
-
-            <Formulario />
+            <FormLogin />
             <Enlaces />
           </div>
 

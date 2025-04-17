@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Plantation } from "../../interfaces/Plantation";
 
-interface SimuladorProps {
+interface SimulatorProps {
   onDataReady: (data: Plantation[]) => void;
 }
 
-const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
+const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,11 +16,10 @@ const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
         status: "Activa",
         temperature: 28,
         humidity: 70,
-        country: "Argentina",
-        province: "Córdoba",
-        city: "Villa María",
+        country: "España",
+        province: "Andalucía",
+        city: "Córdoba",
         type: "Frutas",
-        users: ["user1"]
       },
 
       {
@@ -29,36 +28,34 @@ const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
         status: "Inactiva",
         temperature: 22,
         humidity: 60,
-        country: "Argentina",
-        province: "Buenos Aires",
-        city: "La Plata",
+        country: "España",
+        province: "Madrid",
+        city: "Madrid",
         type: "Verduras",
         users: ["user2"]
       },
       {
         id: "3",
-        name: "Huerto Urbano",
+        name: "Plantaciones de la Mancha",
         status: "Alerta",
         temperature: 30,
         humidity: 80,
-        country: "Argentina",
-        province: "CABA",
-        city: "Buenos Aires",
+        country: "España",
+        province: "Región de Murcia",
+        city: "Alhama de Murcia",
         type: "Frutas y Verduras",
-        users: ["user3"]
       },
 
       {
         id: "4",
-        name: "Huerto Rural",
+        name: "Finca Rural",
         status: "Alerta",
         temperature: 25,
         humidity: 70,
-        country: "Argentina",
-        province: "Buenos Aires",
-        city: "San Luis",
-        type: "Frutas y Verduras",
-        users: ["user4"]
+        country: "España",
+        province: "Almería",
+        city: "Pulpí",
+        type: "Lechugas",
       },
       {
         id: "5",
@@ -66,11 +63,10 @@ const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
         status: "Activa",
         temperature: 30,
         humidity: 80,
-        country: "Argentina",
-        province: "CABA",
-        city: "Buenos Aires",
-        type: "Frutas y Verduras",
-        users: ["user5"]
+        country: "España",
+        province: "Almería",
+        city: "Cuevas del Almanzora",
+        type: "Pepinos",
       },
     ];
 
@@ -111,4 +107,4 @@ const SimuladorPlantaciones = ({ onDataReady }: SimuladorProps) => {
   return null; 
 };
 
-export default SimuladorPlantaciones;
+export default PlantationSimulator;

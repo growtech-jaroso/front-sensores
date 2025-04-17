@@ -5,7 +5,7 @@ import InputPassword from "../Inputs/InputPassword";
 import InputText from "../Inputs/InputsText";
 
 
-const Formulario = () => {
+const FormLogin = () => {
 
   const onSubmit = ({ email, password }: LoginType) => {
     if (email === "test@example.com" && password === "password123") {
@@ -36,4 +36,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default FormLogin;

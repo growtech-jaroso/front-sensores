@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AreaChart,
   Area,
@@ -33,7 +32,7 @@ const formatTimeToSpanish = (isoString: string) => {
   });
 };
 
-const PlantationChart: React.FC<PlantationChartProps> = ({ data }) => {
+const PlantationChart = ({ data }: PlantationChartProps) => {
   return (
     <div className="mt-10 bg-white rounded-2xl shadow p-6 border border-gray-100">
       <h3 className="text-lg font-semibold text-green-600 mb-4">📊 Temperatura y Humedad por Hora</h3>

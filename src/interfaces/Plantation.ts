@@ -1,3 +1,5 @@
+import { IndicatorStatus } from "../types/indicatorStatus";
+
 export interface SensorReading {
   time: string; 
   temperature: number;
@@ -7,7 +9,7 @@ export interface SensorReading {
 export interface Plantation {
   id: string;
   name: string;
-  status: string;
+  status: IndicatorStatus; // enum
   temperature: number;
   humidity: number;
   country: string;

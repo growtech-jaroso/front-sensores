@@ -1,6 +1,4 @@
-import React from "react";
-
-const Enlaces: React.FC = () => {
+const LinksLogin = () => {
   return (
     <div className="text-sm text-gray-600 text-center">
       Al iniciar sesión, aceptas nuestros{" "}
@@ -15,4 +13,4 @@ const Enlaces: React.FC = () => {
   );
 };
 
-export default Enlaces;
+export default LinksLogin;
