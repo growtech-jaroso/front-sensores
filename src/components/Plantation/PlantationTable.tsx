@@ -118,7 +118,7 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => onVerSensor(p)}
-                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all shadow-sm"
+                      className="inline-flex items-center cursor-pointer gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all shadow-sm"
                     >
                       <Eye size={14} className="opacity-80" />
                       Ver

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Plantation } from "../../interfaces/Plantation";
+import { IndicatorStatus } from "../../types/indicatorStatus";
 
 interface SimulatorProps {
   onDataReady: (data: Plantation[]) => void;
@@ -13,7 +14,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       {
         id: "1",
         name: "Finca Esperanza",
-        status: "Activa",
+        status: IndicatorStatus.ACTIVE,
         temperature: 28,
         humidity: 70,
         country: "España",
@@ -25,7 +26,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       {
         id: "2",
         name: "Granja Verde",
-        status: "Inactiva",
+        status: IndicatorStatus.INACTIVE,
         temperature: 22,
         humidity: 60,
         country: "España",
@@ -37,7 +38,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       {
         id: "3",
         name: "Plantaciones de la Mancha",
-        status: "Alerta",
+        status: IndicatorStatus.ALERT,
         temperature: 30,
         humidity: 80,
         country: "España",
@@ -49,7 +50,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       {
         id: "4",
         name: "Finca Rural",
-        status: "Alerta",
+        status: IndicatorStatus.ACTIVE,
         temperature: 25,
         humidity: 70,
         country: "España",
@@ -60,7 +61,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       {
         id: "5",
         name: "Huerto Urbano",
-        status: "Activa",
+        status: IndicatorStatus.ACTIVE,
         temperature: 30,
         humidity: 80,
         country: "España",

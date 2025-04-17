@@ -8,7 +8,11 @@ import type { Plantation } from "../interfaces/Plantation";
 import { IndicatorType } from "../types/indicatorTypes";
 import { IndicatorStatus } from "../types/indicatorStatus";
 
-const Dashboard = () => {
+type DashboardProps = {
+  isSidebarOpen: boolean;
+};
+
+const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
 
   // Función para contar plantaciones por estado con tipado correcto
@@ -34,9 +38,11 @@ const Dashboard = () => {
       {!plantations.length ? (
         <LoadingPlantations onDataReady={setPlantations} />
       ) : (
-        <main className="p-6 space-y-6">
+        <main
+          className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "ml-64" : "ml-20"} p-6 space-y-6`} // Ajuste dinámico según estado del sidebar
+        >
           {/* Tarjetas resumen */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {resumenes.map((item) => (
               <SummaryCard
                 key={item.titulo}
@@ -60,7 +66,7 @@ const Dashboard = () => {
             </div>
 
             {/* Indicadores de progreso */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:gap-4 lg:flex-col">
               <ProgressBar label="Humedad Promedia" value={68} type={IndicatorType.HUMIDITY} />
               <ProgressBar label="Temperatura Promedia" value={75} type={IndicatorType.TEMPERATURE} />
               <ProgressBar label="Luz Solar Promedia" value={90} type={IndicatorType.LIGHT} />
