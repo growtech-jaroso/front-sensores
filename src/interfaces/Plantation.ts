@@ -1,24 +1,21 @@
 import { IndicatorStatus } from "../types/indicatorStatus";
 
-export interface SensorReading {
-  time: string; 
-  temperature: number;
-  humidity: number;
-}
-
 export interface Plantation {
-  id: string;
+  _id: string;
   name: string;
-  status: IndicatorStatus; // enum
-  temperature: number;
-  humidity: number;
+  status?: IndicatorStatus;
+  temperature?: number;
+  humidity?: number;
   country: string;
   province: string;
   city: string;
   type: string;
-  users?: string[];  
 
-  readings?: SensorReading[];
+  users?: string[];
+  owner_id?: string;
+  coordinates?: { lat: number; lng: number } | null;
+  created_at?: string;
+  updated_at?: string;
+
+  //readings?: SensorReading[];
 }
-
-

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { authService } from "../services/authService";
 import { LogOut } from "lucide-react";
+import { useUser } from "../contexts/UserContext";
 
 // Componentes del perfil
 import ProfileLayout from "../components/User/Profile/ProfileLayout";
@@ -11,12 +11,7 @@ import PasswordUpdateSection from "../components/User/Profile/PasswordUpdateSect
 
 export default function ProfileTest() {
   const navigate = useNavigate();
-
-  const [usuario] = useState({
-    nombre: "Admin",
-    email: "admin@gmail.com",
-    rol: "ADMIN",
-  });
+  const { user } = useUser();
 
   const handleLogout = () => {
     authService.logout();
@@ -25,7 +20,6 @@ export default function ProfileTest() {
 
   return (
     <ProfileLayout>
-      {/* Encabezado */}
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-semibold text-gray-800 leading-tight">
@@ -37,15 +31,11 @@ export default function ProfileTest() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          {/* Cerrar sesión */}
           <button
             onClick={handleLogout}
             className="group flex items-center gap-2 text-sm text-red-600 px-3 py-1.5 rounded-md transition-all duration-200 hover:text-red-700 hover:bg-red-100 hover:shadow-inner cursor-pointer"
           >
-            <LogOut
-              className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5"
-              strokeWidth={2}
-            />
+            <LogOut className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
             <span className="transition-colors duration-200">
               Cerrar sesión
             </span>
@@ -54,8 +44,11 @@ export default function ProfileTest() {
       </header>
 
       <div className="space-y-10 animate-fadeIn">
-        <PersonalInfoSection nombre={usuario.nombre} rol={usuario.rol} />
-        <EmailUpdateSection currentEmail={usuario.email} />
+        <PersonalInfoSection
+          name={user?.name || ""}
+          rol={user?.roles[0] || "USER"}
+        />
+        <EmailUpdateSection currentEmail={user?.email || ""} />
         <PasswordUpdateSection />
       </div>
 

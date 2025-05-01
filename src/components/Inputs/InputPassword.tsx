@@ -21,7 +21,7 @@ export default function InputPassword({
   );
 
   const handleShowPassword = (e: React.MouseEvent) => {
-    e.preventDefault(); // ✅ Prevenir cualquier acción por defecto
+    e.preventDefault(); // Prevenir cualquier acción por defecto
     setInputType((prev) => (prev === "password" ? "text" : "password"));
   };
 
@@ -36,7 +36,7 @@ export default function InputPassword({
           className="w-full px-6 py-4 rounded-lg bg-gray-100 border border-gray-300 placeholder-gray-500 text-lg focus:outline-none focus:border-green-500 focus:bg-white"
         />
         <button
-          type="button" // ✅ Asegura que no sea submit
+          type="button"
           tabIndex={-1}
           onClick={handleShowPassword}
           className="absolute right-2 top-4 cursor-pointer"

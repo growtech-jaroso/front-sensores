@@ -1,19 +1,21 @@
-import { User, ShieldCheck } from "lucide-react";
+import { User, ShieldCheck, Users } from "lucide-react";
+import { useUser } from "../../../contexts/UserContext";
 
 type Props = {
-  nombre: string;
-  rol: string;
+  name?: string;
+  rol?: string;
 };
 
-export default function PersonalInfoSection({ nombre, rol }: Props) {
-  const isAdmin = rol.toLowerCase() === "admin";
+export default function PersonalInfoSection({ name, rol }: Props) {
+  const { user } = useUser();
+  const displayName = name || user?.name || "";
+  const userRole = rol || user?.roles?.[0] || "USER";
+  const isAdmin = userRole.toUpperCase() === "ADMIN";
 
   return (
     <section className="space-y-6">
       <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-        <span className="flex items-center gap-1">
-          <User className="w-5 h-5 text-green-600" />
-        </span>
+        <User className="w-5 h-5 text-green-600" />
         Información personal
       </h2>
 
@@ -24,7 +26,7 @@ export default function PersonalInfoSection({ nombre, rol }: Props) {
           </label>
           <input
             type="text"
-            value={nombre}
+            value={displayName}
             disabled
             className="w-full mt-1 px-4 py-2 bg-gray-100 border rounded-lg text-sm text-gray-700"
           />
@@ -34,25 +36,25 @@ export default function PersonalInfoSection({ nombre, rol }: Props) {
           <label className="block text-sm font-medium text-gray-600">Rol</label>
           <input
             type="text"
-            value={rol}
+            value={userRole}
             disabled
             className="w-full mt-1 px-4 py-2 bg-gray-100 border rounded-lg text-sm text-gray-700"
           />
         </div>
 
-        {/* Gestión de personal para admins */}
         {isAdmin && (
           <>
             <hr className="my-4 border-gray-200" />
-            <div className="bg-gray-50 border border-dashed border-green-400 p-4 rounded-md">
-              <div className="flex items-center gap-2 text-sm font-medium text-green-700">
+            <div className="bg-gray-50 border border-dashed border-green-400 p-4 rounded-md space-y-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-green-700">
                 <ShieldCheck className="w-4 h-4" />
                 Acceso administrativo
               </div>
-              <p className="text-xs text-gray-600 mt-1 mb-3">
-                Como administrador puedes gestionar al personal autorizado.
+              <p className="text-xs text-gray-600">
+                Puedes gestionar al personal autorizado desde esta sección.
               </p>
-              <button className="text-xs font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer">
+              <button className="inline-flex items-center gap-2 text-xs font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer">
+                <Users className="w-4 h-4" />
                 Gestionar personal
               </button>
             </div>

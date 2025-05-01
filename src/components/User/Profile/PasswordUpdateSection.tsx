@@ -1,24 +1,51 @@
 import { Lock } from "lucide-react";
+import { useState } from "react";
 
-export default function PasswordUpdateSection() {
+type PasswordUpdateSectionProps = {
+  onSubmit?: (data: {
+    current: string;
+    newPass: string;
+    confirm: string;
+  }) => void;
+  title?: string;
+};
+
+export default function PasswordUpdateSection({
+  onSubmit,
+  title = "Actualizar contraseña",
+}: PasswordUpdateSectionProps) {
+  const [current, setCurrent] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (onSubmit) {
+      onSubmit({ current, newPass, confirm });
+    } else {
+      console.log("Contraseña enviada:", { current, newPass, confirm });
+    }
+  };
+
   return (
     <section className="space-y-6">
       <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-        <span className="flex items-center gap-1">
-          <Lock className="w-5 h-5 text-green-600" />
-        </span>
-        Actualizar contraseña
+        <Lock className="w-5 h-5 text-green-600" />
+        {title}
       </h2>
 
       <div className="bg-white p-6 rounded-xl shadow-sm border space-y-4">
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-600">
               Contraseña actual
             </label>
             <input
               type="password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm"
+              value={current}
+              onChange={(e) => setCurrent(e.target.value)}
+              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
@@ -28,7 +55,9 @@ export default function PasswordUpdateSection() {
             </label>
             <input
               type="password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm"
+              value={newPass}
+              onChange={(e) => setNewPass(e.target.value)}
+              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
@@ -38,7 +67,9 @@ export default function PasswordUpdateSection() {
             </label>
             <input
               type="password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 

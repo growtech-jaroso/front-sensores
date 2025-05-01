@@ -7,9 +7,12 @@ import InputText from "../Inputs/InputsText";
 import { authService } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { showAlert } from "../../components/Alert/AlertService";
+import { useUser } from "../../contexts/UserContext";
 
 const FormLogin = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
+
   const [generalError, setGeneralError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -26,15 +29,20 @@ const FormLogin = () => {
     setLoading(true);
 
     try {
+      // 🔐 Iniciar sesión y guardar datos en sessionStorage
       await authService.login(email, password);
 
-      // Mostrar alerta sin botón y redirigir después de cerrar
+      // ✅ Obtener y setear el usuario en el contexto
+      const userData = authService.getUserData();
+      if (userData) setUser(userData);
+
+      // ✅ Mostrar alerta sin botón y redirigir
       await showAlert(
         "success",
         "Sus credenciales son correctas",
         "Bienvenido a GrowPanel",
         undefined,
-        true // autoClose
+        true // ← autoClose habilitado
       );
 
       navigate("/dashboard");
