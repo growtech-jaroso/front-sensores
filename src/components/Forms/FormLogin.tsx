@@ -28,10 +28,17 @@ const FormLogin = () => {
     try {
       await authService.login(email, password);
 
-      showAlert("success", "Sus credenciales son correctas", "Bienvenido a GrowPanel", "Ver mis plantaciones").then(() => {
-        navigate("/dashboard");
-      });
+      // Mostrar alerta sin botón y redirigir después de cerrar
+      await showAlert(
+        "success",
+        "Sus credenciales son correctas",
+        "Bienvenido a GrowPanel",
+        undefined,
+        true // autoClose
+      );
 
+      navigate("/dashboard");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setGeneralError(error.message || "Error al iniciar sesión.");
     } finally {

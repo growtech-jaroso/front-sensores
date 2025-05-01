@@ -1,14 +1,25 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { authService } from "../services/authService";  
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { authService } from "../services/authService";
 
-const PrivateRoute = () => {
-  const isAuthenticated = authService.isAuthenticated();  // Verifica si el token existe en sessionStorage
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;  // Si no está autenticado, redirige a la página de login
-  }
-
-  return <Outlet />;  // Si está autenticado, renderiza las rutas protegidas
+type Props = {
+  allowedRoles?: ("ADMIN" | "SUPPORT" | "USER")[];
 };
 
-export default PrivateRoute;
+export default function ProtectedRoutes({ allowedRoles }: Props) {
+  const isAuthenticated = authService.isAuthenticated();
+  const userRole = authService.getUserRole();
+  const location = useLocation();
+
+  // No autenticado → redirige
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  // Autenticado, pero no tiene permisos
+  if (allowedRoles && !allowedRoles.includes(userRole as any)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Autenticado y permitido
+  return <Outlet />;
+}

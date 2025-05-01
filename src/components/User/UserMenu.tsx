@@ -41,11 +41,13 @@ export default function UserMenu() {
         >
           <ul className="py-1" role="menu" aria-label="Opciones de usuario">
             <li
+              onClick={() => navigate("/perfil")}
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
               role="menuitem"
             >
               <User className="w-4 h-4" /> Perfil
             </li>
+
             <li
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
               role="menuitem"

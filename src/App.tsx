@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import Perfil from "./pages/Profile"; //
 import Login from "./pages/Login";
 import Layout from "./layout/Layout";
 import PrivateRoute from "./routes/ProtectedRoutes";
@@ -9,7 +10,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        
+
         {/* Rutas protegidas */}
         <Route element={<PrivateRoute />}>
           <Route
@@ -17,6 +18,14 @@ export default function App() {
             element={
               <Layout>
                 <Dashboard isSidebarOpen={false} />
+              </Layout>
+            }
+          />
+          <Route
+            path="/perfil"
+            element={
+              <Layout>
+                <Perfil />
               </Layout>
             }
           />

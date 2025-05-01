@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../components/BasicEstructure/Sidebar";
 import Header from "../components/BasicEstructure/Header";
 
@@ -7,29 +8,34 @@ type LayoutProps = {
 };
 
 export default function Layout({ children }: LayoutProps) {
-  // Sidebar colapsado por defecto (o recuperado desde localStorage)
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    const saved = localStorage.getItem("sidebar_open");
-    return saved === "true" || false;
-  });
+  const location = useLocation();
 
-  // Actualizar localStorage cada vez que se cambia el estado
+  // Sidebar SIEMPRE cerrado al entrar a una nueva ruta
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Ocultar el Header en /perfil
+  const hideHeader = location.pathname === "/perfil";
+
+  // Siempre colapsar el sidebar al cambiar de ruta
   useEffect(() => {
-    localStorage.setItem("sidebar_open", String(sidebarOpen));
-  }, [sidebarOpen]);
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="flex">
-      {/* Sidebar con toggle */}
-      <Sidebar isOpen={sidebarOpen} toggle={() => setSidebarOpen(!sidebarOpen)} />
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={sidebarOpen}
+        toggle={() => setSidebarOpen(!sidebarOpen)}
+      />
 
-      {/* Contenedor principal */}
+      {/* Contenido principal */}
       <div
         className={`flex-1 min-h-screen transition-all duration-500 ease-out ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
-        <Header />
+        {!hideHeader && <Header />}
         <main className="p-6 bg-gray-100">{children}</main>
       </div>
     </div>

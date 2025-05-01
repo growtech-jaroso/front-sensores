@@ -36,4 +36,8 @@ export const authService = {
   logout: () => sessionStorage.removeItem(TOKEN_KEY),
   getToken: () => sessionStorage.getItem(TOKEN_KEY),
   isAuthenticated: () => !!sessionStorage.getItem(TOKEN_KEY),
+  getUserRole: (): "ADMIN" | "SUPPORT" | "USER" | null => {
+    return sessionStorage.getItem("user_role") as "ADMIN" | "SUPPORT" | "USER" | null;
+  }
+  
 };
