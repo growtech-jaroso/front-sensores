@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { authService } from "../services/authService";  // Asegúrate de importar authService
+import { authService } from "../services/authService";  
 
 const PrivateRoute = () => {
   const isAuthenticated = authService.isAuthenticated();  // Verifica si el token existe en sessionStorage
