@@ -3,7 +3,6 @@ import { Eye } from "lucide-react";
 import { IndicatorStatus } from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
 
-
 type PlantationTableProps = {
   plantations: Plantation[];
   onVerSensor: (plantacion: Plantation) => void;
@@ -82,17 +81,17 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
         ))}
       </div>
 
-      {/* Tabla */}
+      {/* Tabla Responsive */}
       <div className="overflow-x-auto rounded-xl border border-gray-200">
-        <table className="w-full text-sm text-gray-800 table-fixed">
+        <table className="min-w-full text-sm text-gray-800">
           <thead className="bg-gray-100 text-xs text-gray-600 font-semibold">
             <tr>
               <th className="py-3 px-4 text-left">Nombre</th>
               <th className="py-3 px-4 text-left">Estado</th>
-              <th className="py-3 px-4 text-left">País</th>
-              <th className="py-3 px-4 text-left">Provincia</th>
-              <th className="py-3 px-4 text-left">Ciudad</th>
-              <th className="py-3 px-4 text-left">Tipo</th>
+              <th className="py-3 px-4 text-left hidden sm:table-cell">País</th>
+              <th className="py-3 px-4 text-left hidden md:table-cell">Provincia</th>
+              <th className="py-3 px-4 text-left hidden lg:table-cell">Ciudad</th>
+              <th className="py-3 px-4 text-left hidden lg:table-cell">Tipo</th>
               <th className="py-3 px-4 text-center">Sensor</th>
             </tr>
           </thead>
@@ -111,10 +110,10 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
                       {statusLabels[p.status]}
                     </span>
                   </td>
-                  <td className="py-3 px-4">{p.country}</td>
-                  <td className="py-3 px-4">{p.province}</td>
-                  <td className="py-3 px-4">{p.city}</td>
-                  <td className="py-3 px-4">{p.type}</td>
+                  <td className="py-3 px-4 hidden sm:table-cell">{p.country}</td>
+                  <td className="py-3 px-4 hidden md:table-cell">{p.province}</td>
+                  <td className="py-3 px-4 hidden lg:table-cell">{p.city}</td>
+                  <td className="py-3 px-4 hidden lg:table-cell">{p.type}</td>
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => onVerSensor(p)}

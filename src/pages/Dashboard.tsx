@@ -15,12 +15,9 @@ type DashboardProps = {
 const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
 
-  // Función para contar plantaciones por estado con tipado correcto
-  const contarPorEstado = (estado: IndicatorStatus): number => {
-    return plantations.filter((p) => p.status === estado).length;
-  };
+  const contarPorEstado = (estado: IndicatorStatus): number =>
+    plantations.filter((p) => p.status === estado).length;
 
-  // Datos para las tarjetas resumen
   const resumenes = [
     { titulo: "Plantaciones Totales", valor: plantations.length, tipo: IndicatorStatus.TOTAL },
     { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE), tipo: IndicatorStatus.ACTIVE },
@@ -28,7 +25,6 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
     { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT), tipo: IndicatorStatus.ALERT },
   ];
 
-  // Acción de ver sensor
   const handleVerSensor = (plantacion: Plantation) => {
     console.log("Ver sensor de:", plantacion.name);
   };
@@ -39,7 +35,9 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
         <LoadingPlantations onDataReady={setPlantations} />
       ) : (
         <main
-          className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? "ml-64" : "ml-20"} p-6 space-y-6`} // Ajuste dinámico según estado del sidebar
+          className={`transition-all duration-300 ease-in-out ${
+            isSidebarOpen ? "ml-64" : "ml-20"
+          } p-4 sm:p-6 space-y-6`}
         >
           {/* Tarjetas resumen */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -53,9 +51,10 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
             ))}
           </div>
 
-          {/* Tabla + Gráfico */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+          {/* Tabla + Gráfico + Indicadores */}
+          <div className="flex flex-col gap-6 lg:grid lg:grid-cols-3">
+            {/* Tabla y gráfico ocupan 2 columnas en escritorio */}
+            <div className="space-y-6 lg:col-span-2">
               <PlantationTable plantations={plantations} onVerSensor={handleVerSensor} />
               <PlantationChart
                 data={plantations.map((plantation) => ({
@@ -65,8 +64,8 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
               />
             </div>
 
-            {/* Indicadores de progreso */}
-            <div className="flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:gap-4 lg:flex-col">
+            {/* Indicadores en columna o fila según el ancho */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
               <ProgressBar label="Humedad Promedia" value={68} type={IndicatorType.HUMIDITY} />
               <ProgressBar label="Temperatura Promedia" value={75} type={IndicatorType.TEMPERATURE} />
               <ProgressBar label="Luz Solar Promedia" value={90} type={IndicatorType.LIGHT} />
