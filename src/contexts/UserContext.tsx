@@ -1,4 +1,3 @@
-// contexts/UserContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
 import { authService } from "../services/authService";
 
@@ -30,11 +29,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => useContext(UserContext);

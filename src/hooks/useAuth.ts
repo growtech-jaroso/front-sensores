@@ -43,7 +43,7 @@ export function useAuth() {
   return {
     isAuthenticated: !!token && !expired,
     tokenExpired: expired,
-    role: user?.roles?.[0] || null,     // principal
+    role: user?.roles?.[0] || null,     
     roles: user?.roles || [],
     username: user?.name || "",
     email: user?.email || "",

@@ -1,9 +1,11 @@
 import { IndicatorStatus } from "../types/indicatorStatus";
+import { IndicatorType } from "../types/indicatorTypes";
 
 export interface Plantation {
   _id: string;
   name: string;
   status?: IndicatorStatus;
+  statusType?: IndicatorType;
   temperature?: number;
   humidity?: number;
   country: string;
