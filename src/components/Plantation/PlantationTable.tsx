@@ -28,61 +28,57 @@ const statusLabels: Record<IndicatorStatus, string> = {
   [IndicatorStatus.ALERT]: "Alerta",
 };
 
-const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => {
+export default function PlantationTable({ plantations, onVerSensor }: PlantationTableProps) {
   const [search, setSearch] = useState("");
-  const [filterStatus, setEstadoFiltro] = useState(IndicatorStatus.TOTAL);
-
-  const availableStates = [
-    IndicatorStatus.TOTAL,
-    IndicatorStatus.ACTIVE,
-    IndicatorStatus.INACTIVE,
-    IndicatorStatus.ALERT,
-  ];
+  const [filterStatus, setFilterStatus] = useState(IndicatorStatus.TOTAL);
 
   const filtered = plantations.filter((p) => {
     const matchesSearch = `${p.name} ${p.city} ${p.status} ${p.type} ${p.country}`
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchesEstado =
-      filterStatus === IndicatorStatus.TOTAL || p.status === filterStatus;
+    const matchesStatus = filterStatus === IndicatorStatus.TOTAL || p.status === filterStatus;
 
-    return matchesSearch && matchesEstado;
+    return matchesSearch && matchesStatus;
   });
 
+  const isLoading = plantations.length === 0;
+
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-      {/* Header */}
+    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+      {/* Header y búsqueda */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <h3 className="text-2xl font-semibold text-green-700">🌱 Plantaciones</h3>
+        <h2 className="text-2xl font-semibold text-green-700">🌱 Plantaciones</h2>
         <input
           type="text"
           placeholder="Buscar..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-green-400 w-full md:w-80"
+          className="w-full md:w-80 px-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </div>
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {availableStates.map((status) => (
-          <button
-            key={status}
-            onClick={() => setEstadoFiltro(status)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
-              filterStatus === status
-                ? "bg-green-600 text-white border-green-600 shadow-sm"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-            }`}
-          >
-            {statusLabels[status]}
-          </button>
-        ))}
+        {[IndicatorStatus.TOTAL, IndicatorStatus.ACTIVE, IndicatorStatus.INACTIVE, IndicatorStatus.ALERT].map(
+          (status) => (
+            <button
+              key={status}
+              onClick={() => setFilterStatus(status)}
+              className={`px-4 py-1.5 text-sm font-medium rounded-full border transition ${
+                filterStatus === status
+                  ? "bg-green-600 text-white border-green-600 shadow-sm"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+              }`}
+            >
+              {statusLabels[status]}
+            </button>
+          )
+        )}
       </div>
 
-      {/* Tabla Responsive */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200">
+      {/* Tabla */}
+      <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-gray-800">
           <thead className="bg-gray-100 text-xs text-gray-600 font-semibold">
             <tr>
@@ -96,18 +92,47 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
             </tr>
           </thead>
           <tbody>
-            {filtered.length > 0 ? (
+            {isLoading ? (
+              [...Array(5)].map((_, i) => (
+                <tr
+                  key={i}
+                  className="border-b border-gray-100 animate-fadeInSkeleton"
+                  style={{ animationDelay: `${i * 0.1}s`, animationFillMode: "both" }}
+                >
+                  {Array(7)
+                    .fill(null)
+                    .map((_, j) => (
+                      <td
+                        key={j}
+                        className={`py-3 px-4 ${
+                          j >= 2 && j <= 5
+                            ? j === 2
+                              ? "hidden sm:table-cell"
+                              : j === 3
+                              ? "hidden md:table-cell"
+                              : "hidden lg:table-cell"
+                            : ""
+                        }`}
+                      >
+                        <div className="h-4 bg-gray-200 rounded w-4/5" />
+                      </td>
+                    ))}
+                </tr>
+              ))
+            ) : filtered.length > 0 ? (
               filtered.map((p, idx) => (
                 <tr
-                  key={p.id}
+                  key={p._id}
                   className={`${
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } hover:bg-green-50 transition-colors border-b border-gray-100`}
+                  } border-b border-gray-100 hover:bg-green-50 transition-colors`}
                 >
                   <td className="py-3 px-4">{p.name}</td>
                   <td className="py-3 px-4">
-                    <span className={`px-2 py-1 text-xs rounded-full font-medium inline-block ${getBadgeStyle(p.status)}`}>
-                      {statusLabels[p.status]}
+                    <span
+                      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(p.status ?? IndicatorStatus.TOTAL)}`}
+                    >
+                      {statusLabels[p.status as IndicatorStatus] || "Desconocido"}
                     </span>
                   </td>
                   <td className="py-3 px-4 hidden sm:table-cell">{p.country}</td>
@@ -117,7 +142,7 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => onVerSensor(p)}
-                      className="inline-flex items-center cursor-pointer gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all shadow-sm"
+                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all"
                     >
                       <Eye size={14} className="opacity-80" />
                       Ver
@@ -128,15 +153,33 @@ const PlantationTable = ({ plantations, onVerSensor }: PlantationTableProps) => 
             ) : (
               <tr>
                 <td colSpan={7} className="text-center py-8 text-gray-400 bg-white">
-                  No se encontraron resultados.
+                  No se encontraron plantaciones.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Animación de entrada por fila */}
+      <style>
+        {`
+          @keyframes fadeInSkeleton {
+            0% {
+              opacity: 0;
+              transform: translateY(6px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .animate-fadeInSkeleton {
+            animation: fadeInSkeleton 0.3s ease-out forwards;
+          }
+        `}
+      </style>
     </div>
   );
-};
-
-export default PlantationTable;
+}

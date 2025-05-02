@@ -10,6 +10,7 @@ export interface Plantation {
   humidity?: number;
   country: string;
   province: string;
+  map_url?: string;
   city: string;
   type: string;
 

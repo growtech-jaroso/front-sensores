@@ -1,12 +1,8 @@
-import { Lock } from "lucide-react";
+import { Lock, KeyRound } from "lucide-react";
 import { useState } from "react";
 
 type PasswordUpdateSectionProps = {
-  onSubmit?: (data: {
-    current: string;
-    newPass: string;
-    confirm: string;
-  }) => void;
+  onSubmit?: (data: { current: string; newPass: string; confirm: string }) => void;
   title?: string;
 };
 
@@ -30,55 +26,54 @@ export default function PasswordUpdateSection({
 
   return (
     <section className="space-y-6">
-      <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+      <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
         <Lock className="w-5 h-5 text-green-600" />
         {title}
       </h2>
 
-      <div className="bg-white p-6 rounded-xl shadow-sm border space-y-4">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Contraseña actual */}
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Contraseña actual
-            </label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Contraseña actual</label>
             <input
               type="password"
               value={current}
               onChange={(e) => setCurrent(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
+          {/* Nueva contraseña */}
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Nueva contraseña
-            </label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Nueva contraseña</label>
             <input
               type="password"
               value={newPass}
               onChange={(e) => setNewPass(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
+          {/* Confirmar contraseña */}
           <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Confirmar contraseña
-            </label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Confirmar contraseña</label>
             <input
               type="password"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
-          <div className="flex justify-start">
+          {/* Botón */}
+          <div className="pt-3">
             <button
               type="submit"
-              className="px-5 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition cursor-pointer"
+              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium text-sm px-5 py-2 rounded-lg shadow-sm transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
             >
-              Actualizar contraseña
+              <KeyRound className="w-4 h-4" />
+              Guardar nueva contraseña
             </button>
           </div>
         </form>

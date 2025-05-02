@@ -6,7 +6,6 @@ import { useUser } from "../contexts/UserContext";
 // Componentes del perfil
 import ProfileLayout from "../components/User/Profile/ProfileLayout";
 import PersonalInfoSection from "../components/User/Profile/PersonalInfoSection";
-import EmailUpdateSection from "../components/User/Profile/EmailUpdateSection";
 import PasswordUpdateSection from "../components/User/Profile/PasswordUpdateSection";
 
 export default function ProfileTest() {
@@ -20,47 +19,38 @@ export default function ProfileTest() {
 
   return (
     <ProfileLayout>
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      {/* Cabecera */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-6 pb-4 border-b border-gray-200">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800 leading-tight">
-            Configuración del perfil
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Gestiona tu información personal, acceso y seguridad
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Configuración de perfil</h1>
+          <p className="text-sm text-gray-500 mt-1">Visualiza y edita tus datos personales y credenciales de acceso.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <button
-            onClick={handleLogout}
-            className="group flex items-center gap-2 text-sm text-red-600 px-3 py-1.5 rounded-md transition-all duration-200 hover:text-red-700 hover:bg-red-100 hover:shadow-inner cursor-pointer"
-          >
-            <LogOut className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
-            <span className="transition-colors duration-200">
-              Cerrar sesión
-            </span>
-          </button>
-        </div>
-      </header>
-
-      <div className="space-y-10 animate-fadeIn">
-        <PersonalInfoSection
-          name={user?.name || ""}
-          rol={user?.roles[0] || "USER"}
-        />
-        <EmailUpdateSection currentEmail={user?.email || ""} />
-        <PasswordUpdateSection />
+        <button
+          onClick={handleLogout}
+          className="group flex items-center gap-2 text-sm font-medium cursor-pointer text-red-600 px-4 py-2 rounded-lg border border-transparent hover:border-red-600 hover:bg-red-50 transition-all"
+        >
+          <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          Cerrar sesión
+        </button>
       </div>
 
+      {/* Secciones del perfil */}
+      <section className="space-y-12 animate-fadeInSlow">
+        <PersonalInfoSection name={user?.name || ""} rol={user?.roles?.[0] || "USER"} />
+        <PasswordUpdateSection />
+      </section>
+
+      {/* Animación suave de entrada */}
       <style>
         {`
-          @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(8px); }
+          @keyframes fadeInSlow {
+            0% { opacity: 0; transform: translateY(12px); }
             100% { opacity: 1; transform: translateY(0); }
           }
 
-          .animate-fadeIn {
-            animation: fadeIn 0.4s ease-out;
+          .animate-fadeInSlow {
+            animation: fadeInSlow 0.5s ease-out;
           }
         `}
       </style>

@@ -29,7 +29,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>; // Pasar a la carpeta providers
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => useContext(UserContext); // Pasar a la hooks

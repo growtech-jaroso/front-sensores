@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 
 // URL base para todas las peticiones
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 // Crear una instancia de axios
 const axiosClient: AxiosInstance = axios.create({

@@ -12,7 +12,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
   useEffect(() => {
     const mockData: Plantation[] = [
       {
-        id: "1",
+        _id: "1",
         name: "Finca Esperanza",
         status: IndicatorStatus.ACTIVE,
         temperature: 28,
@@ -24,7 +24,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       },
 
       {
-        id: "2",
+        _id: "2",
         name: "Granja Verde",
         status: IndicatorStatus.INACTIVE,
         temperature: 22,
@@ -33,10 +33,10 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
         province: "Madrid",
         city: "Madrid",
         type: "Verduras",
-        users: ["user2"]
+        users: ["user2"],
       },
       {
-        id: "3",
+        _id: "3",
         name: "Plantaciones de la Mancha",
         status: IndicatorStatus.ALERT,
         temperature: 30,
@@ -48,7 +48,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
       },
 
       {
-        id: "4",
+        _id: "4",
         name: "Finca Rural",
         status: IndicatorStatus.ACTIVE,
         temperature: 25,
@@ -59,7 +59,7 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
         type: "Lechugas",
       },
       {
-        id: "5",
+        _id: "5",
         name: "Huerto Urbano",
         status: IndicatorStatus.ACTIVE,
         temperature: 30,
@@ -86,26 +86,15 @@ const PlantationSimulator = ({ onDataReady }: SimulatorProps) => {
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v8H4z"
-          ></path>
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
         <p className="text-xl animate-pulse">Cargando plantaciones...</p>
       </div>
     );
   }
 
-  return null; 
+  return null;
 };
 
 export default PlantationSimulator;
