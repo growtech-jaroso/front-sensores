@@ -20,11 +20,11 @@ interface Params {
 }
 
 const getPlantations = async ({ page = 1, limit = 10 }: Params): Promise<PlantationResponse> => {
-  const response = await axiosClient.get<PlantationResponse>(`/plantations`, {
+  const response = await axiosClient.get("/plantations", {
     params: { page, limit },
   });
 
-  return response.data;
+  return response.data; 
 };
 
 export default {

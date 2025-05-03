@@ -1,9 +1,9 @@
-import { useState } from "react";
-import LoadingPlantations from "../components/Plantation/LoadingPlantations";
+import { useEffect, useState } from "react";
+import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
-import type { Plantation } from "../interfaces/Plantation";
 import { IndicatorStatus } from "../types/indicatorStatus";
+import type { Plantation } from "../interfaces/Plantation";
 
 type DashboardProps = {
   isSidebarOpen: boolean;
@@ -11,54 +11,83 @@ type DashboardProps = {
 
 const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const normalizePlantations = (data: Plantation[]): Plantation[] =>
+    data.map((p) => ({
+      ...p,
+      status: p.status ?? IndicatorStatus.ACTIVE,
+    }));
+
+  useEffect(() => {
+    const fetchPlantations = async () => {
+      setLoading(true);
+      try {
+        const response = await plantationService.getPlantations({
+          page: currentPage,
+          limit: 10,
+        });
+
+        const normalized = normalizePlantations(response.data);
+        setPlantations(normalized);
+        setTotalPages(response.meta.total_pages);
+        setHasFetched(true);
+      } catch (error) {
+        console.error("Error al cargar plantaciones", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlantations();
+  }, [currentPage]);
 
   const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
-    { titulo: "Plantaciones Totales", valor: plantations.length, tipo: IndicatorStatus.TOTAL },
-    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE), tipo: IndicatorStatus.ACTIVE },
-    { titulo: "Inactivas", valor: contarPorEstado(IndicatorStatus.INACTIVE), tipo: IndicatorStatus.INACTIVE },
-    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT), tipo: IndicatorStatus.ALERT },
+    { titulo: "Totales", valor: plantations.length.toString(), type: IndicatorStatus.TOTAL },
+    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE).toString(), type: IndicatorStatus.ACTIVE },
+    {
+      titulo: "Inactivas",
+      valor: contarPorEstado(IndicatorStatus.INACTIVE).toString(),
+      type: IndicatorStatus.INACTIVE,
+    },
+    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT).toString(), type: IndicatorStatus.ALERT },
   ];
 
   const handleVerSensor = (plantacion: Plantation) => {
     console.log("Ver sensor de:", plantacion.name);
   };
 
-  if (!plantations.length) {
-    return <LoadingPlantations onDataReady={setPlantations} />;
-  }
-
   return (
     <main
       className={`transition-all duration-300 ease-in-out ${
         isSidebarOpen ? "ml-64" : "ml-20"
-      } flex flex-col h-full max-h-[calc(100vh-100px)]`} // Ajusta según altura del header
+      } flex flex-col h-full p-4 sm:p-6`}
     >
-      <div className="px-4 sm:px-6 py-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-4">
-          {resumenes.map((item) => (
-            <SummaryCard key={item.titulo} title={item.titulo} value={item.valor.toString()} type={item.tipo} />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+        {resumenes.map((item) => (
+          <SummaryCard key={item.titulo} title={item.titulo} value={item.valor} type={item.type} />
+        ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-6">
-        <PlantationTable plantations={plantations} onVerSensor={handleVerSensor} />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-auto">
+          <PlantationTable
+            plantations={plantations}
+            onVerSensor={handleVerSensor}
+            loading={loading && !hasFetched}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
     </main>
   );
 };
 
 export default Dashboard;
-
-/* Indicadores en columna o fila según el ancho
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              <ProgressBar label="Humedad Promedia" value={68} type={IndicatorType.HUMIDITY} />
-              <ProgressBar label="Temperatura Promedia" value={75} type={IndicatorType.TEMPERATURE} />
-              <ProgressBar label="Luz Solar Promedia" value={90} type={IndicatorType.LIGHT} />
-              <ProgressBar label="Presión Promedia" value={80} type={IndicatorType.PRESSURE} />
-              <ProgressBar label="Velocidad Viento Promedia" value={85} type={IndicatorType.WINDSPEED} />
-              <ProgressBar label="CO2 Promedio" value={70} type={IndicatorType.CO2} />
-              <ProgressBar label="Luminosidad Promedio" value={80} type={IndicatorType.LUMINOSITY} />
-            </div> */

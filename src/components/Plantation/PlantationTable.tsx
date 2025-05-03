@@ -6,6 +6,10 @@ import type { Plantation } from "../../interfaces/Plantation";
 type PlantationTableProps = {
   plantations: Plantation[];
   onVerSensor: (plantacion: Plantation) => void;
+  currentPage: number;
+  totalPages: number;
+  loading: boolean;
+  onPageChange: (page: number) => void;
 };
 
 const getBadgeStyle = (status: IndicatorStatus) => {
@@ -28,7 +32,14 @@ const statusLabels: Record<IndicatorStatus, string> = {
   [IndicatorStatus.ALERT]: "Alerta",
 };
 
-export default function PlantationTable({ plantations, onVerSensor }: PlantationTableProps) {
+export default function PlantationTable({
+  plantations,
+  onVerSensor,
+  currentPage,
+  totalPages,
+  loading,
+  onPageChange,
+}: PlantationTableProps) {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState(IndicatorStatus.TOTAL);
 
@@ -42,7 +53,13 @@ export default function PlantationTable({ plantations, onVerSensor }: Plantation
     return matchesSearch && matchesStatus;
   });
 
-  const isLoading = plantations.length === 0;
+  const handlePrevious = () => {
+    if (!loading && currentPage > 1) onPageChange(currentPage - 1);
+  };
+
+  const handleNext = () => {
+    if (!loading && currentPage < totalPages) onPageChange(currentPage + 1);
+  };
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
@@ -92,37 +109,10 @@ export default function PlantationTable({ plantations, onVerSensor }: Plantation
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
-              [...Array(5)].map((_, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-gray-100 animate-fadeInSkeleton"
-                  style={{ animationDelay: `${i * 0.1}s`, animationFillMode: "both" }}
-                >
-                  {Array(7)
-                    .fill(null)
-                    .map((_, j) => (
-                      <td
-                        key={j}
-                        className={`py-3 px-4 ${
-                          j >= 2 && j <= 5
-                            ? j === 2
-                              ? "hidden sm:table-cell"
-                              : j === 3
-                              ? "hidden md:table-cell"
-                              : "hidden lg:table-cell"
-                            : ""
-                        }`}
-                      >
-                        <div className="h-4 bg-gray-200 rounded w-4/5" />
-                      </td>
-                    ))}
-                </tr>
-              ))
-            ) : filtered.length > 0 ? (
+            {filtered.length > 0 ? (
               filtered.map((p, idx) => (
                 <tr
-                  key={p._id}
+                  key={p.id}
                   className={`${
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   } border-b border-gray-100 hover:bg-green-50 transition-colors`}
@@ -130,7 +120,9 @@ export default function PlantationTable({ plantations, onVerSensor }: Plantation
                   <td className="py-3 px-4">{p.name}</td>
                   <td className="py-3 px-4">
                     <span
-                      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(p.status ?? IndicatorStatus.TOTAL)}`}
+                      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(
+                        p.status ?? IndicatorStatus.TOTAL
+                      )}`}
                     >
                       {statusLabels[p.status as IndicatorStatus] || "Desconocido"}
                     </span>
@@ -161,25 +153,36 @@ export default function PlantationTable({ plantations, onVerSensor }: Plantation
         </table>
       </div>
 
-      {/* Animación de entrada por fila */}
-      <style>
-        {`
-          @keyframes fadeInSkeleton {
-            0% {
-              opacity: 0;
-              transform: translateY(6px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+      {/* Paginador incluido */}
+      <div className="flex justify-center items-center mt-6 space-x-4 text-sm">
+        <button
+          onClick={handlePrevious}
+          disabled={currentPage === 1 || loading}
+          className={`px-4 py-2 rounded-lg border transition ${
+            currentPage === 1 || loading
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+          }`}
+        >
+          Anterior
+        </button>
 
-          .animate-fadeInSkeleton {
-            animation: fadeInSkeleton 0.3s ease-out forwards;
-          }
-        `}
-      </style>
+        <span className="text-gray-700 font-medium">
+          Página {currentPage} de {totalPages}
+        </span>
+
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages || loading}
+          className={`px-4 py-2 rounded-lg border transition ${
+            currentPage === totalPages || loading
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+          }`}
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
   );
 }

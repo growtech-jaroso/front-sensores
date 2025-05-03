@@ -2,7 +2,7 @@ import { IndicatorStatus } from "../types/indicatorStatus";
 import { IndicatorType } from "../types/indicatorTypes";
 
 export interface Plantation {
-  _id: string;
+  id: string;
   name: string;
   status?: IndicatorStatus;
   statusType?: IndicatorType;
