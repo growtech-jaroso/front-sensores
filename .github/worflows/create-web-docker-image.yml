@@ -3,6 +3,8 @@ name: build sensors react web image
 on:
   push:
     branches: [main]
+    tags:
+      - '*'
 
 jobs:
   build-sensors-web-image:
