@@ -1,24 +1,33 @@
 import { IndicatorStatus } from "../types/indicatorStatus";
 import { IndicatorType } from "../types/indicatorTypes";
 
+export interface Coordinate {
+  lat: number;
+  lng: number;
+}
+
 export interface Plantation {
-  id: string;
+  id: string; 
   name: string;
+  country: string;
+  province: string;
+  city: string;
+  type: string;
+
+  owner_id: string; 
+  managers: string[]; // Lista de IDs de usuarios que gestionan la plantación
+
+  coordinates?: Coordinate[]; // Lista de coordenadas 
+  map_url?: string;
+
+  created_at?: string;
+  updated_at?: string;
+
+  // Campos adicionales del frontend 
   status?: IndicatorStatus;
   statusType?: IndicatorType;
   temperature?: number;
   humidity?: number;
-  country: string;
-  province: string;
-  map_url?: string;
-  city: string;
-  type: string;
 
-  users?: string[];
-  owner_id?: string;
-  coordinates?: { lat: number; lng: number } | null;
-  created_at?: string;
-  updated_at?: string;
-
-  //readings?: SensorReading[];
+  // readings?: SensorReading[]; //  datos de sensores
 }

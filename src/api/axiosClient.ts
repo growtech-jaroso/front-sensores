@@ -1,9 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 
-// URL base para todas las peticiones
 const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
-// Crear una instancia de axios
 const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -11,10 +9,10 @@ const axiosClient: AxiosInstance = axios.create({
   },
 });
 
-// Interceptor de solicitudes (antes de enviar)
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('auth_token');
+    const userData = sessionStorage.getItem("user_data");
+    const token = userData ? JSON.parse(userData).token : null;
     if (token) {
       config.headers!['Authorization'] = `Bearer ${token}`;
     }
@@ -25,19 +23,17 @@ axiosClient.interceptors.request.use(
   }
 );
 
-// Interceptor de respuestas (después de recibir)
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     const status = error.response?.status;
     const requestUrl = error.config?.url || "";
-
     const isLoginRequest = requestUrl.includes("/auth/login");
 
     if (status === 401 && !isLoginRequest) {
       console.warn("Token inválido o expirado. Redirigiendo al login...");
-      sessionStorage.removeItem("auth_token");
-      window.location.href = "/login"; 
+      sessionStorage.removeItem("user_data");
+      window.location.href = "/login";
     }
 
     return Promise.reject(error);

@@ -24,7 +24,14 @@ const getPlantations = async ({ page = 1, limit = 10 }: Params): Promise<Plantat
     params: { page, limit },
   });
 
-  return response.data; 
+  if (!response.data || !Array.isArray(response.data.data)) {
+    throw new Error("Formato de respuesta inválido desde /plantations");
+  }
+
+  return {
+    data: response.data.data,
+    meta: response.data.meta,
+  };
 };
 
 export default {
