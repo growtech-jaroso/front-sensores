@@ -23,6 +23,7 @@ const getPlantations = async ({ page = 1, limit = 10 }: Params): Promise<Plantat
   const response = await axiosClient.get("/plantations", {
     params: { page, limit },
   });
+  
 
   if (!response.data || !Array.isArray(response.data.data)) {
     throw new Error("Formato de respuesta inválido desde /plantations");

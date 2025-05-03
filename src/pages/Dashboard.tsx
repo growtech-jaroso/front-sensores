@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
@@ -36,7 +37,16 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
         setTotalPages(response.meta.total_pages);
         setHasFetched(true);
       } catch (error) {
-        console.error("Error al cargar plantaciones", error);
+        if (axios.isAxiosError(error)) {
+          console.error("Axios Error al cargar plantaciones:", {
+            message: error.message,
+            url: error.config?.url,
+            status: error.response?.status,
+            data: error.response?.data,
+          });
+        } else {
+          console.error("Error inesperado al cargar plantaciones:", error);
+        }
       } finally {
         setLoading(false);
       }
