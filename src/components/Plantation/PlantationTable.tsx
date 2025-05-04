@@ -63,7 +63,7 @@ export default function PlantationTable({
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-      {/* Header y búsqueda */}
+      {/* Encabezado y campo de búsqueda */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <h2 className="text-2xl font-semibold text-green-700">🌱 Plantaciones</h2>
         <input
@@ -75,7 +75,7 @@ export default function PlantationTable({
         />
       </div>
 
-      {/* Filtros */}
+      {/* Filtros por estado */}
       <div className="flex flex-wrap gap-2 mb-6">
         {[IndicatorStatus.TOTAL, IndicatorStatus.ACTIVE, IndicatorStatus.INACTIVE, IndicatorStatus.ALERT].map(
           (status) => (
@@ -94,7 +94,7 @@ export default function PlantationTable({
         )}
       </div>
 
-      {/* Tabla */}
+      {/* Tabla de datos */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-gray-800">
           <thead className="bg-gray-100 text-xs text-gray-600 font-semibold">
@@ -153,36 +153,38 @@ export default function PlantationTable({
         </table>
       </div>
 
-      {/* Paginador incluido */}
-      <div className="flex justify-center items-center mt-6 space-x-4 text-sm">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1 || loading}
-          className={`px-4 py-2 rounded-lg border transition ${
-            currentPage === 1 || loading
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-          }`}
-        >
-          Anterior
-        </button>
+      {/* Paginador condicional */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-6 space-x-4 text-sm">
+          <button
+            onClick={handlePrevious}
+            disabled={currentPage === 1 || loading}
+            className={`px-4 py-2 rounded-lg border transition ${
+              currentPage === 1 || loading
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+            }`}
+          >
+            Anterior
+          </button>
 
-        <span className="text-gray-700 font-medium">
-          Página {currentPage} de {totalPages}
-        </span>
+          <span className="text-gray-700 font-medium">
+            Página {currentPage} de {totalPages}
+          </span>
 
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages || loading}
-          className={`px-4 py-2 rounded-lg border transition ${
-            currentPage === totalPages || loading
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
-          }`}
-        >
-          Siguiente
-        </button>
-      </div>
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages || loading}
+            className={`px-4 py-2 rounded-lg border transition ${
+              currentPage === totalPages || loading
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+            }`}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 }
