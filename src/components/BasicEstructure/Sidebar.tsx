@@ -1,8 +1,8 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import Footer from "./Footer";
 import { sidebarLinks } from "../Links/LinksSidebar";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -52,9 +52,9 @@ export default function Sidebar({ isOpen, toggle }: SidebarProps) {
           }`}
         >
           {sidebarLinks.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
+              to={item.href}
               className={`relative group flex w-full items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 transition-all ${
                 isOpen ? "justify-start" : "justify-center"
               }`}
@@ -70,7 +70,7 @@ export default function Sidebar({ isOpen, toggle }: SidebarProps) {
                   {item.label}
                 </span>
               )}
-            </a>
+            </Link>
           ))}
         </nav>
 
