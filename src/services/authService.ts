@@ -6,6 +6,7 @@ const USER_DATA_KEY = "user_data";
 
 const loginSchema = z.object({
   email: z.string().email("Correo no válido"),
+  password: z.string().min(1, "La contraseña es obligatoria"),
 });
 
 type UserData = {
@@ -18,18 +19,19 @@ type UserData = {
 export const authService = {
   login: async (email: string, password: string): Promise<void> => {
     try {
-      loginSchema.parse({ email });
+      loginSchema.parse({ email, password });
 
       const response = await axiosClient.post("/auth/login", { email, password });
-      const { token, roles, username, email: userEmail } = response.data.data;
 
-      if (!token || !roles) {
-        throw new Error("Faltan datos en la respuesta.");
+      const { token, role, username, email: userEmail } = response.data.data;
+
+      if (!token || !role) {
+        throw new Error("Faltan datos en la respuesta del servidor.");
       }
 
       const userData: UserData = {
         token,
-        roles,
+        roles: [role], // Asegura formato como array
         name: username,
         email: userEmail,
       };
@@ -37,7 +39,7 @@ export const authService = {
       sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        throw new Error("Hubo un problema al iniciar sesión. Revisa tus credenciales.");
+        throw new Error("Hubo un problema al iniciar sesión. Verifica tus credenciales.");
       } else if (error instanceof Error) {
         throw new Error(error.message);
       } else {
@@ -48,6 +50,7 @@ export const authService = {
 
   logout: () => {
     sessionStorage.removeItem(USER_DATA_KEY);
+    window.location.href = "/login";  // Redirigir al login después de cerrar sesión
   },
 
   getUserData: (): UserData | null => {
@@ -59,6 +62,11 @@ export const authService = {
     }
   },
 
-  getToken: () => authService.getUserData()?.token || null,
-  isAuthenticated: () => !!authService.getToken(),
+  getToken: () => {
+    return authService.getUserData()?.token || null;
+  },
+
+  isAuthenticated: () => {
+    return !!authService.getToken();
+  },
 };

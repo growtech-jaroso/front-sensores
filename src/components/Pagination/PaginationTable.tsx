@@ -6,44 +6,81 @@ type PaginationProps = {
 };
 
 export default function PaginationTable({ currentPage, totalPages, loading, onPageChange }: PaginationProps) {
-  const handlePrevious = () => {
-    if (!loading && currentPage > 1) onPageChange(currentPage - 1);
+  const getPageNumbers = () => {
+    const delta = 2;
+    const pages: number[] = [];
+
+    const start = Math.max(2, currentPage - delta);
+    const end = Math.min(totalPages - 1, currentPage + delta);
+
+    pages.push(1); // always show first
+
+    if (start > 2) pages.push(-1); // ellipsis
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < totalPages - 1) pages.push(-1); // ellipsis
+
+    if (totalPages > 1) pages.push(totalPages); // always show last
+
+    return pages;
   };
 
-  const handleNext = () => {
-    if (!loading && currentPage < totalPages) onPageChange(currentPage + 1);
-  };
+  if (totalPages <= 1) return null;
 
-  if (totalPages <= 1) return null; // Solo mostrar si hay más de una página
+  const handleClick = (page: number) => {
+    if (!loading && page !== currentPage) {
+      onPageChange(page);
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center mt-6 space-x-4 text-sm">
+    <div className="flex justify-center items-center mt-6 gap-2 text-sm flex-wrap">
       <button
-        onClick={handlePrevious}
+        onClick={() => handleClick(currentPage - 1)}
         disabled={currentPage === 1 || loading}
-        className={`px-4 py-2 rounded-lg border transition ${
+        className={`px-3 py-1 rounded border ${
           currentPage === 1 || loading
             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+            : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
         }`}
       >
-        Anterior
+        «
       </button>
 
-      <span className="text-gray-700 font-medium">
-        Página {currentPage} de {totalPages}
-      </span>
+      {getPageNumbers().map((page, idx) =>
+        page === -1 ? (
+          <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">
+            ...
+          </span>
+        ) : (
+          <button
+            key={page}
+            onClick={() => handleClick(page)}
+            disabled={loading}
+            className={`px-3 py-1 rounded border ${
+              currentPage === page
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+            }`}
+          >
+            {page}
+          </button>
+        )
+      )}
 
       <button
-        onClick={handleNext}
+        onClick={() => handleClick(currentPage + 1)}
         disabled={currentPage === totalPages || loading}
-        className={`px-4 py-2 rounded-lg border transition ${
+        className={`px-3 py-1 rounded border ${
           currentPage === totalPages || loading
             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700 border-gray-300"
+            : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
         }`}
       >
-        Siguiente
+        »
       </button>
     </div>
   );

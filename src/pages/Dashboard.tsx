@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
-import axios from "axios";
 import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
+import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
 
@@ -14,7 +15,9 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [firstLoadDone, setFirstLoadDone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [meta, setMeta] = useState<{ total_items: number }>({ total_items: 0 });
   const [hasFetched, setHasFetched] = useState(false);
 
   const normalizePlantations = (data: Plantation[]): Plantation[] =>
@@ -26,27 +29,24 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   useEffect(() => {
     const fetchPlantations = async () => {
       setLoading(true);
+
+      const delay = firstLoadDone ? Promise.resolve() : new Promise((res) => setTimeout(res, 1200));
+
       try {
-        const response = await plantationService.getPlantations({
-          page: currentPage,
-          limit: 10,
-        });
+        const [response] = await Promise.all([
+          plantationService.getPlantations({ page: currentPage, limit: 10 }),
+          delay,
+        ]);
 
         const normalized = normalizePlantations(response.data);
         setPlantations(normalized);
         setTotalPages(response.meta.total_pages);
+        setMeta(response.meta);
         setHasFetched(true);
+
+        if (!firstLoadDone) setFirstLoadDone(true);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios Error al cargar plantaciones:", {
-            message: error.message,
-            url: error.config?.url,
-            status: error.response?.status,
-            data: error.response?.data,
-          });
-        } else {
-          console.error("Error inesperado al cargar plantaciones:", error);
-        }
+        console.error("Error al cargar plantaciones:", error);
       } finally {
         setLoading(false);
       }
@@ -58,7 +58,7 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
-    { titulo: "Totales", valor: plantations.length.toString(), type: IndicatorStatus.TOTAL },
+    { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
     { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE).toString(), type: IndicatorStatus.ACTIVE },
     {
       titulo: "Inactivas",
@@ -74,7 +74,7 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
 
   return (
     <main
-      className={`transition-all duration-300 ease-in-out ${
+      className={`transition-all duration-300 ease-in-out animate-fadeInSlow ${
         isSidebarOpen ? "ml-64" : "ml-20"
       } flex flex-col h-full p-4 sm:p-6`}
     >
@@ -85,16 +85,34 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-auto">
-          <PlantationTable
-            plantations={plantations}
-            onVerSensor={handleVerSensor}
-            loading={loading && !hasFetched}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+        {loading && !hasFetched ? (
+          <div className="flex-1 flex justify-center items-center">
+            <LoadingPlantations />
+          </div>
+        ) : (
+          <div className="flex-1 overflow-auto">
+            <PlantationTable
+              plantations={plantations}
+              onVerSensor={handleVerSensor}
+              loading={loading}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        )}
+        <style>
+          {`
+          @keyframes fadeInSlow {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+
+          .animate-fadeInSlow {
+            animation: fadeInSlow 0.5s ease-out;
+          }
+        `}
+        </style>
       </div>
     </main>
   );
