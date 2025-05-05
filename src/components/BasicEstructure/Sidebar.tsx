@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Footer from "./Footer";
 import { sidebarLinks } from "../Links/LinksSidebar";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -33,7 +34,7 @@ export default function Sidebar({ isOpen, toggle }: SidebarProps) {
         aria-label="Sidebar"
       >
         {/* Logo + Título */}
-        <a href="/dashboard" className="flex flex-col items-center justify-center mt-18 mb-4 px-4 group relative">
+        <Link to="/dashboard" className="flex flex-col items-center justify-center mt-18 mb-4 px-4 group relative">
           <div className="relative flex items-center justify-center">
             <span className="text-2xl text-green-400">🌿</span>
           </div>
@@ -42,7 +43,7 @@ export default function Sidebar({ isOpen, toggle }: SidebarProps) {
               GrowPanel
             </h2>
           )}
-        </a>
+        </Link>
 
         {/* Navegación */}
         <nav
