@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useEffect, useState } from "react";
 import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
@@ -53,7 +53,7 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
     };
 
     fetchPlantations();
-  }, [currentPage]);
+  }, [currentPage, firstLoadDone]);
 
   const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
