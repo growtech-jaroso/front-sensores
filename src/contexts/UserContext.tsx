@@ -21,15 +21,14 @@ const UserContext = createContext<UserContextType>({
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // Leer desde sessionStorage al cargar
   useEffect(() => {
-    const data = authService.getUserData();
-    if (data) {
-      setUser(data);
+    const stored = authService.getUserData();
+    if (stored) {
+      setUser(stored);
     }
   }, []);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>; // Pasar a la carpeta providers
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
 
-export const useUser = () => useContext(UserContext); // Pasar a la hooks
+export const useUser = () => useContext(UserContext);

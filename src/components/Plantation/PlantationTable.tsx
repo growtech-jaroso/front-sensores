@@ -105,6 +105,7 @@ export default function PlantationTable({
               <th className="py-3 px-4 text-left hidden md:table-cell">Provincia</th>
               <th className="py-3 px-4 text-left hidden lg:table-cell">Ciudad</th>
               <th className="py-3 px-4 text-left hidden lg:table-cell">Tipo</th>
+              <th className="py-3 px-4 text-center hidden lg:table-cell">Mapa</th>
               <th className="py-3 px-4 text-center">Sensor</th>
             </tr>
           </thead>
@@ -131,20 +132,26 @@ export default function PlantationTable({
                   <td className="py-3 px-4 hidden md:table-cell">{p.province}</td>
                   <td className="py-3 px-4 hidden lg:table-cell">{p.city}</td>
                   <td className="py-3 px-4 hidden lg:table-cell">{p.type}</td>
+                  <td className="py-3 px-4 text-center hidden lg:table-cell">
+                    <button className="inline-flex gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all cursor-pointer">
+                      <Eye size={18} className="opacity-80" />
+                      Ver Mapa
+                    </button>
+                  </td>
                   <td className="py-3 px-4 text-center">
                     <button
                       onClick={() => onVerSensor(p)}
-                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all"
+                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white bg-green-600 hover:bg-green-700 transition-all cursor-pointer"
                     >
-                      <Eye size={14} className="opacity-80" />
-                      Ver
+                      <Eye size={18} className="opacity-80" />
+                      Ver Sensor
                     </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={7} className="text-center py-8 text-gray-400 bg-white">
+                <td colSpan={8} className="text-center py-8 text-gray-400 bg-white">
                   No se encontraron plantaciones.
                 </td>
               </tr>

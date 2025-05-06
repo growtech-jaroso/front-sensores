@@ -1,4 +1,3 @@
-// Header.tsx
 import { Bell, LineChart } from "lucide-react";
 import UserMenu from "../User/UserMenu";
 

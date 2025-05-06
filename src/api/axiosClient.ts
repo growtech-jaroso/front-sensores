@@ -1,28 +1,30 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
+// Interceptor de solicitudes: añade el token si existe
 axiosClient.interceptors.request.use(
   (config) => {
     const userData = sessionStorage.getItem("user_data");
     const token = userData ? JSON.parse(userData).token : null;
+
     if (token) {
-      config.headers!['Authorization'] = `Bearer ${token}`;
+      config.headers!["Authorization"] = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
+// Interceptor de respuestas: maneja errores como token expirado
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {

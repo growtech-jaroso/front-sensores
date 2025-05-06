@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../components/BasicEstructure/Sidebar";
 import Header from "../components/BasicEstructure/Header";
@@ -9,12 +9,14 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const hideHeader = location.pathname === "/perfil";
 
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname]);
+  // Leer el estado inicial desde sessionStorage
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const stored = sessionStorage.getItem("sidebar_open");
+    return stored === "true"; // true si estaba abierto
+  });
+
+  const hideHeader = location.pathname === "/perfil";
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -22,7 +24,6 @@ export default function Layout({ children }: LayoutProps) {
 
       <div className={`flex flex-col flex-1 transition-all duration-500 ease-out ${sidebarOpen ? "ml-64" : "ml-20"}`}>
         {!hideHeader && <Header />}
-
         <main className="flex-1 overflow-y-auto bg-gray-100 p-4 sm:p-6">{children}</main>
       </div>
     </div>

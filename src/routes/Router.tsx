@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
-import Perfil from "../pages/Profile";
+import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import Layout from "../layout/Layout";
 import PrivateRoute from "./ProtectedRoutes";
@@ -39,7 +39,7 @@ export default function AppRouter() {
           path="/perfil"
           element={
             <Layout>
-              <Perfil />
+              <Profile />
             </Layout>
           }
         />
