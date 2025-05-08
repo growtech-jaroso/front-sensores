@@ -5,10 +5,12 @@ import Login from "../pages/Login";
 import Layout from "../layout/Layout";
 import PrivateRoute from "./ProtectedRoutes";
 import PublicOnlyRoute from "./PublicOnlyRoute";
+import AdminRouter from "./AdminRouter";
 
 export default function AppRouter() {
   return (
     <Routes>
+      {/* Rutas públicas */}
       <Route
         path="/login"
         element={
@@ -26,6 +28,7 @@ export default function AppRouter() {
         }
       />
 
+      {/* Rutas protegidas */}
       <Route element={<PrivateRoute />}>
         <Route
           path="/dashboard"
@@ -43,6 +46,8 @@ export default function AppRouter() {
             </Layout>
           }
         />
+        {/* Rutas de administrador */}
+        <Route path="/admin/*" element={<AdminRouter />} />
       </Route>
     </Routes>
   );

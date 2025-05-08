@@ -1,12 +1,16 @@
 import { Bell, LineChart } from "lucide-react";
 import UserMenu from "../User/UserMenu";
 
-export default function Header() {
+type HeaderProps = {
+  titulo?: string;
+};
+
+export default function Header({ titulo }: HeaderProps) {
   return (
     <header className="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-10">
       <div className="flex items-center gap-3 text-gray-800">
         <LineChart className="w-6 h-6 text-green-600" />
-        <h1 className="text-xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-xl font-semibold tracking-tight">{titulo}</h1>
       </div>
 
       <div className="flex items-center gap-4">

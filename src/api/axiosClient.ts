@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance,AxiosError } from "axios";
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -26,13 +26,15 @@ axiosClient.interceptors.request.use(
 
 // Interceptor de respuestas: maneja errores como token expirado
 axiosClient.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  (response) => response,
+  (error) => {
     const status = error.response?.status;
     const requestUrl = error.config?.url || "";
-    const isLoginRequest = requestUrl.includes("/auth/login");
 
-    if (status === 401 && !isLoginRequest) {
+    const isLoginRequest = requestUrl.includes("/auth/login");
+    const isUserCreation = requestUrl.includes("/users");
+
+    if (status === 401 && !isLoginRequest && !isUserCreation) {
       console.warn("Token inválido o expirado. Redirigiendo al login...");
       sessionStorage.removeItem("user_data");
       window.location.href = "/login";
