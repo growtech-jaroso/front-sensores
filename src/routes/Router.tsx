@@ -6,6 +6,7 @@ import Layout from "../layout/Layout";
 import PrivateRoute from "./ProtectedRoutes";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import AdminRouter from "./AdminRouter";
+import NotFound from "../pages/NotFound";
 
 export default function AppRouter() {
   return (
@@ -49,6 +50,9 @@ export default function AppRouter() {
         {/* Rutas de administrador */}
         <Route path="/admin/*" element={<AdminRouter />} />
       </Route>
+
+      {/* Ruta 404 - En caso que no exista ninguna de las anteriores */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
