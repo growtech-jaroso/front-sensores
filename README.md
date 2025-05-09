@@ -6,6 +6,7 @@ Este es el repositorio del **frontend** del proyecto **Growtech Jaroso**. Aquí 
 
 - Tener instalado **[Bun](https://bun.sh/docs/installation)**.
 - Tener acceso al archivo `.env` que contiene las variables de entorno necesarias para ejecutar el proyecto.
+- Tener acceso a Docker Hub con las credenciales necesarias.
 
 ---
 
