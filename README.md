@@ -14,7 +14,7 @@ Este es el repositorio del **frontend** del proyecto **Growtech Jaroso**. Aquí 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/front-sensores
+git clone https://github.com/growtech-jaroso/front-sensores.git
 cd front-sensores
 ```
 
