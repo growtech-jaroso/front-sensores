@@ -14,7 +14,7 @@ Este es el repositorio del **frontend** del proyecto **Growtech Jaroso**. Aquí 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/growtech-jaroso-frontend.git
+git clone https://github.com/tu-usuario/front-sensores
 cd growtech-jaroso-frontend
 ```
 
@@ -38,7 +38,7 @@ bun install
 ```bash
 bun dev
 ```
-- Esto iniciará el servidor de desarrollo en ``http://localhost:5173´´
+- Esto iniciará el servidor de desarrollo en http://localhost:5173
 
 
 
