@@ -15,7 +15,7 @@ Este es el repositorio del **frontend** del proyecto **Growtech Jaroso**. Aquí 
 
 ```bash
 git clone https://github.com/tu-usuario/front-sensores
-cd growtech-jaroso-frontend
+cd front-sensores
 ```
 
 ### 2. Añadir el archivo .env
