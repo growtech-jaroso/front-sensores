@@ -33,8 +33,19 @@ git checkout develop
 ```bash
 bun install
 ```
+### 5. Conectar con Docker Hub para instalar la imagen actual
+```bash
+docker login docker.project.comparitiko.dev
+```
+- Poner las credenciales que se te han otorgado
 
-### 5. Ejecutar el proyecto en desarrollo
+### 6. Poner en marcha los contenedores
+```bash
+docker compose up -d
+```
+- Instalará todo lo necesario para que la base de datos y el backend funcionen
+
+### 7. Ejecutar el proyecto en desarrollo
 ```bash
 bun dev
 ```
