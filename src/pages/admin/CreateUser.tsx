@@ -75,7 +75,7 @@ export default function CreateUser() {
 
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 flex items-center text-sm text-gray-600 hover:text-green-600 transition"
+        className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer hover:text-green-600 transition"
       >
         <ArrowLeft className="w-4 h-4 mr-1" />
         Volver
@@ -147,6 +147,7 @@ export default function CreateUser() {
           >
             <option value="USER">Usuario</option>
             <option value="SUPPORT">Soporte</option>
+            <option value="ADMIN">Admin</option>
           </select>
         </div>
 

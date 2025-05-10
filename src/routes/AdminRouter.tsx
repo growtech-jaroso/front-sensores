@@ -3,6 +3,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import Layout from "../layout/Layout";
 import CreateUser from "../pages/admin/CreateUser";
 import AdminDashboard from "../pages/admin";
+import UserTable from "../pages/admin/UserTable";
 
 export default function AdminRouter() {
   return (
@@ -22,6 +23,15 @@ export default function AdminRouter() {
           element={
             <Layout>
               <h2 className="text-xl">Configuración Admin</h2>
+            </Layout>
+          }
+        />
+
+        <Route
+          path="usuarios"
+          element={
+            <Layout>
+              <UserTable />
             </Layout>
           }
         />
