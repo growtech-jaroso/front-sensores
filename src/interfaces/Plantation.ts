@@ -7,6 +7,7 @@ export interface Coordinate {
 }
 
 export interface Plantation {
+  hasMap: boolean;
   id: string; 
   name: string;
   country: string;

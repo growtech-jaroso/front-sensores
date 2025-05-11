@@ -2,6 +2,24 @@ import { useState } from "react";
 import { Eye } from "lucide-react";
 import { IndicatorStatus } from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
+import { motion } from "framer-motion";
+
+const getBadgeStyle = (status: IndicatorStatus) => {
+  switch (status) {
+    case IndicatorStatus.ACTIVE:
+      return "bg-green-100 text-green-700 border border-green-400";
+    case IndicatorStatus.ALERT:
+      return "bg-red-100 text-red-700 border border-red-400";
+    default:
+      return "bg-yellow-100 text-yellow-700 border border-yellow-400";
+  }
+};
+
+const statusLabels: Record<IndicatorStatus, string> = {
+  [IndicatorStatus.TOTAL]: "Totales",
+  [IndicatorStatus.ACTIVE]: "Activa",
+  [IndicatorStatus.ALERT]: "Alerta",
+};
 
 type PlantationTableProps = {
   plantations: Plantation[];
@@ -10,26 +28,6 @@ type PlantationTableProps = {
   totalPages: number;
   loading: boolean;
   onPageChange: (page: number) => void;
-};
-
-const getBadgeStyle = (status: IndicatorStatus) => {
-  switch (status) {
-    case IndicatorStatus.ACTIVE:
-      return "bg-green-500/10 text-green-700 border border-green-500";
-    case IndicatorStatus.INACTIVE:
-      return "bg-gray-500/10 text-gray-700 border border-gray-500";
-    case IndicatorStatus.ALERT:
-      return "bg-red-500/10 text-red-700 border border-red-500";
-    default:
-      return "bg-yellow-500/10 text-yellow-700 border border-yellow-500";
-  }
-};
-
-const statusLabels: Record<IndicatorStatus, string> = {
-  [IndicatorStatus.TOTAL]: "Totales",
-  [IndicatorStatus.ACTIVE]: "Activa",
-  [IndicatorStatus.INACTIVE]: "Inactiva",
-  [IndicatorStatus.ALERT]: "Alerta",
 };
 
 export default function PlantationTable({
@@ -62,7 +60,12 @@ export default function PlantationTable({
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6"
+    >
       {/* Encabezado y búsqueda */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <h2 className="text-2xl font-semibold text-green-700">🌱 Plantaciones</h2>
@@ -77,21 +80,19 @@ export default function PlantationTable({
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {[IndicatorStatus.TOTAL, IndicatorStatus.ACTIVE, IndicatorStatus.INACTIVE, IndicatorStatus.ALERT].map(
-          (status) => (
-            <button
-              key={status}
-              onClick={() => setFilterStatus(status)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-full border transition ${
-                filterStatus === status
-                  ? "bg-green-600 text-white border-green-600 shadow-sm"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-            >
-              {statusLabels[status]}
-            </button>
-          )
-        )}
+        {[IndicatorStatus.TOTAL, IndicatorStatus.ACTIVE, IndicatorStatus.ALERT].map((status) => (
+          <button
+            key={status}
+            onClick={() => setFilterStatus(status)}
+            className={`px-4 py-1.5 text-sm font-medium rounded-full border transition ${
+              filterStatus === status
+                ? "bg-green-600 text-white border-green-600 shadow"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            {statusLabels[status]}
+          </button>
+        ))}
       </div>
 
       {/* Tabla escritorio */}
@@ -110,92 +111,103 @@ export default function PlantationTable({
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p, idx) => (
-              <tr
-                key={p.id}
-                className={`${
-                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } border-b border-gray-100 hover:bg-green-50 transition-colors`}
-              >
-                <td className="py-3 px-4">{p.name}</td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(
-                      p.status ?? IndicatorStatus.TOTAL
-                    )}`}
-                  >
-                    {statusLabels[p.status as IndicatorStatus] || "Desconocido"}
-                  </span>
-                </td>
-                <td className="py-3 px-4">{p.country}</td>
-                <td className="py-3 px-4">{p.province}</td>
-                <td className="py-3 px-4">{p.city}</td>
-                <td className="py-3 px-4">{p.type}</td>
-                <td className="py-3 px-4 text-center">
-                  <button className="inline-flex gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition">
-                    <Eye size={16} />
-                    Ver Mapa
-                  </button>
-                </td>
-                <td className="py-3 px-4 text-center">
-                  <button
-                    onClick={() => onVerSensor(p)}
-                    className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-green-600 hover:bg-green-700 transition"
-                  >
-                    <Eye size={16} />
-                    Ver Sensor
-                  </button>
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="text-center py-6 text-gray-500">
+                  No hay plantaciones disponibles.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filtered.map((p, idx) => (
+                <tr
+                  key={p.id}
+                  className={`${
+                    idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } border-b border-gray-100 hover:bg-green-50 transition-colors`}
+                >
+                  <td className="py-3 px-4">{p.name}</td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(
+                        p.status ?? IndicatorStatus.TOTAL
+                      )}`}
+                    >
+                      {statusLabels[p.status as IndicatorStatus] || "Desconocido"}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">{p.country}</td>
+                  <td className="py-3 px-4">{p.province}</td>
+                  <td className="py-3 px-4">{p.city}</td>
+                  <td className="py-3 px-4">{p.type}</td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      disabled={!p.hasMap}
+                      className={`inline-flex gap-1 text-xs px-3 py-1.5 rounded-full text-white transition ${
+                        p.hasMap ? "bg-blue-600 hover:bg-blue-700 cursor-pointer" : "bg-blue-400 cursor-not-allowed"
+                      }`}
+                    >
+                      <Eye size={16} /> Ver Mapa
+                    </button>
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    <button
+                      onClick={() => onVerSensor(p)}
+                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-green-600 hover:bg-green-700 transition"
+                    >
+                      <Eye size={16} /> Ver Sensor
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Vista tarjeta para móvil */}
       <div className="md:hidden space-y-4">
-        {filtered.map((p) => (
-          <div key={p.id} className="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm">
-            {/* Nombre de la plantación */}
-            <div>
-              <h3 className="text-green-700 font-semibold text-base break-words">{p.name}</h3>
+        {filtered.length === 0 ? (
+          <div className="text-center text-gray-500 text-sm">No hay plantaciones disponibles.</div>
+        ) : (
+          filtered.map((p) => (
+            <div key={p.id} className="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm">
+              <div>
+                <h3 className="text-green-700 font-semibold text-base break-words">{p.name}</h3>
+              </div>
+              <div>
+                <span
+                  className={`inline-block text-xs font-medium px-2 py-1 rounded-full ${getBadgeStyle(
+                    p.status ?? IndicatorStatus.TOTAL
+                  )}`}
+                >
+                  {statusLabels[p.status as IndicatorStatus]}
+                </span>
+              </div>
+              <p className="text-xs text-gray-600">
+                <strong>Ubicación:</strong> {p.city}, {p.province}, {p.country}
+              </p>
+              <p className="text-xs text-gray-500">
+                <strong>Tipo:</strong> {p.type}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <button
+                  disabled={!p.hasMap}
+                  className={`w-full text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition ${
+                    p.hasMap ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400 cursor-not-allowed"
+                  }`}
+                >
+                  <Eye size={14} /> Mapa
+                </button>
+                <button
+                  onClick={() => onVerSensor(p)}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition"
+                >
+                  <Eye size={14} /> Sensor
+                </button>
+              </div>
             </div>
-
-            {/* Estado */}
-            <div>
-              <span
-                className={`inline-block text-xs font-medium px-2 py-1 rounded-full ${getBadgeStyle(
-                  p.status ?? IndicatorStatus.TOTAL
-                )}`}
-              >
-                {statusLabels[p.status as IndicatorStatus]}
-              </span>
-            </div>
-
-            {/* Información adicional */}
-            <p className="text-xs text-gray-600">
-              <strong>Ubicación:</strong> {p.city}, {p.province}, {p.country}
-            </p>
-            <p className="text-xs text-gray-500">
-              <strong>Tipo:</strong> {p.type}
-            </p>
-
-            {/* Botones */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-2">
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition">
-                <Eye size={14} />
-                Mapa
-              </button>
-              <button
-                onClick={() => onVerSensor(p)}
-                className="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition"
-              >
-                <Eye size={14} />
-                Sensor
-              </button>
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Paginación */}
@@ -230,6 +242,6 @@ export default function PlantationTable({
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

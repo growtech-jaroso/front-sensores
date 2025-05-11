@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
@@ -60,11 +59,6 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   const resumenes = [
     { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
     { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE).toString(), type: IndicatorStatus.ACTIVE },
-    {
-      titulo: "Inactivas",
-      valor: contarPorEstado(IndicatorStatus.INACTIVE).toString(),
-      type: IndicatorStatus.INACTIVE,
-    },
     { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT).toString(), type: IndicatorStatus.ALERT },
   ];
 
@@ -78,7 +72,7 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
         isSidebarOpen ? "ml-64" : "ml-20"
       } flex flex-col h-full p-4 sm:p-6`}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {resumenes.map((item) => (
           <SummaryCard key={item.titulo} title={item.titulo} value={item.valor} type={item.type} />
         ))}

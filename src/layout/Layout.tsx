@@ -7,6 +7,17 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
+const getTitleFromPath = (pathname: string): string => {
+  if (pathname.startsWith("/dashboard")) return "Dashboard";
+  if (pathname.startsWith("/admin/usuarios")) return "Gestión de Usuarios";
+  if (pathname.startsWith("/admin/crear-usuario")) return "Crear Usuario";
+  if (pathname.startsWith("/admin/configuracion")) return "Configuración";
+  return "Panel";
+};
+
+// Titulo dinamico dependiendo de la ruta
+document.title = getTitleFromPath(location.pathname);
+
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
@@ -26,7 +37,7 @@ export default function Layout({ children }: LayoutProps) {
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
-        {!hideHeader && <Header />}
+        {!hideHeader && <Header titulo={getTitleFromPath(location.pathname)} />}
         <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 p-4 sm:p-6">{children}</main>
       </div>
     </div>

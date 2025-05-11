@@ -154,7 +154,7 @@ export default function CreateUser() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
+          className="w-full bg-green-600 cursor-pointer hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
         >
           {submitting ? "Creando..." : "Crear Usuario"}
         </button>
