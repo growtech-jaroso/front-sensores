@@ -61,8 +61,8 @@ export default function PlantationTable({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
       className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6"
     >
@@ -119,9 +119,12 @@ export default function PlantationTable({
               </tr>
             ) : (
               filtered.map((p, idx) => (
-                <tr
+                <motion.tr
                   key={p.id}
-                  className={`${
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25, delay: idx * 0.04 }}
+                  className={`$${
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   } border-b border-gray-100 hover:bg-green-50 transition-colors`}
                 >
@@ -157,7 +160,7 @@ export default function PlantationTable({
                       <Eye size={16} /> Ver Sensor
                     </button>
                   </td>
-                </tr>
+                </motion.tr>
               ))
             )}
           </tbody>
@@ -169,8 +172,14 @@ export default function PlantationTable({
         {filtered.length === 0 ? (
           <div className="text-center text-gray-500 text-sm">No hay plantaciones disponibles.</div>
         ) : (
-          filtered.map((p) => (
-            <div key={p.id} className="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm">
+          filtered.map((p, idx) => (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              className="bg-white border rounded-xl p-4 shadow-sm space-y-2 text-sm"
+            >
               <div>
                 <h3 className="text-green-700 font-semibold text-base break-words">{p.name}</h3>
               </div>
@@ -205,7 +214,7 @@ export default function PlantationTable({
                   <Eye size={14} /> Sensor
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))
         )}
       </div>
