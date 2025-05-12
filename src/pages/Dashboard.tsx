@@ -6,11 +6,7 @@ import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
 
-type DashboardProps = {
-  isSidebarOpen: boolean;
-};
-
-const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
+const Dashboard = () => {
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -67,24 +63,20 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
   };
 
   return (
-    <main
-      className={`transition-all duration-300 ease-in-out animate-fadeInSlow ${
-        isSidebarOpen ? "ml-64" : "ml-20"
-      } flex flex-col h-full p-4 sm:p-6`}
-    >
+    <div className="flex flex-col flex-grow min-h-full animate-fadeInSlow">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {resumenes.map((item) => (
           <SummaryCard key={item.titulo} title={item.titulo} value={item.valor} type={item.type} />
         ))}
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col">
         {loading && !hasFetched ? (
           <div className="flex-1 flex justify-center items-center">
             <LoadingPlantations />
           </div>
         ) : (
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1">
             <PlantationTable
               plantations={plantations}
               onVerSensor={handleVerSensor}
@@ -95,20 +87,20 @@ const Dashboard = ({ isSidebarOpen }: DashboardProps) => {
             />
           </div>
         )}
-        <style>
-          {`
+      </div>
+
+      <style>
+        {`
           @keyframes fadeInSlow {
             0% { opacity: 0; transform: translateY(12px); }
             100% { opacity: 1; transform: translateY(0); }
           }
-
           .animate-fadeInSlow {
             animation: fadeInSlow 0.5s ease-out;
           }
         `}
-        </style>
-      </div>
-    </main>
+      </style>
+    </div>
   );
 };
 

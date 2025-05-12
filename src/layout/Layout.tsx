@@ -15,9 +15,6 @@ const getTitleFromPath = (pathname: string): string => {
   return "Panel";
 };
 
-// Titulo dinamico dependiendo de la ruta
-document.title = getTitleFromPath(location.pathname);
-
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
@@ -29,16 +26,16 @@ export default function Layout({ children }: LayoutProps) {
   const hideHeader = location.pathname === "/perfil";
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen max-h-screen overflow-hidden bg-gray-100">
       <Sidebar isOpen={sidebarOpen} toggle={() => setSidebarOpen(!sidebarOpen)} />
 
       <div
-        className={`flex flex-col flex-1 transition-[margin] duration-500 ease-out min-w-0 ${
+        className={`flex flex-col flex-1 transition-all duration-500 ease-out min-w-0 ${
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
         {!hideHeader && <Header titulo={getTitleFromPath(location.pathname)} />}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 p-4 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );
