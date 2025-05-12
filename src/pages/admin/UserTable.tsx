@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, PencilLine, Trash2, Mail, UserRound } from "lucide-react";
 import { AlertDelete } from "../../components/Alert/AlertDelete";
 import PaginationTable from "../../components/Pagination/PaginationTable";
 import axiosClient from "../../api/axiosClient";
+import { motion } from "framer-motion";
 
 interface User {
   _id: string;
@@ -71,26 +72,20 @@ export default function UserTable() {
   };
 
   return (
-    <div className="p-6 animate-fadeIn">
-      <style>
-        {`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .animate-fadeIn {
-            animation: fadeIn 0.3s ease-out;
-          }
-        `}
-      </style>
-
+    <motion.div
+      key={page + search.username + search.email}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="p-6"
+    >
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 inline-flex items-center gap-2 cursor-pointer text-sm text-gray-600 hover:text-green-700 transition group"
+        className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-green-700 transition group"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-5 h-5 group-hover:-translate-x-1 transition-transform cursor-pointer"
+          className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -101,55 +96,62 @@ export default function UserTable() {
       </button>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
-        <h2 className="text-3xl font-bold text-green-700">👥 Usuarios</h2>
+        <h2 className="text-3xl font-bold text-green-700">👥 Gestión de Usuarios</h2>
         <button
           onClick={() => navigate("/admin/crear-usuario")}
-          className="inline-flex items-center gap-2 bg-green-600 cursor-pointer hover:bg-green-700 text-white px-5 py-2.5 rounded-2xl shadow-lg transition"
+          className="inline-flex items-center gap-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-2xl shadow-lg transition"
         >
-          <Plus className="w-5 h-5" />
-          Crear Usuario
+          <Plus className="w-5 h-5" /> Crear Usuario
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <input
-          type="text"
-          name="username"
-          placeholder="Buscar por nombre"
-          value={search.username}
-          onChange={handleSearchChange}
-          className="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
-        />
-        <input
-          type="text"
-          name="email"
-          placeholder="Buscar por correo"
-          value={search.email}
-          onChange={handleSearchChange}
-          className="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
-        />
+        <div className="relative w-full sm:w-64">
+          <UserRound className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            name="username"
+            placeholder="Buscar por nombre"
+            value={search.username}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
+          />
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            name="email"
+            placeholder="Buscar por correo"
+            value={search.email}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
+          />
+        </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl shadow-lg bg-white">
-        <table className="min-w-full divide-y divide-gray-200 rounded-xl overflow-hidden">
-          <thead className="bg-green-200">
+      <div className="overflow-x-auto rounded-xl shadow-md bg-white">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-black uppercase tracking-wider">Nombre</th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-green-800 uppercase tracking-wider">
-                Correo
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-green-800 uppercase tracking-wider">Rol</th>
-              <th className="px-6 py-4 text-center text-xs font-semibold text-green-800 uppercase tracking-wider">
-                Acciones
-              </th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-600">Nombre</th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-600">Correo</th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-600">Rol</th>
+              <th className="px-6 py-4 text-center font-semibold text-gray-600">Acciones</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {users.map((user) => (
-              <tr key={user._id} className="hover:bg-green-50 transition">
-                <td className="px-6 py-4 font-medium text-gray-900">{user.username}</td>
-                <td className="px-6 py-4 text-gray-700">{user.email}</td>
-                <td className="px-6 py-4">
+          <tbody>
+            {users.map((user, idx) => (
+              <motion.tr
+                key={user._id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25, delay: idx * 0.04 }}
+                className={`transition-all ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-green-50`}
+              >
+                <td className="px-6 py-3 text-gray-800 font-medium">{user.username}</td>
+                <td className="px-6 py-3 text-gray-700">{user.email}</td>
+                <td className="px-6 py-3">
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
@@ -160,27 +162,27 @@ export default function UserTable() {
                     <option value="ADMIN">Admin</option>
                   </select>
                 </td>
-                <td className="px-6 py-4 text-center">
+                <td className="px-6 py-3 text-center">
                   <div className="flex justify-center gap-3">
-                    <button className="text-green-600 hover:text-green-800 transition" title="Editar">
-                      <Pencil className="w-5 h-5" />
+                    <button className="text-blue-600 hover:text-blue-800 cursor-pointer transition" title="Editar">
+                      <PencilLine className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => handleDelete(user._id)}
-                      className="text-red-600 hover:text-red-800 transition"
+                      className="text-red-600 cursor-pointer hover:text-red-800 transition"
                       title="Eliminar"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
       </div>
 
       <PaginationTable currentPage={page} totalPages={totalPages} loading={loading} onPageChange={setPage} />
-    </div>
+    </motion.div>
   );
 }
