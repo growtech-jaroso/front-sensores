@@ -8,6 +8,7 @@ import UserTableHeader from "../../components/Admin/Users/UserTableHeader";
 import UserSearchInputs from "../../components/Admin/Users/UserSearchInputs";
 import UserTableBody from "../../components/Admin/Users/UserTableBody";
 import {ErrorAlert} from "../../components/Alert/WarningAlert.tsx";
+import Layout from "../../layout/Layout";
 
 interface User {
   _id: string;
@@ -75,27 +76,29 @@ export default function UserTable() {
   };
 
   return (
-    <div className="p-6">
-      <UserTableHeader navigate={navigate} />
-      <UserSearchInputs search={search} handleSearchChange={handleSearchChange} />
+    <Layout>
+      <div className="p-6">
+        <UserTableHeader navigate={navigate} />
+        <UserSearchInputs search={search} handleSearchChange={handleSearchChange} />
 
-      <div className="overflow-x-auto rounded-xl shadow-md bg-white">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-4 text-left font-semibold text-gray-600">Nombre</th>
-              <th className="px-6 py-4 text-left font-semibold text-gray-600">Correo</th>
-              <th className="px-6 py-4 text-left font-semibold text-gray-600">Rol</th>
-              <th className="px-6 py-4 text-center font-semibold text-gray-600">Acciones</th>
-            </tr>
-          </thead>
-          <AnimatePresence initial={false}>
-            <UserTableBody users={users} onDelete={handleDelete} />
-          </AnimatePresence>
-        </table>
+        <div className="overflow-x-auto rounded-xl shadow-md bg-white">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-left font-semibold text-gray-600">Nombre</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-600">Correo</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-600">Rol</th>
+                <th className="px-6 py-4 text-center font-semibold text-gray-600">Acciones</th>
+              </tr>
+            </thead>
+            <AnimatePresence initial={false}>
+              <UserTableBody users={users} onDelete={handleDelete} />
+            </AnimatePresence>
+          </table>
+        </div>
+
+        <PaginationTable currentPage={page} totalPages={totalPages} loading={loading} onPageChange={setPage} />
       </div>
-
-      <PaginationTable currentPage={page} totalPages={totalPages} loading={loading} onPageChange={setPage} />
-    </div>
+    </Layout>
   );
 }
