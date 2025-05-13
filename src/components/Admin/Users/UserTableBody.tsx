@@ -11,10 +11,9 @@ interface User {
 type Props = {
   users: User[];
   onDelete: (userId: string) => void;
-  onRoleChange: (userId: string, newRole: string) => void;
 };
 
-export default function UserTableBody({ users, onDelete, onRoleChange }: Props) {
+export default function UserTableBody({ users, onDelete }: Props) {
   return (
     <tbody>
       {users.map((user, idx) => (
@@ -28,25 +27,15 @@ export default function UserTableBody({ users, onDelete, onRoleChange }: Props) 
         >
           <td className="px-6 py-3 text-gray-800 font-medium">{user.username}</td>
           <td className="px-6 py-3 text-gray-700">{user.email}</td>
-          <td className="px-6 py-3">
-            <select
-              value={user.role}
-              onChange={(e) => onRoleChange(user._id, e.target.value)}
-              className="text-sm px-3 py-1.5 border border-gray-300 rounded-md bg-white focus:ring-green-400"
-            >
-              <option value="USER">Usuario</option>
-              <option value="SUPPORT">Soporte</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-          </td>
+          <td className="px-6 py-3 text-gray-700">{user.role}</td>
           <td className="px-6 py-3 text-center">
             <div className="flex justify-center gap-3">
-              <button className="text-blue-600 hover:text-blue-800 transition" title="Editar">
+              <button className="text-blue-600 hover:text-blue-800 transition cursor-pointer" title="Editar">
                 <PencilLine className="w-5 h-5" />
               </button>
               <button
                 onClick={() => onDelete(user._id)}
-                className="text-red-600 hover:text-red-800 transition"
+                className="text-red-600 hover:text-red-800 transition cursor-pointer"
                 title="Eliminar"
               >
                 <Trash2 className="w-5 h-5" />

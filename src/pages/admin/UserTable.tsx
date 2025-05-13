@@ -7,6 +7,7 @@ import axiosClient from "../../api/axiosClient";
 import UserTableHeader from "../../components/Admin/Users/UserTableHeader";
 import UserSearchInputs from "../../components/Admin/Users/UserSearchInputs";
 import UserTableBody from "../../components/Admin/Users/UserTableBody";
+import {ErrorAlert} from "../../components/Alert/WarningAlert.tsx";
 
 interface User {
   _id: string;
@@ -44,15 +45,6 @@ export default function UserTable() {
     }
   };
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
-    try {
-      await axiosClient.patch(`/users/${userId}`, { role: newRole });
-      setUsers((prev) => prev.map((u) => (u._id === userId ? { ...u, role: newRole } : u)));
-    } catch (error) {
-      console.error("Error al actualizar rol:", error);
-    }
-  };
-
   const handleDelete = async (userId: string) => {
     const confirmed = await AlertDelete();
     if (confirmed) {
@@ -63,8 +55,12 @@ export default function UserTable() {
         if (updatedUsers.length === 0 && page > 1) {
           setPage(page - 1);
         }
-      } catch (error) {
-        console.error("Error al eliminar usuario:", error);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_) {
+        await ErrorAlert({
+          title: "Error al eliminar usuario",
+          text: "No se pudo eliminar el usuario. Intenta nuevamente.",
+        })
       }
     }
   };
@@ -94,7 +90,7 @@ export default function UserTable() {
             </tr>
           </thead>
           <AnimatePresence initial={false}>
-            <UserTableBody users={users} onDelete={handleDelete} onRoleChange={handleRoleChange} />
+            <UserTableBody users={users} onDelete={handleDelete} />
           </AnimatePresence>
         </table>
       </div>
