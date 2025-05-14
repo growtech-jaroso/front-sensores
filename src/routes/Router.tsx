@@ -14,17 +14,13 @@ export default function AppRouter() {
   return (
     <Routes>
       {/* Rutas públicas */}
-      <Route
-        path="/login"
-        element={
+      <Route path="/login" element={
           <PublicOnlyRoute>
             <Login />
           </PublicOnlyRoute>
         }
       />
-      <Route
-        path="/"
-        element={
+      <Route path="/" element={
           <PublicOnlyRoute>
             <Login />
           </PublicOnlyRoute>
@@ -37,7 +33,7 @@ export default function AppRouter() {
           path="/dashboard"
           element={
             <Layout>
-              <Dashboard isSidebarOpen={false} />
+              <Dashboard />
             </Layout>
           }
         />
