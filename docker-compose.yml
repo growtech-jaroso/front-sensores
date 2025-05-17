@@ -33,10 +33,9 @@ services:
       - mongo
   nodered:
     image: nodered/node-red:4.0.9
-    container_name: nodered
     restart: unless-stopped
     ports:
-      - "1880:1880"
+      - "${NODERED_PORT:- 1880}:1880"
     volumes:
       - nodered-data:/data
     environment:
@@ -44,14 +43,13 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto:openssl
-    container_name: mosquitto
     restart: unless-stopped
     volumes:
       - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - mosquitto-data:/mosquitto/data
       - mosquitto-logs:/mosquitto/log
     ports:
-      - "1883:1883"
+      - "${MOSQUITTO_PORT:- 1883}:1883"
     environment:
       - TZ=Europe/Madrid
 
