@@ -1,203 +1,103 @@
 [
-  {
-    "id": "f6f2187d.f17ca8",
-    "type": "tab",
-    "label": "Flow 1",
-    "disabled": false,
-    "info": ""
-  },
-  {
-    "id": "d177e134cd310a4c",
-    "type": "mqtt-broker",
-    "name": "",
-    "broker": "mosquitto",
-    "port": 1883,
-    "clientid": "",
-    "autoConnect": true,
-    "usetls": false,
-    "protocolVersion": "5",
-    "keepalive": 60,
-    "cleansession": true,
-    "autoUnsubscribe": true,
-    "birthTopic": "",
-    "birthQos": "0",
-    "birthRetain": "false",
-    "birthPayload": "",
-    "birthMsg": {},
-    "closeTopic": "",
-    "closeQos": "0",
-    "closeRetain": "false",
-    "closePayload": "",
-    "closeMsg": {},
-    "willTopic": "",
-    "willQos": "0",
-    "willRetain": "false",
-    "willPayload": "",
-    "willMsg": {},
-    "userProps": "",
-    "sessionExpiry": ""
-  },
-  {
-    "id": "8a8f599c0e31ba62",
-    "type": "inject",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "5",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deeb\",\"multiplier\":30}",
-    "payloadType": "json",
-    "x": 390,
-    "y": 280,
-    "wires": [
-      [
-        "31be03370bb37f46"
-      ]
-    ]
-  },
-  {
-    "id": "31be03370bb37f46",
-    "type": "function",
-    "z": "f6f2187d.f17ca8",
-    "name": "function 1",
-    "func": "const PLANTATION_ID = msg.payload.plantation_id\nconst SENSOR_ID = msg.payload.sensor_id\n\nmsg.topic = `planation/${PLANTATION_ID}/sensor/${SENSOR_ID}/event/reading`\n\nconst now = new Date()\nnow.setUTCSeconds(0)\nnow.setUTCMilliseconds(0)\n\nmsg.payload = {\n    measure_timespan: \"AVG_LAST_1_MIN\",\n    measurement: Math.random() * msg.payload.multiplier,\n    reading_timestamp: now.toISOString()\n}\n\nreturn msg;",
-    "outputs": 1,
-    "timeout": 0,
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [],
-    "x": 580,
-    "y": 360,
-    "wires": [
-      [
-        "843c8baf8873e702"
-      ]
-    ]
-  },
-  {
-    "id": "843c8baf8873e702",
-    "type": "mqtt out",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "topic": "",
-    "qos": "",
-    "retain": "",
-    "respTopic": "",
-    "contentType": "",
-    "userProps": "",
-    "correl": "",
-    "expiry": "",
-    "broker": "d177e134cd310a4c",
-    "x": 710,
-    "y": 360,
-    "wires": []
-  },
-  {
-    "id": "786a42ae58a58bed",
-    "type": "inject",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "5",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deeb\",\"multiplier\":30}",
-    "payloadType": "json",
-    "x": 390,
-    "y": 320,
-    "wires": [
-      [
-        "31be03370bb37f46"
-      ]
-    ]
-  },
-  {
-    "id": "65c61012f90ed015",
-    "type": "inject",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "5",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deeb\",\"multiplier\":30}",
-    "payloadType": "json",
-    "x": 390,
-    "y": 360,
-    "wires": [
-      [
-        "31be03370bb37f46"
-      ]
-    ]
-  },
-  {
-    "id": "9faebe29efb35160",
-    "type": "inject",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "5",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deeb\",\"multiplier\":30}",
-    "payloadType": "json",
-    "x": 390,
-    "y": 400,
-    "wires": [
-      [
-        "31be03370bb37f46"
-      ]
-    ]
-  },
-  {
-    "id": "977ebf7ccd3a0948",
-    "type": "inject",
-    "z": "f6f2187d.f17ca8",
-    "name": "",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "5",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deee\",\"multiplier\":200}",
-    "payloadType": "json",
-    "x": 390,
-    "y": 440,
-    "wires": [
-      [
-        "31be03370bb37f46"
-      ]
-    ]
-  }
+    {
+        "id": "69b6870fd5e443fd",
+        "type": "tab",
+        "label": "create demon values",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d177e134cd310a4c",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "621615218d35467f",
+        "type": "inject",
+        "z": "69b6870fd5e443fd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"plantation_id\":\"681f27bfca5c20033059d52c\",\"sensor_id\":\"6828a77e9130e51af5d5deeb\",\"multiplier\":30}",
+        "payloadType": "json",
+        "x": 450,
+        "y": 360,
+        "wires": [
+            [
+                "6eea7b958ddff1d9"
+            ]
+        ]
+    },
+    {
+        "id": "6eea7b958ddff1d9",
+        "type": "function",
+        "z": "69b6870fd5e443fd",
+        "name": "function 1",
+        "func": "const PLANTATION_ID = msg.payload.plantation_id\nconst SENSOR_ID = msg.payload.sensor_id\n\nmsg.topic = `planation/${PLANTATION_ID}/sensor/${SENSOR_ID}/event/reading`\n\nconst now = new Date()\nnow.setUTCSeconds(0)\nnow.setUTCMilliseconds(0)\n\nmsg.payload = {\n    measure_timespan: \"AVG_LAST_1_MIN\",\n    measurement: Math.random() * msg.payload.multiplier,\n    reading_timestamp: now.toISOString()\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 360,
+        "wires": [
+            [
+                "2cb4985b291f2cae"
+            ]
+        ]
+    },
+    {
+        "id": "2cb4985b291f2cae",
+        "type": "mqtt out",
+        "z": "69b6870fd5e443fd",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d177e134cd310a4c",
+        "x": 710,
+        "y": 360,
+        "wires": []
+    }
 ]
