@@ -7,7 +7,7 @@ import axiosClient from "../../api/axiosClient";
 import UserTableHeader from "../../components/Admin/Users/UserTableHeader";
 import UserSearchInputs from "../../components/Admin/Users/UserSearchInputs";
 import UserTableBody from "../../components/Admin/Users/UserTableBody";
-import {ErrorAlert} from "../../components/Alert/WarningAlert.tsx";
+import { ErrorAlert } from "../../components/Alert/WarningAlert.tsx";
 import Layout from "../../layout/Layout";
 
 interface User {
@@ -61,7 +61,7 @@ export default function UserTable() {
         await ErrorAlert({
           title: "Error al eliminar usuario",
           text: "No se pudo eliminar el usuario. Intenta nuevamente.",
-        })
+        });
       }
     }
   };
@@ -83,11 +83,11 @@ export default function UserTable() {
 
         <div className="overflow-x-auto rounded-xl shadow-md bg-white">
           <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-600">Nombre</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-600">Correo</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-600">Rol</th>
+                <th className="px-6 py-4 text-left font-bold text-gray-600">Nombre</th>
+                <th className="px-6 py-4 text-left font-bold text-gray-600">Correo</th>
+                <th className="px-6 py-4 text-left font-bold text-gray-600">Rol</th>
                 <th className="px-6 py-4 text-center font-semibold text-gray-600">Acciones</th>
               </tr>
             </thead>

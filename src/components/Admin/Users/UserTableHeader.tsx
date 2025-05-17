@@ -6,7 +6,7 @@ export default function UserTableHeader({ navigate }: { navigate: ReturnType<typ
     <>
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-green-700 transition group"
+        className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-green-700 transition group"
       >
         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
         Volver atrás
