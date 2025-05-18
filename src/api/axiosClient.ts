@@ -28,20 +28,26 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error.response?.status;
-    const requestUrl = error.config?.url || "";
+  const status = error.response?.status;
+  const requestUrl = error.config?.url || "";
 
-    const isLoginRequest = requestUrl.includes("/auth/login");
-    const isUserCreation = requestUrl.includes("/users");
+  const isLoginRequest = requestUrl.includes("/auth/login");
+  const isUserCreation = requestUrl.includes("/users");
 
-    if (status === 401 && !isLoginRequest && !isUserCreation) {
-      console.warn("Token inválido o expirado. Redirigiendo al login...");
-      sessionStorage.removeItem("user_data");
-      window.location.href = "/login";
-    }
+  if (status === 401 && !isLoginRequest && !isUserCreation) {
+  const message = error.response?.data?.message || "";
 
-    return Promise.reject(error);
+  const isAuthError = message.toLowerCase().includes("token") || message.toLowerCase().includes("autorización");
+
+  if (isAuthError) {
+  console.warn("Token inválido o expirado. Redirigiendo al login...");
+  sessionStorage.removeItem("user_data");
+  window.location.href = "/login";
   }
+}
+
+  return Promise.reject(error);
+}
 );
 
 export default axiosClient;

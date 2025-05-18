@@ -1,8 +1,8 @@
 import { Mail, UserRound } from "lucide-react";
 
 type Props = {
-  search: { username: string; email: string };
-  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  search: { username: string; email: string; role: string };
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 };
 
 export default function UserSearchInputs({ search, handleSearchChange }: Props) {
@@ -29,6 +29,19 @@ export default function UserSearchInputs({ search, handleSearchChange }: Props) 
           onChange={handleSearchChange}
           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
         />
+      </div>
+      <div className="w-full sm:w-64">
+        <select
+          name="role"
+          value={search.role}
+          onChange={handleSearchChange}
+          className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-green-400"
+        >
+          <option value="">Todos los roles</option>
+          <option value="ADMIN">Administrador</option>
+          <option value="SUPPORT">Soporte</option>
+          <option value="USER">Usuario</option>
+        </select>
       </div>
     </div>
   );

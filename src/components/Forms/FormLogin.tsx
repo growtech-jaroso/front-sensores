@@ -29,14 +29,14 @@ const FormLogin = () => {
     setLoading(true);
 
     try {
-      // 🔐 Iniciar sesión y guardar datos en sessionStorage
+      // Iniciar sesión y guardar datos en sessionStorage
       await authService.login(email, password);
 
-      // ✅ Obtener y setear el usuario en el contexto
+      // Obtener y setear el usuario en el contexto
       const userData = authService.getUserData();
       if (userData) setUser(userData);
 
-      // ✅ Mostrar alerta sin botón y redirigir
+      // Mostrar alerta sin botón y redirigir
       await showAlert(
         "success",
         "Sus credenciales son correctas",

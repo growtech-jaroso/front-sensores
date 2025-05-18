@@ -1,60 +1,44 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle, XCircle, ArrowLeft } from "lucide-react";
-import axiosClient from "../../api/axiosClient";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
 import Layout from "../../layout/Layout";
+import { UserSchema, UserFormType } from "../../schemas/user.schema";
+import axiosClient from "../../api/axiosClient";
+import { useState } from "react";
+import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
 
 export default function CreateUser() {
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-    role: "USER",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UserFormType>({
+    resolver: zodResolver(UserSchema),
   });
 
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: UserFormType) => {
+    setSubmitting(true);
     setMessage(null);
 
-    if (form.password !== form.confirm_password) {
-      return setMessage({ type: "error", text: "Las contraseñas no coinciden." });
-    }
-
-    setSubmitting(true);
     try {
-      const payload = {
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        confirm_password: form.confirm_password,
-        role: form.role,
-      };
-
-      await axiosClient.post("/auth/register", payload);
-      console.log("Payload enviado:", payload);
-
+      await axiosClient.post("/auth/register", data);
       setMessage({ type: "success", text: "Usuario creado correctamente." });
-      setForm({
-        username: "",
-        email: "",
-        password: "",
-        confirm_password: "",
-        role: "USER",
-      });
+      reset();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      const errorMsg = error.response?.data?.message || "Error al crear el usuario.";
-      setMessage({ type: "error", text: `${errorMsg}` });
+      const rawMessage = error?.response?.data?.message || "Error al crear el usuario.";
+      let customMessage = rawMessage;
+
+      if (rawMessage.toLowerCase().includes("email")) customMessage = "Este correo ya está registrado.";
+      if (rawMessage.toLowerCase().includes("username")) customMessage = "Este nombre de usuario ya está registrado.";
+
+      setMessage({ type: "error", text: customMessage });
     } finally {
       setSubmitting(false);
     }
@@ -77,91 +61,69 @@ export default function CreateUser() {
 
         <button
           onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer cursor-pointer hover:text-green-600 transition"
+          className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer hover:text-green-600 transition"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Volver
+          <ArrowLeft className="w-4 h-4 mr-1" /> Volver
         </button>
 
         <h2 className="text-2xl font-bold text-green-700 mb-6">👤 Crear nuevo usuario</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nombre de usuario */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
             <input
               type="text"
-              name="username"
-              value={form.username}
-              onChange={handleChange}
-              required
+              {...register("username")}
               className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
             />
+            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
             <input
               type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
+              {...register("email")}
               className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
             />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
-          {/* Contraseña */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-            />
+            <InputPasswordUser register={register("password")} errors={errors.password} placeholder="Contraseña" />
           </div>
 
-          {/* Confirmar contraseña */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar contraseña</label>
-            <input
-              type="password"
-              name="confirm_password"
-              value={form.confirm_password}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
+            <InputPasswordUser
+              register={register("confirm_password")}
+              errors={errors.confirm_password}
+              placeholder="Confirmar contraseña"
             />
           </div>
 
-          {/* Rol */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
             <select
-              name="role"
-              value={form.role}
-              onChange={handleChange}
+              {...register("role")}
               className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
             >
               <option value="USER">Usuario</option>
               <option value="SUPPORT">Soporte</option>
               <option value="ADMIN">Admin</option>
             </select>
+            {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-green-600 cursor-pointer hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
           >
             {submitting ? "Creando..." : "Crear Usuario"}
           </button>
 
-          {/* Mensaje */}
           {message && (
             <div
               className={`flex items-center gap-2 mt-4 text-sm px-4 py-2 rounded-md ${

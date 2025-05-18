@@ -20,7 +20,7 @@ interface User {
 export default function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState({ username: "", email: "" });
+  const [search, setSearch] = useState({ username: "", email: "", role: "" });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ export default function UserTable() {
           limit: 10,
           username: search.username,
           email: search.email,
+          role: search.role,
         },
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,7 +57,6 @@ export default function UserTable() {
         if (updatedUsers.length === 0 && page > 1) {
           setPage(page - 1);
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {
         await ErrorAlert({
           title: "Error al eliminar usuario",
@@ -70,7 +70,7 @@ export default function UserTable() {
     fetchUsers();
   }, [page, search]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearch({ ...search, [e.target.name]: e.target.value });
     setPage(1);
   };
@@ -91,7 +91,7 @@ export default function UserTable() {
                 <th className="px-6 py-4 text-center font-semibold text-gray-600">Acciones</th>
               </tr>
             </thead>
-            <AnimatePresence initial={false}>
+            <AnimatePresence initial={true} mode="wait">
               <UserTableBody users={users} onDelete={handleDelete} />
             </AnimatePresence>
           </table>
