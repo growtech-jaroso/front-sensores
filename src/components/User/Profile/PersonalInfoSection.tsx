@@ -54,7 +54,7 @@ export default function PersonalInfoSection({ name, email, rol }: Props) {
               </div>
               <p className="text-sm text-gray-600">Puedes gestionar al personal autorizado desde esta sección.</p>
               <button
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/admin/panel")}
                 className="inline-flex items-center gap-2 text-sm font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
               >
                 <Users className="w-4 h-4" />

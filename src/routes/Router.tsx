@@ -6,7 +6,7 @@ import Layout from "../layout/Layout";
 import PrivateRoute from "./ProtectedRoutes";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import NotFound from "../pages/NotFound";
-import {lazy} from "react";
+import { lazy } from "react";
 
 const AdminRouter = lazy(() => import("./AdminRouter"));
 
@@ -14,13 +14,17 @@ export default function AppRouter() {
   return (
     <Routes>
       {/* Rutas públicas */}
-      <Route path="/login" element={
+      <Route
+        path="/login"
+        element={
           <PublicOnlyRoute>
             <Login />
           </PublicOnlyRoute>
         }
       />
-      <Route path="/" element={
+      <Route
+        path="/"
+        element={
           <PublicOnlyRoute>
             <Login />
           </PublicOnlyRoute>

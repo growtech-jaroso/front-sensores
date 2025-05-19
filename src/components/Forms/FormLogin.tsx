@@ -55,11 +55,7 @@ const FormLogin = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-md flex flex-col space-y-5"
-      noValidate
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md flex flex-col space-y-5" noValidate>
       <InputText
         register={register("email")}
         errors={errors.email}
@@ -67,16 +63,10 @@ const FormLogin = () => {
         inputType="email"
       />
 
-      <InputPassword
-        register={register("password")}
-        errors={errors.password}
-        placeholder="Contraseña"
-      />
+      <InputPassword register={register("password")} errors={errors.password} placeholder="Contraseña" />
 
       {generalError && (
-        <p className="text-red-500 text-center text-sm font-medium bg-red-100 px-3 py-2 rounded">
-          {generalError}
-        </p>
+        <p className="text-red-500 text-center text-sm font-medium bg-red-100 px-3 py-2 rounded">{generalError}</p>
       )}
 
       <button

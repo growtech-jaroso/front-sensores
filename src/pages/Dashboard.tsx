@@ -5,8 +5,17 @@ import SummaryCard from "../components/DashboardWidgets/SummaryCard";
 import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const { isAdmin, isSupport } = useAuth();
+  const navigate = useNavigate();
+
+  if (isAdmin || isSupport) {
+    navigate("/admin/dashboard");
+  }
+
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "../../layout/Layout";
 import { Users, Settings } from "lucide-react";
 
-export default function AdminDashboard() {
+export default function PanelIndex() {
   return (
     <Layout>
       <main className="h-full flex items-center justify-center px-4 py-8 overflow-hidden bg-gray-50 animate-fadeInMenu">

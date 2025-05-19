@@ -1,24 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
-import Layout from "../layout/Layout";
 import CreateUser from "../pages/admin/CreateUser";
-import AdminDashboard from "../pages/admin";
+import PanelIndex from "../pages/admin/Panel_index";
 import UserTable from "../pages/admin/UserTable";
 import EditUser from "../pages/admin/EditUser";
+import AdminDashboard from "../pages/admin/AdminDashboard";
 
 export default function AdminRouter() {
   return (
     <Routes>
       <Route element={<ProtectedRoutes allowedRoles={["ADMIN"]} />}>
-        <Route index element={<AdminDashboard />} />
-        <Route
-          path="configuracion"
-          element={
-            <Layout>
-              <h2 className="text-xl">Configuración Admin</h2>
-            </Layout>
-          }
-        />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="panel" element={<PanelIndex />} />
         <Route path="usuarios" element={<UserTable />} />
         <Route path="crear-usuario" element={<CreateUser />} />
         <Route path="editar-usuario/:userId" element={<EditUser />} />
