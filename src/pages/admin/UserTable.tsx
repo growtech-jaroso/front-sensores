@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { AlertDelete } from "../../components/Alert/AlertDelete";
@@ -9,13 +9,7 @@ import UserSearchInputs from "../../components/Admin/Users/UserSearchInputs";
 import UserTableBody from "../../components/Admin/Users/UserTableBody";
 import { ErrorAlert } from "../../components/Alert/WarningAlert.tsx";
 import Layout from "../../layout/Layout";
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  role: string;
-}
+import {User} from "../../interfaces/User.ts";
 
 export default function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
@@ -52,11 +46,12 @@ export default function UserTable() {
     if (confirmed) {
       try {
         await axiosClient.delete(`/users/${userId}`);
-        const updatedUsers = users.filter((u) => u._id !== userId);
+        const updatedUsers = users.filter((u) => u.id !== userId);
         setUsers(updatedUsers);
         if (updatedUsers.length === 0 && page > 1) {
           setPage(page - 1);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {
         await ErrorAlert({
           title: "Error al eliminar usuario",
@@ -70,7 +65,7 @@ export default function UserTable() {
     fetchUsers();
   }, [page, search]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearch({ ...search, [e.target.name]: e.target.value });
     setPage(1);
   };

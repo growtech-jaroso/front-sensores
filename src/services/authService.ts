@@ -1,6 +1,7 @@
 import { z } from "zod";
 import axiosClient from "../api/axiosClient";
 import axios from "axios";
+import {User} from "../interfaces/User.ts";
 
 const USER_DATA_KEY = "user_data";
 
@@ -8,13 +9,6 @@ const loginSchema = z.object({
   email: z.string().email("Correo no válido"),
   password: z.string().min(1, "La contraseña es obligatoria"),
 });
-
-type UserData = {
-  token: string;
-  roles: string[];
-  name: string;
-  email: string;
-};
 
 export const authService = {
   login: async (email: string, password: string): Promise<void> => {
@@ -29,10 +23,10 @@ export const authService = {
         throw new Error("Faltan datos en la respuesta del servidor.");
       }
 
-      const userData: UserData = {
+      const userData: User = {
         token,
-        roles: [role], // Asegura formato como array
-        name: username,
+        role: role,
+        username: username,
         email: userEmail,
       };
 
@@ -53,10 +47,10 @@ export const authService = {
     window.location.href = "/login";  // Redirigir al login después de cerrar sesión
   },
 
-  getUserData: (): UserData | null => {
+  getUserData: (): User | null => {
     try {
       const data = sessionStorage.getItem(USER_DATA_KEY);
-      return data ? JSON.parse(data) as UserData : null;
+      return data ? JSON.parse(data) as User : null;
     } catch {
       return null;
     }

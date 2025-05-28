@@ -7,13 +7,12 @@ import { adminService } from "../../services/adminService";
 import Layout from "../../layout/Layout";
 import type { User as UserType } from "../../interfaces/User";
 import type { Plantation } from "../../interfaces/Plantation";
-import { set } from "zod";
 
 export default function AdminDashboard() {
   const user = authService.getUserData();
 
   // Solo accesible si es admin
-  if (!user || !user.roles.includes("ADMIN")) {
+  if (!user || user.role !== "ADMIN") {
     return <Navigate to="/dashboard" />;
   }
 
@@ -32,7 +31,7 @@ export default function AdminDashboard() {
   const handleUserClick = async (user: UserType) => {
     setSelectedUser(user);
     setLoading(true);
-    const data = await adminService.getUserPlantations(user._id);
+    const data = await adminService.getUserPlantations(user.id!);
     setPlantations(data);
     setLoading(false);
   };
@@ -53,7 +52,7 @@ export default function AdminDashboard() {
                   key={user.id}
                   onClick={() => handleUserClick(user)}
                   className={`cursor-pointer px-4 py-2 rounded-lg border transition hover:bg-green-50 ${
-                    selectedUser?._id === user._id ? "bg-green-100 border-green-400" : ""
+                    selectedUser?.id === user._id ? "bg-green-100 border-green-400" : ""
                   }`}
                 >
                   <div className="font-medium">{user.username}</div>

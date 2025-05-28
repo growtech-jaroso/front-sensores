@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
-import { useUser } from "../../contexts/UserContext";
+import useUser from "../../hooks/useUser.tsx";
 
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
@@ -33,7 +33,7 @@ export default function UserMenu() {
         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-1.5 rounded-full transition"
       >
         <User className="w-5 h-5 text-gray-700" />
-        <span className="text-sm text-gray-800 font-medium">{user?.name || "Usuario"}</span>
+        <span className="text-sm text-gray-800 font-medium">{user?.username || "Usuario"}</span>
       </div>
 
       {/* Dropdown animado */}

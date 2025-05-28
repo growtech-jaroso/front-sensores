@@ -1,20 +1,20 @@
 import { User, ShieldCheck, Users } from "lucide-react";
-import { useUser } from "../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import useUser from "../../../hooks/useUser.tsx";
 
 type Props = {
-  name?: string;
+  username?: string;
   email?: string;
-  rol?: string;
+  role?: string;
 };
 
-export default function PersonalInfoSection({ name, email, rol }: Props) {
+export default function PersonalInfoSection({ username, email, role }: Props) {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  const displayName = name || user?.name || "";
+  const displayName = username || user?.username || "";
   const displayEmail = email || user?.email || "";
-  const userRole = rol || user?.roles?.[0] || "USER";
+  const userRole = role || user?.role || "USER";
   const isAdmin = userRole.toUpperCase() === "ADMIN";
 
   return (

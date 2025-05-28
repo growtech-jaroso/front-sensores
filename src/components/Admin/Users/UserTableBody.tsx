@@ -1,26 +1,21 @@
 import { Trash2, PencilLine } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  role: string;
-}
+import {User} from "../../../interfaces/User.ts";
+import {UserRole} from "../../../types/userRole.ts";
 
 type Props = {
   users: User[];
   onDelete: (userId: string) => void;
 };
 
-const roleLabels: Record<string, string> = {
+const roleLabels: Record<UserRole, string> = {
   ADMIN: "Administrador",
   SUPPORT: "Soporte",
   USER: "Usuario",
 };
 
-const roleColors: Record<string, string> = {
+const roleColors: Record<UserRole, string> = {
   ADMIN: "bg-red-100 text-red-700 border-red-300",
   SUPPORT: "bg-blue-100 text-blue-700 border-blue-300",
   USER: "bg-green-100 text-green-700 border-green-300",
@@ -33,7 +28,7 @@ export default function UserTableBody({ users, onDelete }: Props) {
     <tbody>
       {users.map((user, idx) => (
         <motion.tr
-          key={user._id}
+          key={user.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -54,7 +49,7 @@ export default function UserTableBody({ users, onDelete }: Props) {
           <td className="px-6 py-3 text-center">
             <div className="flex justify-center gap-3">
               <button
-                onClick={() => navigate(`/admin/editar-usuario/${user._id}`)}
+                onClick={() => navigate(`/admin/editar-usuario/${user.id}`)}
                 className="text-blue-600 hover:text-blue-800 cursor-pointer transition"
                 title="Editar"
               >
@@ -62,7 +57,7 @@ export default function UserTableBody({ users, onDelete }: Props) {
               </button>
 
               <button
-                onClick={() => user.role !== "ADMIN" && onDelete(user._id)}
+                onClick={() => user.role !== "ADMIN" && onDelete(user.id!)}
                 disabled={user.role === "ADMIN"}
                 className={`transition cursor-pointer ${
                   user.role === "ADMIN" ? "text-gray-400 cursor-not-allowed" : "text-red-600 hover:text-red-800"

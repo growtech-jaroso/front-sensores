@@ -1,21 +1,20 @@
 import { useMemo } from "react";
-import { useUser } from "../contexts/UserContext";
+import useUser from "./useUser.tsx";
 
 export function useAuth() {
   const { user } = useUser();
 
   const token = user?.token || "";
 
-  const isAdmin = useMemo(() => user?.roles.includes("ADMIN") || false, [user]);
-  const isSupport = useMemo(() => user?.roles.includes("SUPPORT") || false, [user]);
-  const isUser = useMemo(() => user?.roles.includes("USER") || false, [user]);
+  const isAdmin = useMemo(() => user?.role === "ADMIN" || false, [user]);
+  const isSupport = useMemo(() => user?.role === "SUPPORT" || false, [user]);
+  const isUser = useMemo(() => user?.role === "USER" || false, [user]);
 
   return {
     isAuthenticated: !!token,
     tokenExpired: false, 
-    role: user?.roles?.[0] || null,
-    roles: user?.roles || [],
-    username: user?.name || "",
+    role: user?.role || null,
+    username: user?.username || "",
     email: user?.email || "",
     isAdmin,
     isSupport,

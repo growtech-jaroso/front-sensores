@@ -7,7 +7,7 @@ import InputText from "../Inputs/InputsText";
 import { authService } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { showAlert } from "../../components/Alert/AlertService";
-import { useUser } from "../../contexts/UserContext";
+import useUser from "../../hooks/useUser.tsx";
 
 const FormLogin = () => {
   const navigate = useNavigate();

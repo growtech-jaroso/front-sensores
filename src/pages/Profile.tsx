@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { authService } from "../services/authService";
 import { LogOut } from "lucide-react";
-import { useUser } from "../contexts/UserContext";
+import useUser  from "../hooks/useUser";
 
 // Componentes del perfil
 import ProfileLayout from "../components/User/Profile/ProfileLayout";
@@ -37,7 +37,7 @@ export default function ProfileTest() {
 
       {/* Secciones del perfil */}
       <section className="space-y-12 animate-fadeInSlow">
-        <PersonalInfoSection name={user?.name || ""} rol={user?.roles?.[0] || "USER"} />
+        <PersonalInfoSection username={user?.username || ""} role={user?.role || "USER"} />
         <PasswordUpdateSection />
       </section>
 

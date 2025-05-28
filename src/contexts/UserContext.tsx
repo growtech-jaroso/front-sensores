@@ -1,12 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { authService } from "../services/authService";
-
-type User = {
-  name: string;
-  email: string;
-  roles: string[];
-  token: string;
-};
+import { createContext } from "react";
+import {User} from "../interfaces/User.ts";
 
 type UserContextType = {
   user: User | null;
@@ -18,17 +11,4 @@ const UserContext = createContext<UserContextType>({
   setUser: () => {},
 });
 
-export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const stored = authService.getUserData();
-    if (stored) {
-      setUser(stored);
-    }
-  }, []);
-
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
-};
-
-export const useUser = () => useContext(UserContext);
+export default UserContext;

@@ -22,7 +22,6 @@ const Dashboard = () => {
   const [firstLoadDone, setFirstLoadDone] = useState(false);
   const [loading, setLoading] = useState(true);
   const [meta, setMeta] = useState<{ total_items: number }>({ total_items: 0 });
-  const [hasFetched, setHasFetched] = useState(false);
 
   const normalizePlantations = (data: Plantation[]): Plantation[] =>
     data.map((p) => ({
@@ -34,19 +33,13 @@ const Dashboard = () => {
     const fetchPlantations = async () => {
       setLoading(true);
 
-      const delay = firstLoadDone ? Promise.resolve() : new Promise((res) => setTimeout(res, 1200));
-
       try {
-        const [response] = await Promise.all([
-          plantationService.getPlantations({ page: currentPage, limit: 10 }),
-          delay,
-        ]);
+        const response = await plantationService.getPlantations({ page: currentPage, limit: 10 })
 
         const normalized = normalizePlantations(response.data);
         setPlantations(normalized);
         setTotalPages(response.meta.total_pages);
         setMeta(response.meta);
-        setHasFetched(true);
 
         if (!firstLoadDone) setFirstLoadDone(true);
       } catch (error) {
@@ -80,7 +73,7 @@ const Dashboard = () => {
       </div>
 
       <div className="flex-1 flex flex-col">
-        {loading && !hasFetched ? (
+        {loading ? (
           <div className="flex-1 flex justify-center items-center">
             <LoadingPlantations />
           </div>
