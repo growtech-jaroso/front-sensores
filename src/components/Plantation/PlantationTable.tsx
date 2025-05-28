@@ -1,24 +1,18 @@
 import { useState } from "react";
 import { Eye } from "lucide-react";
-import { IndicatorStatus } from "../../types/indicatorStatus";
+import {IndicatorStatus, IndicatorStatusType} from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
 
 const getBadgeStyle = (status: IndicatorStatus) => {
   switch (status) {
-    case IndicatorStatus.ACTIVE:
+    case IndicatorStatus.ONLINE:
       return "bg-green-100 text-green-700 border border-green-400";
-    case IndicatorStatus.ALERT:
+    case IndicatorStatus.OFFLINE:
       return "bg-red-100 text-red-700 border border-red-400";
     default:
       return "bg-yellow-100 text-yellow-700 border border-yellow-400";
   }
-};
-
-const statusLabels: Record<IndicatorStatus, string> = {
-  [IndicatorStatus.TOTAL]: "Totales",
-  [IndicatorStatus.ACTIVE]: "Activa",
-  [IndicatorStatus.ALERT]: "Alerta",
 };
 
 type PlantationTableProps = {
@@ -28,6 +22,8 @@ type PlantationTableProps = {
   totalPages: number;
   loading: boolean;
   onPageChange: (page: number) => void;
+  search: string;
+  setSearch: (search: string) => void;
 };
 
 export default function PlantationTable({
@@ -37,8 +33,9 @@ export default function PlantationTable({
   totalPages,
   loading,
   onPageChange,
+  search,
+  setSearch,
 }: PlantationTableProps) {
-  const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState(IndicatorStatus.TOTAL);
 
   const filtered = plantations.filter((p) => {
@@ -46,7 +43,7 @@ export default function PlantationTable({
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchesStatus = filterStatus === IndicatorStatus.TOTAL || p.status === filterStatus;
+    const matchesStatus = filterStatus === IndicatorStatus.TOTAL || p.status === filterStatus.toString();
 
     return matchesSearch && matchesStatus;
   });
@@ -80,7 +77,7 @@ export default function PlantationTable({
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {[IndicatorStatus.TOTAL, IndicatorStatus.ACTIVE, IndicatorStatus.ALERT].map((status) => (
+        {[IndicatorStatus.TOTAL, IndicatorStatus.ONLINE, IndicatorStatus.OFFLINE].map((status) => (
           <button
             key={status}
             onClick={() => setFilterStatus(status)}
@@ -90,7 +87,7 @@ export default function PlantationTable({
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
           >
-            {statusLabels[status]}
+            {status}
           </button>
         ))}
       </div>
@@ -132,10 +129,10 @@ export default function PlantationTable({
                   <td className="py-3 px-4">
                     <span
                       className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getBadgeStyle(
-                        p.status ?? IndicatorStatus.TOTAL
+                        IndicatorStatus[p.status as IndicatorStatusType] ?? IndicatorStatus.TOTAL
                       )}`}
                     >
-                      {statusLabels[p.status as IndicatorStatus] || "Desconocido"}
+                      {IndicatorStatus[p.status as IndicatorStatusType] ?? "Desconocido"}
                     </span>
                   </td>
                   <td className="py-3 px-4">{p.country}</td>
@@ -186,10 +183,10 @@ export default function PlantationTable({
               <div>
                 <span
                   className={`inline-block text-xs font-medium px-2 py-1 rounded-full ${getBadgeStyle(
-                    p.status ?? IndicatorStatus.TOTAL
+                    IndicatorStatus[p.status as IndicatorStatusType] ?? IndicatorStatus.TOTAL
                   )}`}
                 >
-                  {statusLabels[p.status as IndicatorStatus]}
+                  {p.status ?? "Desconocido"}
                 </span>
               </div>
               <p className="text-xs text-gray-600">

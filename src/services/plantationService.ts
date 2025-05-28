@@ -17,11 +17,12 @@ interface PlantationResponse {
 interface Params {
   page?: number;
   limit?: number;
+  search?: string;
 }
 
-const getPlantations = async ({ page = 1, limit = 10 }: Params): Promise<PlantationResponse> => {
+const getPlantations = async ({ page = 1, limit = 10, search = "" }: Params): Promise<PlantationResponse> => {
   const response = await axiosClient.get("/plantations", {
-    params: { page, limit },
+    params: { page, limit, search },
   });
   
 

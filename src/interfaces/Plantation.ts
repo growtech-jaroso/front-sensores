@@ -1,4 +1,3 @@
-import { IndicatorStatus } from "../types/indicatorStatus";
 import { IndicatorType } from "../types/indicatorTypes";
 
 export interface Coordinate {
@@ -25,7 +24,7 @@ export interface Plantation {
   updated_at?: string;
 
   // Campos adicionales del frontend 
-  status?: IndicatorStatus;
+  status: string;
   statusType?: IndicatorType;
   temperature?: number;
   humidity?: number;

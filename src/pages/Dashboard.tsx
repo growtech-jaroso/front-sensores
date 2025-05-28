@@ -7,6 +7,7 @@ import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import {useDebounce} from "use-debounce";
 
 const Dashboard = () => {
   const { isAdmin, isSupport } = useAuth();
@@ -22,11 +23,13 @@ const Dashboard = () => {
   const [firstLoadDone, setFirstLoadDone] = useState(false);
   const [loading, setLoading] = useState(true);
   const [meta, setMeta] = useState<{ total_items: number }>({ total_items: 0 });
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 400);
 
   const normalizePlantations = (data: Plantation[]): Plantation[] =>
     data.map((p) => ({
       ...p,
-      status: p.status ?? IndicatorStatus.ACTIVE,
+      status: p.status ?? IndicatorStatus.ONLINE,
     }));
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const Dashboard = () => {
       setLoading(true);
 
       try {
-        const response = await plantationService.getPlantations({ page: currentPage, limit: 10 })
+        const response = await plantationService.getPlantations({ page: currentPage, limit: 10, search: debouncedSearch })
 
         const normalized = normalizePlantations(response.data);
         setPlantations(normalized);
@@ -50,14 +53,14 @@ const Dashboard = () => {
     };
 
     fetchPlantations();
-  }, [currentPage, firstLoadDone]);
+  }, [currentPage, firstLoadDone, debouncedSearch]);
 
   const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
     { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
-    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ACTIVE).toString(), type: IndicatorStatus.ACTIVE },
-    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.ALERT).toString(), type: IndicatorStatus.ALERT },
+    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
+    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
   ];
 
   const handleVerSensor = (plantacion: Plantation) => {
@@ -86,6 +89,8 @@ const Dashboard = () => {
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
+              search={search}
+              setSearch={setSearch}
             />
           </div>
         )}
