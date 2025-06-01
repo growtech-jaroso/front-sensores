@@ -6,7 +6,7 @@ import InputPassword from "../Inputs/InputPassword";
 import InputText from "../Inputs/InputsText";
 import { authService } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
-import { showAlert } from "../../components/Alert/AlertService";
+import { showAlert } from "../Alert/AlertService.tsx";
 import useUser from "../../hooks/useUser.tsx";
 
 const FormLogin = () => {
@@ -41,7 +41,7 @@ const FormLogin = () => {
         await showAlert("success", "Sus credenciales son correctas", "Bienvenido a GrowPanel", undefined, true).then(
           () => {
             // Redirección tras la alerta
-            if (userData.role === "ADMIN") {
+            if (userData.role === "ADMIN" || userData.role === "SUPPORT") {
               navigate("/admin/dashboard");
             } else {
               navigate("/dashboard");
