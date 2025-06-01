@@ -6,8 +6,14 @@ export const adminService = {
     return response.data;
   },
 
+ getOwnersPlantations: async (userId: string) => {
+  const response = await axiosClient.get(`/plantations/owners/${userId}`);
+  return response.data; // contiene { status, data }
+  },
+
+
   getUserPlantations: async (userId: string) => {
-    const response = await axiosClient.get(`/plantations/user/${userId}`);
+    const response = await axiosClient.get(`/plantations/user/${userId}`); // Obtener todas las plantaciones de un usuario específico
     return response.data;
   },
 };
