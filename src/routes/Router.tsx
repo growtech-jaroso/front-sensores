@@ -42,6 +42,14 @@ export default function AppRouter() {
           }
         />
         <Route
+          path="/dashboard/plantacion/:plantationId"
+          element={
+            <Layout>
+              <h1>Ver sensores </h1>
+            </Layout>
+          }
+        />
+        <Route
           path="/perfil"
           element={
             <Layout>

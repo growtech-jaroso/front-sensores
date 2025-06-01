@@ -2,7 +2,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
-import { authService } from "../../services/authService";
 import { adminService } from "../../services/adminService";
 import Layout from "../../layout/Layout";
 import Pagination from "../../components/Pagination/PaginationTable";
@@ -10,13 +9,10 @@ import type { User as UserType } from "../../interfaces/User";
 import type { Plantation } from "../../interfaces/Plantation";
 import { IndicatorStatus } from "../../types/indicatorStatus";
 import { PlantationCard } from "../../components/Admin/Plantation/PlantationCard";
+import useUser from "../../hooks/useUser.tsx";
 
 export default function AdminDashboard() {
-  const user = authService.getUserData();
-
-  if (!user || user.role !== "ADMIN") {
-    return <Navigate to="/dashboard" />;
-  }
+  const {user} = useUser()
 
   const [users, setUsers] = useState<UserType[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -30,21 +26,6 @@ export default function AdminDashboard() {
 
   const [currentPlantationPage, setCurrentPlantationPage] = useState(1);
   const plantationsPerPage = 6;
-
-  useEffect(() => {
-    adminService.getAllOwners().then((res) => {
-      setUsers(res.data);
-    });
-  }, []);
-
-  const handleUserClick = async (user: UserType) => {
-    setSelectedUser(user);
-    setLoading(true);
-    const result = await adminService.getOwnersPlantations(user.id!);
-    setPlantations(result.data);
-    setCurrentPlantationPage(1);
-    setLoading(false);
-  };
 
   const filteredUsers = useMemo(() => {
     return users
@@ -76,6 +57,25 @@ export default function AdminDashboard() {
     currentPlantationPage * plantationsPerPage
   );
   const totalPlantationPages = Math.ceil(filteredPlantations.length / plantationsPerPage);
+
+  useEffect(() => {
+    adminService.getAllOwners().then((res) => {
+      setUsers(res.data);
+    });
+  }, []);
+
+  if (!user || user.role !== "ADMIN") {
+    return <Navigate to="/dashboard" />;
+  }
+
+  const handleUserClick = async (user: UserType) => {
+    setSelectedUser(user);
+    setLoading(true);
+    const result = await adminService.getOwnersPlantations(user.id!);
+    setPlantations(result.data);
+    setCurrentPlantationPage(1);
+    setLoading(false);
+  };
 
   return (
     <Layout>
@@ -202,9 +202,6 @@ export default function AdminDashboard() {
                     <PlantationCard
                       key={p.id}
                       plantation={p}
-                      onViewSensors={() => console.log("Sensor de:", p.id)}
-                      onEdit={() => console.log("Editar:", p.id)}
-                      onDelete={() => console.log("Eliminar:", p.id)}
                     />
                   ))}
                 </ul>

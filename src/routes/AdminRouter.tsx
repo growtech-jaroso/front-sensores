@@ -15,6 +15,7 @@ export default function AdminRouter() {
         <Route path="usuarios" element={<UserTable />} />
         <Route path="crear-usuario" element={<CreateUser />} />
         <Route path="editar-usuario/:userId" element={<EditUser />} />
+        <Route path="editar-plantacion/:plantationId" element={<h1>Editar plantación</h1>} />
       </Route>
     </Routes>
   );
