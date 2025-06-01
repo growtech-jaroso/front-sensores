@@ -1,13 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState, useMemo } from "react";
 import { Navigate } from "react-router-dom";
-import { User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ, Pencil, Leaf, MapPin, Info } from "lucide-react";
+import { User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
 import { authService } from "../../services/authService";
 import { adminService } from "../../services/adminService";
 import Layout from "../../layout/Layout";
 import Pagination from "../../components/Pagination/PaginationTable";
 import type { User as UserType } from "../../interfaces/User";
 import type { Plantation } from "../../interfaces/Plantation";
+import { IndicatorStatus } from "../../types/indicatorStatus";
+import { PlantationCard } from "../../components/Admin/Plantation/PlantationCard";
 
 export default function AdminDashboard() {
   const user = authService.getUserData();
@@ -23,6 +25,8 @@ export default function AdminDashboard() {
 
   const [search, setSearch] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("TOTAL");
+  const [plantationSearch, setPlantationSearch] = useState("");
 
   const [currentPlantationPage, setCurrentPlantationPage] = useState(1);
   const plantationsPerPage = 6;
@@ -56,26 +60,47 @@ export default function AdminDashboard() {
       });
   }, [users, search, sortAsc]);
 
-  const paginatedPlantations = plantations.slice(
+  const filteredPlantations = useMemo(() => {
+    let filtered = plantations;
+    if (statusFilter !== "TOTAL") {
+      filtered = filtered.filter((p) => p.status === statusFilter);
+    }
+    if (plantationSearch.trim() !== "") {
+      filtered = filtered.filter((p) => p.name.toLowerCase().includes(plantationSearch.toLowerCase()));
+    }
+    return filtered;
+  }, [plantations, statusFilter, plantationSearch]);
+
+  const paginatedPlantations = filteredPlantations.slice(
     (currentPlantationPage - 1) * plantationsPerPage,
     currentPlantationPage * plantationsPerPage
   );
-  const totalPlantationPages = Math.ceil(plantations.length / plantationsPerPage);
+  const totalPlantationPages = Math.ceil(filteredPlantations.length / plantationsPerPage);
 
   return (
     <Layout>
-      <div className="h-full w-full px-4 py-6 sm:px-6 sm:py-8 bg-gray-50">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Usuarios */}
-          <aside className="bg-white rounded-xl shadow p-4 col-span-1">
+      <style>
+        {`
+          @keyframes fadeInSlow {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fadeInSlow {
+            animation: fadeInSlow 0.5s ease-out;
+          }
+        `}
+      </style>
+      <div className="animate-fadeInSlow min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 bg-gradient-to-tr from-green-50 to-white">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <aside className="bg-white rounded-2xl shadow-lg p-4 w-full lg:w-1/3 h-fit max-h-[calc(100vh-8rem)] overflow-y-auto border border-gray-200">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-green-700 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-green-700 flex items-center gap-2">
                 <UserIcon className="w-5 h-5" /> Propietarios
               </h2>
               <button
                 onClick={() => setSortAsc(!sortAsc)}
                 title={`Ordenar de ${sortAsc ? "Z–A" : "A–Z"}`}
-                className="p-2 border rounded hover:bg-green-50"
+                className="p-2 border rounded hover:bg-green-100"
               >
                 {sortAsc ? (
                   <ArrowDownAZ className="w-4 h-4 text-green-600" />
@@ -96,21 +121,21 @@ export default function AdminDashboard() {
               />
             </div>
 
-            <div className="space-y-2 overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-green-200">
+            <div className="space-y-2">
               {filteredUsers.map((user) => {
                 const isSelected = selectedUser?.id === user.id;
                 return (
                   <div
                     key={user.id}
                     onClick={() => handleUserClick(user)}
-                    className={`cursor-pointer p-3 rounded-lg border transition ${
+                    className={`cursor-pointer p-3 rounded-lg border flex flex-col transition ${
                       isSelected
                         ? "bg-green-100 border-green-400 ring-2 ring-green-200"
                         : "hover:bg-green-50 border-gray-200"
                     }`}
                   >
-                    <div className="font-medium text-sm text-gray-800">{user.username}</div>
-                    <div className="text-xs text-gray-500">{user.email}</div>
+                    <span className="font-medium text-sm text-gray-800">{user.username}</span>
+                    <span className="text-xs text-gray-500">{user.email}</span>
                   </div>
                 );
               })}
@@ -119,48 +144,68 @@ export default function AdminDashboard() {
           </aside>
 
           {/* Plantaciones */}
-          <section className="bg-white rounded-xl shadow p-6 md:col-span-2">
-            <h2 className="text-xl font-semibold text-green-700 mb-4">
-              {selectedUser
-                ? `Plantaciones de ${selectedUser.username}`
-                : "Selecciona un usuario para ver sus plantaciones"}
-            </h2>
+          <section className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-2/3 border border-gray-200">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-green-700 mb-4">
+                {selectedUser
+                  ? `🌱 Plantaciones de ${selectedUser.username}`
+                  : "Selecciona un propietario para ver sus plantaciones"}
+              </h2>
+              {/* Filtros */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {[IndicatorStatus.TOTAL, IndicatorStatus.ONLINE, IndicatorStatus.OFFLINE].map((status) => (
+                  <button
+                    key={status}
+                    onClick={() =>
+                      setStatusFilter(
+                        Object.keys(IndicatorStatus).find(
+                          (k) => IndicatorStatus[k as keyof typeof IndicatorStatus] === status
+                        ) || "TOTAL"
+                      )
+                    }
+                    className={`px-4 py-1.5 text-sm font-medium rounded-full border transition ${
+                      statusFilter ===
+                      Object.keys(IndicatorStatus).find(
+                        (k) => IndicatorStatus[k as keyof typeof IndicatorStatus] === status
+                      )
+                        ? "bg-green-600 text-white border-green-600 shadow"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+              {/* Buscador de plantaciones */}
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={plantationSearch}
+                  onChange={(e) => setPlantationSearch(e.target.value)}
+                  placeholder="Buscar plantación..."
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+                />
+              </div>
+            </div>
 
             {loading ? (
-              <div className="grid gap-4 md:grid-cols-2 animate-pulse">
+              <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 animate-pulse">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="h-32 bg-gray-200 rounded-xl" />
                 ))}
               </div>
             ) : selectedUser ? (
-              plantations.length > 0 ? (
-                <ul className="grid gap-4 md:grid-cols-2">
+              filteredPlantations.length > 0 ? (
+                <ul className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
                   {paginatedPlantations.map((p) => (
-                    <li
+                    <PlantationCard
                       key={p.id}
-                      className="group rounded-xl border p-4 hover:border-green-400 transition shadow-sm hover:shadow-md bg-gradient-to-br from-white to-green-50"
-                    >
-                      <div className="space-y-2">
-                        <h3 className="text-lg font-semibold text-gray-800 group-hover:text-green-700 flex items-center gap-2">
-                          <Leaf className="w-4 h-4 text-green-600" /> {p.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 flex items-center gap-1">
-                          <MapPin className="w-4 h-4 text-gray-400" />
-                          {p.country} — {p.province}, {p.city}
-                        </p>
-                        <p className="text-xs text-gray-500 flex items-center gap-1">
-                          <Info className="w-4 h-4 text-gray-400" /> Tipo: {p.type} | Estado: {p.status}
-                        </p>
-                      </div>
-                      <div className="mt-4 flex justify-end">
-                        <button
-                          onClick={() => console.log("Editar plantación:", p.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition"
-                        >
-                          <Pencil className="w-4 h-4" /> Editar
-                        </button>
-                      </div>
-                    </li>
+                      plantation={p}
+                      onViewSensors={() => console.log("Sensor de:", p.id)}
+                      onEdit={() => console.log("Editar:", p.id)}
+                      onDelete={() => console.log("Eliminar:", p.id)}
+                    />
                   ))}
                 </ul>
               ) : (

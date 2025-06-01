@@ -7,15 +7,17 @@ import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import {useDebounce} from "use-debounce";
+import { useDebounce } from "use-debounce";
 
 const Dashboard = () => {
   const { isAdmin, isSupport } = useAuth();
   const navigate = useNavigate();
 
-  if (isAdmin || isSupport) {
-    navigate("/admin/dashboard");
-  }
+  useEffect(() => {
+    if (isAdmin || isSupport) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAdmin, isSupport, navigate]);
 
   const [plantations, setPlantations] = useState<Plantation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +39,11 @@ const Dashboard = () => {
       setLoading(true);
 
       try {
-        const response = await plantationService.getPlantations({ page: currentPage, limit: 10, search: debouncedSearch })
+        const response = await plantationService.getPlantations({
+          page: currentPage,
+          limit: 10,
+          search: debouncedSearch,
+        });
 
         const normalized = normalizePlantations(response.data);
         setPlantations(normalized);

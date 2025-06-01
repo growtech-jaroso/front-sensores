@@ -29,23 +29,26 @@ const FormLogin = () => {
     setLoading(true);
 
     try {
-      // Iniciar sesión y guardar datos en sessionStorage
+      // Login
       await authService.login(email, password);
 
-      // Obtener y setear el usuario en el contexto
+      // Obtener y guardar usuario
       const userData = authService.getUserData();
-      if (userData) setUser(userData);
+      if (userData) {
+        setUser(userData);
 
-      // Mostrar alerta sin botón y redirigir
-      await showAlert(
-        "success",
-        "Sus credenciales son correctas",
-        "Bienvenido a GrowPanel",
-        undefined,
-        true // ← autoClose habilitado
-      );
-
-      navigate("/dashboard");
+        // Mostrar alerta y esperar a que se cierre automáticamente
+        await showAlert("success", "Sus credenciales son correctas", "Bienvenido a GrowPanel", undefined, true).then(
+          () => {
+            // Redirección tras la alerta
+            if (userData.role === "ADMIN") {
+              navigate("/admin/dashboard");
+            } else {
+              navigate("/dashboard");
+            }
+          }
+        );
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setGeneralError(error.message || "Error al iniciar sesión.");

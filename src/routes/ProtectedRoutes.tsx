@@ -35,10 +35,7 @@ export default function ProtectedRoutes({ allowedRoles }: Props) {
   }
 
   // Verificar permisos por roles
-  if (
-    allowedRoles &&
-    !allowedRoles.some((role) => user?.role === role)
-  ) {
+  if (allowedRoles && !allowedRoles.some((role) => user?.role === role)) {
     return <Navigate to="/dashboard" replace />;
   }
 

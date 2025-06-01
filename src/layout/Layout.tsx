@@ -9,8 +9,10 @@ type LayoutProps = {
 
 const getTitleFromPath = (pathname: string): string => {
   if (pathname.startsWith("/dashboard")) return "Dashboard";
+  if (pathname.startsWith("/admin/dashboard")) return "Dashboard Admin";
   if (pathname.startsWith("/admin/usuarios")) return "Gestión de Usuarios";
   if (pathname.startsWith("/admin/crear-usuario")) return "Crear Usuario";
+  if (pathname.startsWith("/admin/editar-usuario")) return "Editar Usuario";
   if (pathname.startsWith("/admin/configuracion")) return "Configuración";
   return "Panel";
 };

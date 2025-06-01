@@ -1,6 +1,6 @@
-import {ReactNode, useEffect, useState} from "react";
-import {User} from "../interfaces/User.ts";
-import {authService} from "../services/authService.ts";
+import { ReactNode, useEffect, useState } from "react";
+import { User } from "../interfaces/User.ts";
+import { authService } from "../services/authService.ts";
 import UserContext from "../contexts/UserContext.tsx";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
