@@ -10,12 +10,14 @@ export default function AdminRouter() {
   return (
     <Routes>
       <Route element={<ProtectedRoutes allowedRoles={["ADMIN"]} />}>
-        <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="panel" element={<PanelIndex />} />
         <Route path="usuarios" element={<UserTable />} />
         <Route path="crear-usuario" element={<CreateUser />} />
         <Route path="editar-usuario/:userId" element={<EditUser />} />
         <Route path="editar-plantacion/:plantationId" element={<h1>Editar plantación</h1>} />
+      </Route>
+      <Route element={<ProtectedRoutes allowedRoles={["ADMIN", "SUPPORT"]} />}>
+        <Route path="dashboard" element={<AdminDashboard />} />
       </Route>
     </Routes>
   );

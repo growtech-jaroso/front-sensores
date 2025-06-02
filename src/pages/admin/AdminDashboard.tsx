@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
@@ -79,7 +78,7 @@ export default function AdminDashboard() {
     });
   }, []);
 
-  if (!user || user.role !== "ADMIN") {
+  if (!user || !["ADMIN", "SUPPORT"].includes(user.role)) {
     return <Navigate to="/dashboard" />;
   }
 
