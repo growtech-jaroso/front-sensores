@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Eye } from "lucide-react";
-import {IndicatorStatus, IndicatorStatusType} from "../../types/indicatorStatus";
+import { IndicatorStatus, IndicatorStatusType } from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
 
@@ -24,6 +23,8 @@ type PlantationTableProps = {
   onPageChange: (page: number) => void;
   search: string;
   setSearch: (search: string) => void;
+  setStatus: (status: IndicatorStatus) => void;
+  statusFilter?: IndicatorStatus;
 };
 
 export default function PlantationTable({
@@ -35,19 +36,9 @@ export default function PlantationTable({
   onPageChange,
   search,
   setSearch,
+  setStatus,
+  statusFilter = IndicatorStatus.TOTAL,
 }: PlantationTableProps) {
-  const [filterStatus, setFilterStatus] = useState(IndicatorStatus.TOTAL);
-
-  const filtered = plantations.filter((p) => {
-    const matchesSearch = `${p.name} ${p.city} ${p.status} ${p.type} ${p.country}`
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesStatus = filterStatus === IndicatorStatus.TOTAL || p.status === filterStatus.toString();
-
-    return matchesSearch && matchesStatus;
-  });
-
   const handlePrevious = () => {
     if (!loading && currentPage > 1) onPageChange(currentPage - 1);
   };
@@ -80,9 +71,9 @@ export default function PlantationTable({
         {[IndicatorStatus.TOTAL, IndicatorStatus.ONLINE, IndicatorStatus.OFFLINE].map((status) => (
           <button
             key={status}
-            onClick={() => setFilterStatus(status)}
+            onClick={() => setStatus(status)}
             className={`px-4 py-1.5 text-sm font-medium rounded-full border transition ${
-              filterStatus === status
+              statusFilter === status
                 ? "bg-green-600 text-white border-green-600 shadow"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
             }`}
@@ -108,14 +99,14 @@ export default function PlantationTable({
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 ? (
+            {plantations.length === 0 ? (
               <tr>
                 <td colSpan={8} className="text-center py-6 text-gray-500">
                   No hay plantaciones disponibles.
                 </td>
               </tr>
             ) : (
-              filtered.map((p, idx) => (
+              plantations.map((p, idx) => (
                 <motion.tr
                   key={p.id}
                   initial={{ opacity: 0 }}
@@ -166,10 +157,10 @@ export default function PlantationTable({
 
       {/* Vista tarjeta para móvil */}
       <div className="md:hidden space-y-4">
-        {filtered.length === 0 ? (
+        {plantations.length === 0 ? (
           <div className="text-center text-gray-500 text-sm">No hay plantaciones disponibles.</div>
         ) : (
-          filtered.map((p, idx) => (
+          plantations.map((p, idx) => (
             <motion.div
               key={p.id}
               initial={{ opacity: 0, y: 10 }}

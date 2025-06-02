@@ -10,13 +10,13 @@ interface SummaryCardProps {
 const SummaryCard = ({ title, value, type }: SummaryCardProps) => {
   const getColor = (type?: SummaryCardProps["type"]) => {
     switch (type) {
-      case IndicatorStatus.ACTIVE:
+      case IndicatorStatus.ONLINE:
         return "text-green-600";
-      case IndicatorStatus.INACTIVE:
-        return "text-gray-500";
-      case IndicatorStatus.ALERT:
-        return "text-red-600";
+      case IndicatorStatus.OFFLINE:
+        return "text-red-500";
+
       case IndicatorStatus.TOTAL:
+        return "text-gray-700";
       default:
         return "text-green-600";
     }
