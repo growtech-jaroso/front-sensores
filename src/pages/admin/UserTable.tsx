@@ -46,11 +46,7 @@ export default function UserTable() {
     if (confirmed) {
       try {
         await axiosClient.delete(`/users/${userId}`);
-        const updatedUsers = users.filter((u) => u.id !== userId);
-        setUsers(updatedUsers);
-        if (updatedUsers.length === 0 && page > 1) {
-          setPage(page - 1);
-        }
+        await fetchUsers();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {
         await ErrorAlert({
