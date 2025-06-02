@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [meta, setMeta] = useState<{ total_items: number }>({ total_items: 0 });
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
+  const [filterStatus, setFilterStatus] = useState(IndicatorStatus.TOTAL);
 
   const normalizePlantations = (data: Plantation[]): Plantation[] =>
     data.map((p) => ({
@@ -42,7 +43,7 @@ const Dashboard = () => {
         const response = await plantationService.getPlantations({
           page: currentPage,
           limit: 10,
-          search: debouncedSearch,
+          search: debouncedSearch, status: ,
         });
 
         const normalized = normalizePlantations(response.data);
