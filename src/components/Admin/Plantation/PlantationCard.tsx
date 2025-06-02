@@ -3,19 +3,17 @@ import { Leaf, MapPin, Info, Satellite, Pencil, Trash2 } from "lucide-react";
 import { Plantation } from "../../../interfaces/Plantation";
 import {useAuth} from "../../../hooks/useAuth.ts";
 import {useNavigate} from "react-router-dom";
+import {IndicatorStatus} from "../../../types/indicatorStatus.ts";
 
 interface PlantationCardProps {
   plantation: Plantation;
+  handleDeleteClick: (plantation: Plantation) => void
 }
 
-export function PlantationCard({ plantation}: PlantationCardProps) {
+export function PlantationCard({ plantation, handleDeleteClick}: PlantationCardProps) {
 
   const {isAdmin} = useAuth()
   const navigate = useNavigate()
-
-  const handleDeletePlantation = () => {
-    console.log("Eliminando")
-  }
 
   const handleEditPlantation = () => {
     navigate(`/admin/editar-plantacion/${plantation.id}`)
@@ -42,7 +40,7 @@ export function PlantationCard({ plantation}: PlantationCardProps) {
           {plantation.country} — {plantation.province}, {plantation.city}
         </p>
         <p className="text-xs text-gray-500 flex items-center gap-1">
-          <Info className="w-4 h-4" /> Tipo: {plantation.type} | Estado: {plantation.status}
+          <Info className="w-4 h-4" /> Tipo: {plantation.type} | Estado: { IndicatorStatus[plantation.status as keyof typeof IndicatorStatus]}
         </p>
       </div>
 
@@ -63,7 +61,7 @@ export function PlantationCard({ plantation}: PlantationCardProps) {
         )}
         {isAdmin && (
           <button
-            onClick={() => handleDeletePlantation()}
+            onClick={() => handleDeleteClick(plantation)}
             className="inline-flex items-center cursor-pointer gap-1 px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition"
           >
             <Trash2 className="w-4 h-4" /> Borrar

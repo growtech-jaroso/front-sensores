@@ -10,6 +10,8 @@ import type { Plantation } from "../../interfaces/Plantation";
 import { IndicatorStatus } from "../../types/indicatorStatus";
 import { PlantationCard } from "../../components/Admin/Plantation/PlantationCard";
 import useUser from "../../hooks/useUser.tsx";
+import axiosClient from "../../api/axiosClient.ts";
+import {ErrorAlert} from "../../components/Alert/WarningAlert.tsx";
 
 export default function AdminDashboard() {
   const {user} = useUser()
@@ -57,6 +59,19 @@ export default function AdminDashboard() {
     currentPlantationPage * plantationsPerPage
   );
   const totalPlantationPages = Math.ceil(filteredPlantations.length / plantationsPerPage);
+
+  const handleDeletePlantation = async (plantation: Plantation) => {
+    try {
+      await axiosClient.delete(`/plantations/${plantation.id}`)
+      await handleUserClick(selectedUser!)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      await ErrorAlert({
+        title: "Error al eliminar la plantación",
+        text: "No se pudo eliminar la plantación. Intenta nuevamente.",
+      });
+    }
+  }
 
   useEffect(() => {
     adminService.getAllOwners().then((res) => {
@@ -200,6 +215,7 @@ export default function AdminDashboard() {
                 <ul className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
                   {paginatedPlantations.map((p) => (
                     <PlantationCard
+                      handleDeleteClick={handleDeletePlantation}
                       key={p.id}
                       plantation={p}
                     />
