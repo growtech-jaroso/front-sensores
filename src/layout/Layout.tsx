@@ -8,7 +8,9 @@ type LayoutProps = {
 };
 
 const getTitleFromPath = (pathname: string): string => {
-  if (pathname.startsWith("/dashboard")) return "Dashboard";
+  if (pathname.startsWith("/dashboard")) {
+    return localStorage.getItem("dashboard_title") || "Dashboard";
+  }
   if (pathname.startsWith("/admin/dashboard")) return "Dashboard Admin";
   if (pathname.startsWith("/admin/usuarios")) return "Gestión de Usuarios";
   if (pathname.startsWith("/admin/crear-usuario")) return "Crear Usuario";
@@ -36,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
-        {!hideHeader && <Header titulo={getTitleFromPath(location.pathname)} />}
+        {!hideHeader && <Header titulo={getTitleFromPath(location.pathname)} pathname={location.pathname} />}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">{children}</main>
       </div>
     </div>
