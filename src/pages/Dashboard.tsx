@@ -5,7 +5,7 @@ import SummaryCard from "../components/DashboardWidgets/SummaryCard";
 import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Leaf, MapPin, Info, Satellite, Pencil, Trash2 } from "lucide-react";
 import { Plantation } from "../../../interfaces/Plantation";
-import {useAuth} from "../../../hooks/useAuth.ts";
+import {useAuth} from "../../../hooks/useAuth.tsx";
 import {useNavigate} from "react-router-dom";
 import {IndicatorStatus} from "../../../types/indicatorStatus.ts";
 
