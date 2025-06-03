@@ -11,6 +11,7 @@ import { PlantationCard } from "../../components/Admin/Plantation/PlantationCard
 import useUser from "../../hooks/useUser.tsx";
 import axiosClient from "../../api/axiosClient.ts";
 import {ErrorAlert} from "../../components/Alert/WarningAlert.tsx";
+import {AlertDelete} from "../../components/Alert/AlertDelete.tsx";
 
 export default function AdminDashboard() {
   const {user} = useUser()
@@ -60,6 +61,8 @@ export default function AdminDashboard() {
   const totalPlantationPages = Math.ceil(filteredPlantations.length / plantationsPerPage);
 
   const handleDeletePlantation = async (plantation: Plantation) => {
+    const confirmed = await AlertDelete();
+    if (!confirmed) return
     try {
       await axiosClient.delete(`/plantations/${plantation.id}`)
       await handleUserClick(selectedUser!)
