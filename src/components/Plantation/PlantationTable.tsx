@@ -2,6 +2,7 @@ import { Eye } from "lucide-react";
 import { IndicatorStatus, IndicatorStatusType } from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
+import {Dispatch, SetStateAction} from "react";
 
 const getBadgeStyle = (status: IndicatorStatus) => {
   switch (status) {
@@ -23,7 +24,7 @@ type PlantationTableProps = {
   onPageChange: (page: number) => void;
   search: string;
   setSearch: (search: string) => void;
-  setStatus: (status: IndicatorStatus) => void;
+  setStatus: Dispatch<SetStateAction<IndicatorStatus>>;
   statusFilter?: IndicatorStatus;
 };
 

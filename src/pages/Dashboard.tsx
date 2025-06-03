@@ -43,7 +43,7 @@ const Dashboard = () => {
         const response = await plantationService.getPlantations({
           page: currentPage,
           limit: 10,
-          search: debouncedSearch, status: ,
+          search: debouncedSearch, status: filterStatus,
         });
 
         const normalized = normalizePlantations(response.data);
@@ -60,7 +60,7 @@ const Dashboard = () => {
     };
 
     fetchPlantations();
-  }, [currentPage, firstLoadDone, debouncedSearch]);
+  }, [currentPage, firstLoadDone, debouncedSearch, filterStatus]);
 
   const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
@@ -98,6 +98,8 @@ const Dashboard = () => {
               onPageChange={setCurrentPage}
               search={search}
               setSearch={setSearch}
+              statusFilter={filterStatus}
+              setStatus={setFilterStatus}
             />
           </div>
         )}
