@@ -5,45 +5,8 @@ import axiosClient from "../../api/axiosClient";
 import Layout from "../../layout/Layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
-
-const EditUserSchema = z
-  .object({
-    username: z.string().min(3, "El nombre de usuario es obligatorio"),
-    email: z.string().email("Correo electrónico inválido"),
-    role: z.enum(["USER", "SUPPORT", "ADMIN"], {
-      errorMap: () => ({ message: "Selecciona un rol válido" }),
-    }),
-    password: z.string().optional(),
-    confirm_password: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    const { password, confirm_password } = data;
-
-    if (password || confirm_password) {
-      if ((password || "").length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.too_small,
-          minimum: 8,
-          inclusive: true,
-          type: "string",
-          path: ["password"],
-          message: "La nueva contraseña debe tener al menos 8 caracteres",
-        });
-      }
-
-      if (password !== confirm_password) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["confirm_password"],
-          message: "Las contraseñas no coinciden",
-        });
-      }
-    }
-  });
-
-type EditUserFormType = z.infer<typeof EditUserSchema>;
+import {EditUserFormType, EditUserSchema} from "../../schemas/edit-user.schema.ts";
 
 export default function EditUser() {
   const navigate = useNavigate();
