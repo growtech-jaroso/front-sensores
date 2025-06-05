@@ -6,6 +6,7 @@ import UserTable from "../pages/admin/UserTable";
 import EditUser from "../pages/admin/EditUser";
 import AdminIndex from "../pages/admin/AdminIndex.tsx";
 import EditPlantation from "../pages/EditPlantation.tsx";
+import NotFound from "../pages/NotFound.tsx";
 
 export default function AdminRouter() {
   return (
@@ -20,6 +21,7 @@ export default function AdminRouter() {
       <Route element={<ProtectedRoutes allowedRoles={["ADMIN", "SUPPORT"]} />}>
         <Route path="dashboard" element={<AdminIndex />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
