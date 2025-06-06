@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axiosClient from "../api/axiosClient.ts";
 import {EditPlantationFormType, EditPlantationSchema} from "../schemas/edit-plantation.schema.ts";
 import {Plantation} from "../interfaces/Plantation.ts";
-import InputText from "../components/Inputs/InputsText.tsx";
+import InputText from "../components/Inputs/InputText.tsx";
 import Layout from "../layout/Layout.tsx";
+import GoBackButton from "../components/Button/GoBackButton.tsx";
 
 export default function EditPlantation() {
   const navigate = useNavigate();
@@ -86,13 +87,7 @@ export default function EditPlantation() {
           }
         `}</style>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer hover:text-green-600 transition"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Volver
-        </button>
+        <GoBackButton />
 
         <h2 className="text-2xl font-bold text-green-700 mb-6">✏️ Editar Plantación</h2>
 

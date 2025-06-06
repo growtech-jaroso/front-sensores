@@ -1,15 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 import Layout from "../../layout/Layout";
 import { UserSchema, UserFormType } from "../../schemas/user.schema";
 import axiosClient from "../../api/axiosClient";
 import { useState } from "react";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
+import GoBackButton from "../../components/Button/GoBackButton.tsx";
 
 export default function CreateUser() {
-  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -59,12 +58,7 @@ export default function CreateUser() {
           `}
         </style>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer hover:text-green-600 transition"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1" /> Volver
-        </button>
+        <GoBackButton />
 
         <h2 className="text-2xl font-bold text-green-700 mb-6">👤 Crear nuevo usuario</h2>
 
