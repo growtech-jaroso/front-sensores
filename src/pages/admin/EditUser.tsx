@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
 import {EditUserFormType, EditUserSchema} from "../../schemas/edit-user.schema.ts";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
+import InputEditForm from "../../components/Inputs/InputEditForm.tsx";
 
 export default function EditUser() {
   const { userId } = useParams();
@@ -92,25 +93,8 @@ export default function EditUser() {
           <p className="text-center text-gray-500">Cargando usuario...</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
-              <input
-                type="text"
-                {...register("username")}
-                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-              />
-              {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-              <input
-                type="email"
-                {...register("email")}
-                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-              />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-            </div>
+            <InputEditForm register={register("username")} errors={errors.username} label="Nombre de usuario" />
+            <InputEditForm register={register("email")} errors={errors.email} label="Correo electrónico" />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nueva contraseña</label>
