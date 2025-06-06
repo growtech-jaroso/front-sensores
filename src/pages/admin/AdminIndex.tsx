@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
-import { Navigate } from "react-router-dom";
-import { User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ } from "lucide-react";
+import {Link, Navigate} from "react-router-dom";
+import {User as UserIcon, Search, ArrowDownAZ, ArrowUpAZ, Plus} from "lucide-react";
 import { adminService } from "../../services/adminService";
 import Layout from "../../layout/Layout";
 import Pagination from "../../components/Pagination/PaginationTable";
@@ -164,10 +164,16 @@ export default function AdminDashboard() {
           <section className="bg-white rounded-2xl shadow-lg p-6 w-full lg:w-2/3 border border-gray-200">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-green-700 mb-4">
-                {selectedUser
+                {
+                  selectedUser
                   ? `🌱 Plantaciones de ${selectedUser.username}`
-                  : "Selecciona un propietario para ver sus plantaciones"}
+                  : "Selecciona un propietario para ver sus plantaciones"
+                }
               </h2>
+              <Link to='admin/crear-plantacion'>
+                <Plus className="w-5 h-5 text-green-600" />
+                <span className="ml-2 text-sm text-gray-600">Agregar plantación</span>
+              </Link>
               {/* Filtros */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {[IndicatorStatus.TOTAL, IndicatorStatus.ONLINE, IndicatorStatus.OFFLINE].map((status) => (

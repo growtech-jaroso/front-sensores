@@ -7,6 +7,7 @@ import EditUser from "../pages/admin/EditUser";
 import AdminIndex from "../pages/admin/AdminIndex.tsx";
 import EditPlantation from "../pages/EditPlantation.tsx";
 import NotFound from "../pages/NotFound.tsx";
+import CreatePlantation from "../pages/admin/CreatePlantation.tsx";
 
 export default function AdminRouter() {
   return (
@@ -17,6 +18,7 @@ export default function AdminRouter() {
         <Route path="crear-usuario" element={<CreateUser />} />
         <Route path="editar-usuario/:userId" element={<EditUser />} />
         <Route path="editar-plantacion/:plantationId" element={<EditPlantation />} />
+        <Route path="crear-plantacion" element={<CreatePlantation />} />
       </Route>
       <Route element={<ProtectedRoutes allowedRoles={["ADMIN", "SUPPORT"]} />}>
         <Route path="dashboard" element={<AdminIndex />} />
