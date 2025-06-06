@@ -3,6 +3,7 @@ import { IndicatorStatus, IndicatorStatusType } from "../../types/indicatorStatu
 import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
 import {Dispatch, SetStateAction} from "react";
+import {Link} from "react-router-dom";
 
 const getBadgeStyle = (status: IndicatorStatus) => {
   switch (status) {
@@ -17,7 +18,6 @@ const getBadgeStyle = (status: IndicatorStatus) => {
 
 type PlantationTableProps = {
   plantations: Plantation[];
-  onVerSensor: (plantacion: Plantation) => void;
   currentPage: number;
   totalPages: number;
   loading: boolean;
@@ -30,7 +30,6 @@ type PlantationTableProps = {
 
 export default function PlantationTable({
   plantations,
-  onVerSensor,
   currentPage,
   totalPages,
   loading,
@@ -142,12 +141,12 @@ export default function PlantationTable({
                     </button>
                   </td>
                   <td className="py-3 px-4 text-center">
-                    <button
-                      onClick={() => onVerSensor(p)}
+                    <Link
+                      to={`/dashboard/plantacion/${p.id}`}
                       className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-green-600 hover:bg-green-700 transition"
                     >
-                      <Eye size={16} /> Ver Sensor
-                    </button>
+                      <Eye size={16} /> Ver Sensores
+                    </Link>
                   </td>
                 </motion.tr>
               ))
@@ -178,7 +177,7 @@ export default function PlantationTable({
                     IndicatorStatus[p.status as IndicatorStatusType] ?? IndicatorStatus.TOTAL
                   )}`}
                 >
-                  {p.status ?? "Desconocido"}
+                  {IndicatorStatus[p.status as IndicatorStatusType] ?? "Desconocido"}
                 </span>
               </div>
               <p className="text-xs text-gray-600">
@@ -196,12 +195,12 @@ export default function PlantationTable({
                 >
                   <Eye size={14} /> Mapa
                 </button>
-                <button
-                  onClick={() => onVerSensor(p)}
+                <Link
+                  to={`/dashboard/plantacion/${p.id}`}
                   className="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition"
                 >
-                  <Eye size={14} /> Sensor
-                </button>
+                  <Eye size={14} /> Sensores
+                </Link>
               </div>
             </motion.div>
           ))

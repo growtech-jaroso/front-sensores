@@ -70,10 +70,6 @@ const Dashboard = () => {
     { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
   ];
 
-  const handleVerSensor = (plantacion: Plantation) => {
-    console.log("Ver sensor de:", plantacion.name);
-  };
-
   return (
     <div className="flex flex-col flex-grow min-h-full animate-fadeInSlow">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -91,7 +87,6 @@ const Dashboard = () => {
           <div className="flex-1">
             <PlantationTable
               plantations={plantations}
-              onVerSensor={handleVerSensor}
               loading={loading}
               currentPage={currentPage}
               totalPages={totalPages}
