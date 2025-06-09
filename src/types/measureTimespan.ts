@@ -1,0 +1,5 @@
+export enum MeasureTimespan {
+  ONE_HOUR = "ONE_HOUR",
+  THIRTY_MINUTES = "THIRTY_MINUTES",
+  FIFTEEN_MINUTES = "FIFTEEN_MINUTES"
+}

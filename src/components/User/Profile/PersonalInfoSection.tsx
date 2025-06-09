@@ -52,13 +52,13 @@ export default function PersonalInfoSection({ username, email, role }: Props) {
                 <ShieldCheck className="w-4 h-4" />
                 Tienes acceso administrativo
               </div>
-              <p className="text-sm text-gray-600">Puedes gestionar al personal autorizado desde esta sección.</p>
+              <p className="text-sm text-gray-600">Puedes acceder a la sección de administración.</p>
               <button
                 onClick={() => navigate("/admin/panel")}
                 className="inline-flex items-center gap-2 text-sm font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
               >
                 <Users className="w-4 h-4" />
-                Gestionar personal
+                Administrar
               </button>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import axiosClient from "../api/axiosClient";
 import { Plantation } from "../interfaces/Plantation";
+import {IndicatorStatus} from "../types/indicatorStatus.ts";
 
 interface MetaData {
   total_items: number;
@@ -18,11 +19,12 @@ interface Params {
   page?: number;
   limit?: number;
   search?: string;
+  status?: IndicatorStatus
 }
 
-const getPlantations = async ({ page = 1, limit = 10, search = "" }: Params): Promise<PlantationResponse> => {
+const getPlantations = async ({ page = 1, limit = 10, search, status }: Params): Promise<PlantationResponse> => {
   const response = await axiosClient.get("/plantations", {
-    params: { page, limit, search },
+    params: { page, limit, search, status },
   });
   
 

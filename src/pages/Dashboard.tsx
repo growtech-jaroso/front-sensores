@@ -5,7 +5,7 @@ import SummaryCard from "../components/DashboardWidgets/SummaryCard";
 import LoadingPlantations from "../components/Plantation/LoadingPlantations";
 import { IndicatorStatus } from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
@@ -43,7 +43,8 @@ const Dashboard = () => {
         const response = await plantationService.getPlantations({
           page: currentPage,
           limit: 10,
-          search: debouncedSearch, status: ,
+          search: debouncedSearch,
+          status: filterStatus,
         });
 
         const normalized = normalizePlantations(response.data);
@@ -60,19 +61,15 @@ const Dashboard = () => {
     };
 
     fetchPlantations();
-  }, [currentPage, firstLoadDone, debouncedSearch]);
+  }, [currentPage, firstLoadDone, debouncedSearch, filterStatus]);
 
-  const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
+  const countbystate = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
     { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
-    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
-    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
+    { titulo: "Activas", valor: countbystate(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
+    { titulo: "En Alerta", valor: countbystate(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
   ];
-
-  const handleVerSensor = (plantacion: Plantation) => {
-    console.log("Ver sensor de:", plantacion.name);
-  };
 
   return (
     <div className="flex flex-col flex-grow min-h-full animate-fadeInSlow">
@@ -91,13 +88,14 @@ const Dashboard = () => {
           <div className="flex-1">
             <PlantationTable
               plantations={plantations}
-              onVerSensor={handleVerSensor}
               loading={loading}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
               search={search}
               setSearch={setSearch}
+              statusFilter={filterStatus}
+              setStatus={setFilterStatus}
             />
           </div>
         )}

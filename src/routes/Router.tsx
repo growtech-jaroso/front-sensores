@@ -7,6 +7,7 @@ import PrivateRoute from "./ProtectedRoutes";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import NotFound from "../pages/NotFound";
 import { lazy } from "react";
+import PlantationSensorsView from "../components/Sensor/PlantationSensorsView";
 
 const AdminRouter = lazy(() => import("./AdminRouter"));
 
@@ -45,7 +46,7 @@ export default function AppRouter() {
           path="/dashboard/plantacion/:plantationId"
           element={
             <Layout>
-              <h1>Ver sensores </h1>
+              <PlantationSensorsView />
             </Layout>
           }
         />

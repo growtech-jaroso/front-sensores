@@ -10,11 +10,12 @@ import UserTableBody from "../../components/Admin/Users/UserTableBody";
 import { ErrorAlert } from "../../components/Alert/WarningAlert.tsx";
 import Layout from "../../layout/Layout";
 import {User} from "../../interfaces/User.ts";
+import {UserSearch} from "../../types/userSearch.ts";
 
 export default function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState({ username: "", email: "", role: "" });
+  const [search, setSearch] = useState<UserSearch>({ search: "", role: "" });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
@@ -26,8 +27,7 @@ export default function UserTable() {
         params: {
           page,
           limit: 10,
-          username: search.username,
-          email: search.email,
+          search: search.search,
           role: search.role,
         },
       });

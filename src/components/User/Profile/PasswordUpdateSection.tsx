@@ -1,77 +1,62 @@
 import { Lock, KeyRound, CheckCircle } from "lucide-react";
-import { useState } from "react";
+import {useState} from "react";
 import axiosClient from "../../../api/axiosClient";
-import ErrorText from "../../Errors/ErrorText";
 import InputPasswordUser from "../../Inputs/InputPasswordUser";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {ChangePasswordFormType, ChangePasswordSchema} from "../../../schemas/change-password.schema.ts";
 
 export default function PasswordUpdateSection() {
-  const [current, setCurrent] = useState("");
-  const [newPass, setNewPass] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ChangePasswordFormType>({
+    resolver: zodResolver(ChangePasswordSchema),
+  });
 
-    if (newPass.length < 8) {
-      setMessage({ type: "error", text: "La nueva contraseña debe tener al menos 8 caracteres." });
-      return;
-    }
-
-    if (newPass !== confirm) {
-      setMessage({ type: "error", text: "Las contraseñas no coinciden." });
-      return;
-    }
-
+  const onSubmit: SubmitHandler<ChangePasswordFormType> = async ({old_password, new_password, confirm_password}) => {
     setSubmitting(true);
 
     try {
       await axiosClient.put("/users/change_password", {
-        old_password: current,
-        new_password: newPass,
-        confirm_password: confirm,
+        old_password,
+        new_password,
+        confirm_password
       });
-      setMessage({ type: "success", text: "Contraseña actualizada correctamente." });
-      setCurrent("");
-      setNewPass("");
-      setConfirm("");
+      setMessage({type: "success", text: "Contraseña actualizada correctamente."});
+      reset()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const backendMsg = error?.response?.data?.message || "Error al actualizar la contraseña.";
       if (backendMsg.toLowerCase().includes("old password")) {
-        setMessage({ type: "error", text: "La contraseña actual no es correcta." });
+        setMessage({type: "error", text: "La contraseña actual no es correcta."});
       } else {
-        setMessage({ type: "error", text: backendMsg });
+        setMessage({type: "error", text: backendMsg});
       }
     } finally {
       setSubmitting(false);
     }
   };
 
-  const showFieldError = (field: string): string | undefined => {
-    if (message?.type !== "error") return;
-    if (field === "current" && message.text.toLowerCase().includes("actual")) return message.text;
-    if (field === "newPass" && message.text.toLowerCase().includes("caracteres")) return message.text;
-    if (field === "confirm" && message.text.toLowerCase().includes("coinciden")) return message.text;
-    return;
-  };
-
   return (
     <section className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-        <Lock className="w-5 h-5 text-green-600" />
+        <Lock className="w-5 h-5 text-green-600"/>
         Actualizar contraseña
       </h2>
 
       <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-5">
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">Contraseña actual</label>
             <InputPasswordUser
-              register={{ name: "current", onChange: (e) => setCurrent(e.target.value), value: current } as any}
-              errors={showFieldError("current") ? { message: showFieldError("current") } : undefined}
+              register={register("old_password")}
+              errors={errors.old_password}
               placeholder="Contraseña actual"
             />
           </div>
@@ -79,8 +64,8 @@ export default function PasswordUpdateSection() {
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">Nueva contraseña</label>
             <InputPasswordUser
-              register={{ name: "newPass", onChange: (e) => setNewPass(e.target.value), value: newPass } as any}
-              errors={showFieldError("newPass") ? { message: showFieldError("newPass") } : undefined}
+              register={register("new_password")}
+              errors={errors.new_password}
               placeholder="Nueva contraseña"
             />
           </div>
@@ -88,8 +73,8 @@ export default function PasswordUpdateSection() {
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">Confirmar contraseña</label>
             <InputPasswordUser
-              register={{ name: "confirm", onChange: (e) => setConfirm(e.target.value), value: confirm } as any}
-              errors={showFieldError("confirm") ? { message: showFieldError("confirm") } : undefined}
+              register={register("confirm_password")}
+              errors={errors.confirm_password}
               placeholder="Confirmar contraseña"
             />
           </div>

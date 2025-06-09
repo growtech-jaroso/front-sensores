@@ -1,52 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { CheckCircle, XCircle } from "lucide-react";
 import axiosClient from "../../api/axiosClient";
 import Layout from "../../layout/Layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
-
-const EditUserSchema = z
-  .object({
-    username: z.string().min(3, "El nombre de usuario es obligatorio"),
-    email: z.string().email("Correo electrónico inválido"),
-    role: z.enum(["USER", "SUPPORT", "ADMIN"], {
-      errorMap: () => ({ message: "Selecciona un rol válido" }),
-    }),
-    password: z.string().optional(),
-    confirm_password: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    const { password, confirm_password } = data;
-
-    if (password || confirm_password) {
-      if ((password || "").length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.too_small,
-          minimum: 8,
-          inclusive: true,
-          type: "string",
-          path: ["password"],
-          message: "La nueva contraseña debe tener al menos 8 caracteres",
-        });
-      }
-
-      if (password !== confirm_password) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["confirm_password"],
-          message: "Las contraseñas no coinciden",
-        });
-      }
-    }
-  });
-
-type EditUserFormType = z.infer<typeof EditUserSchema>;
+import {EditUserFormType, EditUserSchema} from "../../schemas/edit-user.schema.ts";
+import GoBackButton from "../../components/Button/GoBackButton.tsx";
+import InputEditForm from "../../components/Inputs/InputEditForm.tsx";
 
 export default function EditUser() {
-  const navigate = useNavigate();
   const { userId } = useParams();
 
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -121,13 +85,7 @@ export default function EditUser() {
           }
         `}</style>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-sm text-gray-600 cursor-pointer hover:text-green-600 transition"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Volver
-        </button>
+        <GoBackButton />
 
         <h2 className="text-2xl font-bold text-green-700 mb-6">✏️ Editar Usuario</h2>
 
@@ -135,25 +93,8 @@ export default function EditUser() {
           <p className="text-center text-gray-500">Cargando usuario...</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
-              <input
-                type="text"
-                {...register("username")}
-                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-              />
-              {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-              <input
-                type="email"
-                {...register("email")}
-                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-              />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-            </div>
+            <InputEditForm register={register("username")} errors={errors.username} label="Nombre de usuario" />
+            <InputEditForm register={register("email")} errors={errors.email} label="Correo electrónico" />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nueva contraseña</label>
