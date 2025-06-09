@@ -43,7 +43,8 @@ const Dashboard = () => {
         const response = await plantationService.getPlantations({
           page: currentPage,
           limit: 10,
-          search: debouncedSearch, status: filterStatus,
+          search: debouncedSearch,
+          status: filterStatus,
         });
 
         const normalized = normalizePlantations(response.data);
@@ -62,12 +63,12 @@ const Dashboard = () => {
     fetchPlantations();
   }, [currentPage, firstLoadDone, debouncedSearch, filterStatus]);
 
-  const contarPorEstado = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
+  const countbystate = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
     { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
-    { titulo: "Activas", valor: contarPorEstado(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
-    { titulo: "En Alerta", valor: contarPorEstado(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
+    { titulo: "Activas", valor: countbystate(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
+    { titulo: "En Alerta", valor: countbystate(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
   ];
 
   return (
