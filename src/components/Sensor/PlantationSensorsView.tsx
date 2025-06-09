@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { Plantation } from "../../interfaces/Plantation";
 import { Sensor } from "../../interfaces/Sensor";
-import { Thermometer, Droplets, Cpu, Zap, HelpCircle } from "lucide-react";
+import { Thermometer, Droplets, Zap, HelpCircle } from "lucide-react";
 import { SensorType } from "../../types/sensorType";
+import { getPlantationById } from "../../services/plantationService";
+import { getSensorsByPlantation } from "../../services/sensorService";
 
 export default function PlantationSensorsView() {
   const { plantationId } = useParams();
@@ -14,29 +15,27 @@ export default function PlantationSensorsView() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get(`/plantaions/${plantationId}`)
-      .then((res) => setPlantation(res.data.data ?? []))
+    if (!plantationId) return;
+    getPlantationById(plantationId)
+      .then(setPlantation)
       .catch(() => setError("No se pudo cargar la información de la plantación."));
   }, [plantationId]);
 
   useEffect(() => {
-    axios
-      .get(`/plantations/${plantationId}/sensors`)
-      .then((res) => setSensors(res.data.data ?? []))
+    if (!plantationId) return;
+    getSensorsByPlantation(plantationId)
+      .then(setSensors)
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
 
   const getIcon = (type: SensorType | null) => {
     switch (type) {
-      case SensorType.TEMPERATURE:
+      case SensorType.AMBIENT_TEMPERATURE:
         return <Thermometer className="w-8 h-8 text-red-500" />;
-      case SensorType.HUMIDITY:
+      case SensorType.AMBIENT_HUMIDITY:
         return <Droplets className="w-8 h-8 text-blue-500" />;
-      case SensorType.PH:
-        return <Cpu className="w-8 h-8 text-purple-500" />;
-      case SensorType.LIGHT:
-        return <Zap className="w-8 h-8 text-yellow-400" />;
+      case SensorType.ATMOSPHERIC_PRESSURE:
+        return <Zap className="w-8 h-8 text-purple-500" />;
       default:
         return <HelpCircle className="w-8 h-8 text-gray-400" />;
     }
@@ -44,7 +43,9 @@ export default function PlantationSensorsView() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
-      {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-4 border border-red-200">⚠️ {error}</div>}
+      {error && (
+        <div className="bg-red-100 text-red-800 p-4 rounded mb-6 border border-red-200 shadow-sm">⚠️ {error}</div>
+      )}
 
       {plantation && (
         <section className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10">

@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "../api/axiosClient";
 import { Plantation } from "../interfaces/Plantation";
 import {IndicatorStatus} from "../types/indicatorStatus.ts";
@@ -37,6 +38,12 @@ const getPlantations = async ({ page = 1, limit = 10, search, status }: Params):
     meta: response.data.meta,
   };
 };
+
+export const getPlantationById = async (plantationId: string): Promise<Plantation> => {
+  const response = await axios.get(`/plantations/${plantationId}`);
+  return response.data;
+};
+
 
 export default {
   getPlantations,
