@@ -1,121 +1,83 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import PlantationChart from "../Plantation/PlantationChart";
 import { Plantation } from "../../interfaces/Plantation";
 import { Sensor } from "../../interfaces/Sensor";
+import { Thermometer, Droplets, Cpu, Zap, HelpCircle } from "lucide-react";
 import { SensorType } from "../../types/sensorType";
 
-// Lectura combinada que espera el gráfico
-type Reading = {
-  id: string;
-  name: string;
-  time: string;
-  temperature: number;
-  humidity: number;
-};
-
-// Lo que devuelve cada sensor individualmente
-type SensorValue = {
-  id: string;
-  value: number;
-  reading_timestamp: string;
-  sensor_id: string;
-};
-
 export default function PlantationSensorsView() {
-  const { id } = useParams();
+  const { plantationId } = useParams();
+  const navigate = useNavigate();
   const [plantation, setPlantation] = useState<Plantation | null>(null);
   const [sensors, setSensors] = useState<Sensor[]>([]);
-  const [readings, setReadings] = useState<Reading[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // Cargar info de la plantación
   useEffect(() => {
     axios
-      .get(`/api/plantaciones/${id}`)
-      .then((res) => setPlantation(res.data.data))
-      .catch((err) => console.error("Error al cargar la plantación", err));
-  }, [id]);
+      .get(`/plantaions/${plantationId}`)
+      .then((res) => setPlantation(res.data.data ?? []))
+      .catch(() => setError("No se pudo cargar la información de la plantación."));
+  }, [plantationId]);
 
-  // Cargar sensores de la plantación
   useEffect(() => {
     axios
-      .get(`/api/plantaciones/${id}/sensores`)
-      .then((res) => setSensors(res.data.data))
-      .catch((err) => console.error("Error al cargar sensores", err));
-  }, [id]);
+      .get(`/plantations/${plantationId}/sensors`)
+      .then((res) => setSensors(res.data.data ?? []))
+      .catch(() => setError("No se pudieron cargar los sensores."));
+  }, [plantationId]);
 
-  // Cargar lecturas de TEMP y HUM y combinarlas
-  useEffect(() => {
-    if (sensors.length === 0) return;
-
-    const tempSensor = sensors.find((s) => s.type === SensorType.TEMPERATURE);
-    const humSensor = sensors.find((s) => s.type === SensorType.HUMIDITY);
-
-    if (!tempSensor || !humSensor) return;
-
-    Promise.all([
-      axios.get(`/api/sensores/${tempSensor.id}/lecturas`),
-      axios.get(`/api/sensores/${humSensor.id}/lecturas`),
-    ])
-      .then(([tempRes, humRes]) => {
-        const tempValues: SensorValue[] = tempRes.data;
-        const humValues: SensorValue[] = humRes.data;
-
-        const merged = mergeSensorValues(tempValues, humValues);
-        setReadings(merged);
-      })
-      .catch((err) => console.error("Error al cargar lecturas", err));
-  }, [sensors]);
+  const getIcon = (type: SensorType | null) => {
+    switch (type) {
+      case SensorType.TEMPERATURE:
+        return <Thermometer className="w-8 h-8 text-red-500" />;
+      case SensorType.HUMIDITY:
+        return <Droplets className="w-8 h-8 text-blue-500" />;
+      case SensorType.PH:
+        return <Cpu className="w-8 h-8 text-purple-500" />;
+      case SensorType.LIGHT:
+        return <Zap className="w-8 h-8 text-yellow-400" />;
+      default:
+        return <HelpCircle className="w-8 h-8 text-gray-400" />;
+    }
+  };
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto px-6 py-10">
+      {error && <div className="bg-red-100 text-red-800 p-4 rounded mb-4 border border-red-200">⚠️ {error}</div>}
+
       {plantation && (
-        <div className="bg-white p-4 rounded-lg shadow mb-6 border border-gray-200">
-          <h3 className="text-xl font-semibold text-green-700">{plantation.name}</h3>
-          <p className="text-gray-600">
+        <section className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10">
+          <h1 className="text-4xl font-extrabold text-green-700 mb-2">🌿 {plantation.name}</h1>
+          <p className="text-gray-600 text-lg mb-1">
             📍 {plantation.city}, {plantation.province}, {plantation.country}
           </p>
-          <p className="text-gray-500">
-            🌿 Cultivo: {plantation.type} | Estado: {plantation.status}
+          <p className="text-sm text-gray-500">
+            Cultivo: <strong>{plantation.type}</strong> — Estado:{" "}
+            <span className="text-green-600 font-medium">{plantation.status}</span>
           </p>
-        </div>
+        </section>
       )}
 
-      {readings.length > 0 ? (
-        <PlantationChart data={readings} />
-      ) : (
-        <p className="text-gray-500">Cargando datos combinados...</p>
-      )}
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔎 Sensores disponibles</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sensors.map((sensor) => (
+          <div
+            key={sensor.id}
+            onClick={() => navigate(`/dashboard/sensor/${sensor.id}`)}
+            className="cursor-pointer bg-white border border-gray-200 hover:border-green-500 rounded-2xl p-6 shadow-sm hover:shadow-xl transition"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              {getIcon(sensor.type)}
+              <h3 className="text-lg font-semibold text-gray-800">{sensor.type}</h3>
+            </div>
+            <p className="text-sm text-gray-500">
+              Unidad de medida: <span className="font-medium">{sensor.unit}</span>
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
-
-// Combinar lecturas TEMP + HUM por timestamp
-function mergeSensorValues(temp: SensorValue[], hum: SensorValue[]): Reading[] {
-  const map = new Map<string, Partial<Reading>>();
-
-  for (const t of temp) {
-    const key = t.reading_timestamp;
-    if (!map.has(key)) map.set(key, {});
-    map.get(key)!.temperature = t.value;
-    map.get(key)!.time = key;
-    map.get(key)!.id = t.id;
-  }
-
-  for (const h of hum) {
-    const key = h.reading_timestamp;
-    if (!map.has(key)) map.set(key, {});
-    map.get(key)!.humidity = h.value;
-    map.get(key)!.time = key;
-    map.get(key)!.id = h.id;
-  }
-
-  return Array.from(map.values()).map((r) => ({
-    id: r.id!,
-    name: "Combinado",
-    time: r.time!,
-    temperature: r.temperature ?? 0,
-    humidity: r.humidity ?? 0,
-  }));
 }
