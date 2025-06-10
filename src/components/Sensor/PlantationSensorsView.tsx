@@ -19,10 +19,6 @@ export default function PlantationSensorsView() {
     getPlantationById(plantationId)
       .then(setPlantation)
       .catch(() => setError("No se pudo cargar la información de la plantación."));
-  }, [plantationId]);
-
-  useEffect(() => {
-    if (!plantationId) return;
     getSensorsByPlantation(plantationId)
       .then(setSensors)
       .catch(() => setError("No se pudieron cargar los sensores."));
@@ -40,6 +36,8 @@ export default function PlantationSensorsView() {
         return <HelpCircle className="w-8 h-8 text-gray-400" />;
     }
   };
+
+  console.log(sensors);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
