@@ -1,5 +1,5 @@
 export enum SensorUnit {
-  CELSIUS = "°C",
-  PERCENTAGE = "%",
-  MBAR = "mbar",
+  CELSIUS = "CELSIUS",
+  PERCENTAGE = "PERCENTAGE",
+  MBAR = "MBAR",
 }

@@ -1,5 +1,3 @@
-import { IndicatorType } from "../types/indicatorTypes";
-
 export interface Coordinate {
   lat: number;
   lng: number;
@@ -23,11 +21,7 @@ export interface Plantation {
   created_at?: string;
   updated_at?: string;
 
-  // Campos adicionales del frontend 
-  status: string;
-  statusType?: IndicatorType;
-  temperature?: number;
-  humidity?: number;
+  status: string
 
   // readings?: SensorReading[]; //  datos de sensores
 }

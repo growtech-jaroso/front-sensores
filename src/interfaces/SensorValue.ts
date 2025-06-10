@@ -1,4 +1,4 @@
-export type MeasureTimespan = "ONE_HOUR" | "THIRTY_MINUTES" | "FIFTEEN_MINUTES"; // según tus enums
+export type MeasureTimespan = "AVG_1_MIN"
 
 export interface SensorValue {
   id: string;
