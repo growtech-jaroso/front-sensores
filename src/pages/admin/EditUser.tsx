@@ -9,6 +9,7 @@ import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
 import {EditUserFormType, EditUserSchema} from "../../schemas/edit-user.schema.ts";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
 import InputEditForm from "../../components/Inputs/InputEditForm.tsx";
+import InputSelect from "../../components/Inputs/InputSelect.tsx";
 
 export default function EditUser() {
   const { userId } = useParams();
@@ -113,6 +114,12 @@ export default function EditUser() {
                 placeholder="Confirmar contraseña"
               />
             </div>
+
+            <InputSelect register={register("role")} errors={errors.role} label="Rol" options={[
+              {value: "USER", label: "Usuario", selected: true},
+              {value: "SUPPORT", label: "Soporte"},
+              {value: "ADMIN", label: "Administrador"},
+            ]} />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>

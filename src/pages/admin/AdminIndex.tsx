@@ -172,7 +172,7 @@ export default function AdminDashboard() {
                   }
                 </h2>
                 <Link
-                  to='admin/crear-plantacion'
+                  to='/admin/crear-plantacion'
                   className="inline-flex items-center gap-2 text-sm font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
                 >
                   <Plus className="w-5 h-5" />

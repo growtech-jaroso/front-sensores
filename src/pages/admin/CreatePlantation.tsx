@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import axiosClient from "../../api/axiosClient.ts";
@@ -6,10 +6,16 @@ import Layout from "../../layout/Layout.tsx";
 import {CheckCircle, XCircle} from "lucide-react";
 import {CreatePlantationFormType, CreatePlantationSchema} from "../../schemas/create-plantation.schema.ts";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
+import InputSelect from "../../components/Inputs/InputSelect.tsx";
 
 export default function CreatePlantation() {
+  const [usersEmails, setUsersEmails] = useState<{ value: string; label: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  useEffect(() => {
+
+  }, []);
 
   const {
     register,
@@ -63,7 +69,7 @@ export default function CreatePlantation() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-
+          <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
 
           <button
             type="submit"
