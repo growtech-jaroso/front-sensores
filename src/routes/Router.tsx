@@ -1,30 +1,69 @@
-import { Layout } from "lucide-react";
-import { Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
-import ProtectedRoutes from "./ProtectedRoutes";
-import ProfileLayout from "../components/User/Profile/ProfileLayout";
+import Profile from "../pages/Profile";
+import Login from "../pages/Login";
+import Layout from "../layout/Layout";
+import PrivateRoute from "./ProtectedRoutes";
+import PublicOnlyRoute from "./PublicOnlyRoute";
+import NotFound from "../pages/NotFound";
+import { lazy } from "react";
+import PlantationSensorsView from "../components/Sensor/PlantationSensorsView";
 
-<>
-  <Route element={<ProtectedRoutes />}>
-    {/* Rutas para cualquier usuario autenticado */}
-    <Route
-      path="/dashboard"
-      element={
-        <Layout>
-          <Dashboard isSidebarOpen={false} />
-        </Layout>
-      }
-    />
-    <Route
-      path="/perfil"
-      element={
-        <Layout>
-          <ProfileLayout children={undefined} />
-        </Layout>
-      }
-    />
-  </Route>
-  <Route element={<ProtectedRoutes allowedRoles={["ADMIN", "SUPPORT"]} />}>
-    <Route path="/admin/personal" element={<Layout>GESTIÓN</Layout>} />
-  </Route>
-</>;
+const AdminRouter = lazy(() => import("./AdminRouter"));
+
+export default function AppRouter() {
+  return (
+    <Routes>
+      {/* Rutas públicas */}
+      <Route
+        path="/login"
+        element={
+          <PublicOnlyRoute>
+            <Login />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          <PublicOnlyRoute>
+            <Login />
+          </PublicOnlyRoute>
+        }
+      />
+
+      {/* Rutas protegidas */}
+      <Route element={<PrivateRoute />}>
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/dashboard/plantacion/:plantationId"
+          element={
+            <Layout>
+              <PlantationSensorsView />
+            </Layout>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <Layout>
+              <Profile />
+            </Layout>
+          }
+        />
+        {/* Rutas de administrador */}
+        <Route path="/admin/*" element={<AdminRouter />} />
+      </Route>
+
+      {/* Ruta 404 - En caso que no exista ninguna de las anteriores */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}

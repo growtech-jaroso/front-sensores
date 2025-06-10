@@ -1,62 +1,67 @@
-import { User, ShieldCheck } from "lucide-react";
+import { User, ShieldCheck, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import useUser from "../../../hooks/useUser.tsx";
 
 type Props = {
-  nombre: string;
-  rol: string;
+  username?: string;
+  email?: string;
+  role?: string;
 };
 
-export default function PersonalInfoSection({ nombre, rol }: Props) {
-  const isAdmin = rol.toLowerCase() === "admin";
+export default function PersonalInfoSection({ username, email, role }: Props) {
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  const displayName = username || user?.username || "";
+  const displayEmail = email || user?.email || "";
+  const userRole = role || user?.role || "USER";
+  const isAdmin = userRole.toUpperCase() === "ADMIN";
 
   return (
     <section className="space-y-6">
-      <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-        <span className="flex items-center gap-1">
-          <User className="w-5 h-5 text-green-600" />
-        </span>
+      <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+        <User className="w-5 h-5 text-green-600" />
         Información personal
       </h2>
 
-      <div className="bg-white p-6 rounded-xl shadow-sm border space-y-4">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-5 transition-all">
         <div>
-          <label className="block text-sm font-medium text-gray-600">
-            Nombre completo
-          </label>
+          <label className="block text-sm font-medium text-gray-600 mb-1">Nombre completo</label>
           <input
             type="text"
-            value={nombre}
+            value={displayName}
             disabled
-            className="w-full mt-1 px-4 py-2 bg-gray-100 border rounded-lg text-sm text-gray-700"
+            className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-800"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600">Rol</label>
+          <label className="block text-sm font-medium text-gray-600 mb-1">Correo electrónico</label>
           <input
             type="text"
-            value={rol}
+            value={displayEmail}
             disabled
-            className="w-full mt-1 px-4 py-2 bg-gray-100 border rounded-lg text-sm text-gray-700"
+            className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm text-gray-800"
           />
         </div>
 
-        {/* Gestión de personal para admins */}
         {isAdmin && (
-          <>
-            <hr className="my-4 border-gray-200" />
-            <div className="bg-gray-50 border border-dashed border-green-400 p-4 rounded-md">
-              <div className="flex items-center gap-2 text-sm font-medium text-green-700">
+          <div className="mt-6 border-t pt-6 border-dashed border-gray-300">
+            <div className="bg-green-50 border border-green-300 p-4 rounded-lg shadow-sm space-y-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-green-700">
                 <ShieldCheck className="w-4 h-4" />
-                Acceso administrativo
+                Tienes acceso administrativo
               </div>
-              <p className="text-xs text-gray-600 mt-1 mb-3">
-                Como administrador puedes gestionar al personal autorizado.
-              </p>
-              <button className="text-xs font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer">
-                Gestionar personal
+              <p className="text-sm text-gray-600">Puedes acceder a la sección de administración.</p>
+              <button
+                onClick={() => navigate("/admin/panel")}
+                className="inline-flex items-center gap-2 text-sm font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
+              >
+                <Users className="w-4 h-4" />
+                Administrar
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </section>

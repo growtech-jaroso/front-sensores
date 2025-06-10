@@ -1,47 +1,53 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance,AxiosError } from "axios";
 
-// URL base para todas las peticiones
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
-// Crear una instancia de axios
 const axiosClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-// Interceptor de solicitudes (antes de enviar)
+// Interceptor de solicitudes: añade el token si existe
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('auth_token');
+    const userData = sessionStorage.getItem("user_data");
+    const token = userData ? JSON.parse(userData).token : null;
+
     if (token) {
-      config.headers!['Authorization'] = `Bearer ${token}`;
+      config.headers!["Authorization"] = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
-// Interceptor de respuestas (después de recibir)
+// Interceptor de respuestas: maneja errores como token expirado
 axiosClient.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    const status = error.response?.status;
-    const requestUrl = error.config?.url || "";
+  (response) => response,
+  (error) => {
+  const status = error.response?.status;
+  const requestUrl = error.config?.url || "";
 
-    const isLoginRequest = requestUrl.includes("/auth/login");
+  const isLoginRequest = requestUrl.includes("/auth/login");
+  const isUserCreation = requestUrl.includes("/users");
 
-    if (status === 401 && !isLoginRequest) {
-      console.warn("Token inválido o expirado. Redirigiendo al login...");
-      sessionStorage.removeItem("auth_token");
-      window.location.href = "/login"; 
-    }
+  if (status === 401 && !isLoginRequest && !isUserCreation) {
+  const message = error.response?.data?.message || "";
 
-    return Promise.reject(error);
+  const isAuthError = message.toLowerCase().includes("token") || message.toLowerCase().includes("autorización");
+
+  if (isAuthError) {
+  console.warn("Token inválido o expirado. Redirigiendo al login...");
+  sessionStorage.removeItem("user_data");
+  window.location.href = "/login";
   }
+}
+
+  return Promise.reject(error);
+}
 );
 
 export default axiosClient;

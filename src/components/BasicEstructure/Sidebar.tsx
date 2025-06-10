@@ -1,6 +1,8 @@
-import Footer from "./Footer";
-import { sidebarLinks } from "../Links/LinksSidebar";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { sidebarLinks } from "../Links/LinksSidebar";
+import Footer from "./Footer";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -8,70 +10,78 @@ type SidebarProps = {
 };
 
 export default function Sidebar({ isOpen, toggle }: SidebarProps) {
+  useEffect(() => {
+    sessionStorage.setItem("sidebar_open", isOpen.toString());
+  }, [isOpen]);
+
   return (
     <>
-      {/* Botón toggle con animación de giro */}
-      <button
-        onClick={toggle}
-        className="fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded-full shadow-md hover:bg-gray-800 transition-transform duration-300 hover:rotate-90"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
+      {/* Overlay móvil suave */}
+      {isOpen && <div className="fixed inset-0 bg-white/20 backdrop-blur-sm z-30 md:hidden" onClick={toggle} />}
 
-      {/* Sidebar con altura dinámica */}
       <aside
-        className={`bg-gray-800 text-white fixed inset-y-0 left-0 z-40 transition-all duration-500 ease-in-out overflow-hidden
-        ${isOpen ? "w-64" : "w-20"} flex flex-col justify-between`}
+        className={`fixed top-0 left-0 z-40 h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl flex flex-col
+        transition-all duration-300 ease-in-out overflow-x-hidden
+        ${isOpen ? "w-64" : "w-20"}`}
+        role="navigation"
       >
+        {/* Toggle + Logo */}
+        <div className="flex flex-col gap-3 px-4 pt-4 pb-2">
+          <button
+            onClick={toggle}
+            className="bg-gray-900 text-white p-2 rounded-full hover:bg-green-500 hover:text-white transition duration-300 focus:outline-none w-fit"
+            aria-label="Alternar menú lateral"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
 
-        {/* Encabezado */}
-        <div className="flex flex-col items-center justify-center mt-12 mb-6 px-4 space-y-2">
-          <div
-            className={`flex items-center gap-2 transition-all duration-500 ease-in-out transform ${
-              isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-5"
+          <Link
+            to="/dashboard"
+            className={`flex items-center hover:bg-gray-700 transition rounded-md ${
+              isOpen ? "gap-2 py-2 px-2" : "justify-center py-3"
             }`}
           >
-            <span className="text-2xl text-green-400">🌿</span>
-          </div>
-          <h2
-            className={`text-xl font-semibold text-green-400 tracking-tight transition-all duration-500 ease-in-out transform ${
-              isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-5"
-            }`}
-          >
-            GrowPanel
-          </h2>
+            <span className="text-2xl">🌿</span>
+            {isOpen && <span className="text-green-400 font-semibold text-xl truncate">GrowPanel</span>}
+          </Link>
         </div>
 
         {/* Navegación */}
-        <nav className="flex-1 space-y-4 px-2">
+        <nav
+          className={`flex-1 px-2 py-4 space-y-1 ${
+            isOpen ? "overflow-y-auto" : "overflow-hidden"
+          } relative overflow-x-hidden`}
+        >
           {sidebarLinks.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
-              className="relative group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              to={item.href}
+              className={`relative flex items-center gap-6 px-3 py-2 rounded-lg transition-all duration-200
+              ${isOpen ? "justify-start" : "justify-center group"} 
+              w-full overflow-hidden hover:bg-gray-700 hover:text-green-400`}
             >
-              <span className="text-gray-400">{item.icon}</span>
-              <span
-                className={`transition-all duration-500 ease-in-out transform ${
-                  isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-5"
-                }`}
-              >
-                {item.label}
-              </span>
+              <span className="text-lg">{item.icon}</span>
+
+              {isOpen && <span className="whitespace-nowrap">{item.label}</span>}
 
               {!isOpen && (
-                <span className="absolute left-full ml-2 whitespace-nowrap bg-black text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                <span
+                  className="absolute left-full top-1/2 -translate-y-1/2 ml-2 bg-black text-white text-xs px-2 py-1 rounded 
+                  opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none max-w-xs overflow-hidden text-ellipsis"
+                >
                   {item.label}
                 </span>
               )}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Footer */}
-        <div className={`px-4 pb-4 text-center ${!isOpen && "hidden"}`}>
-          <Footer />
-        </div>
+        {isOpen && (
+          <div className="shrink-0 border-t border-gray-700 px-4 py-3">
+            <Footer />
+          </div>
+        )}
       </aside>
     </>
   );

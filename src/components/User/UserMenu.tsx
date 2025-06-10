@@ -2,11 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { User, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
+import useUser from "../../hooks/useUser.tsx";
 
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { user } = useUser();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -25,20 +27,18 @@ export default function UserMenu() {
 
   return (
     <div className="relative" ref={menuRef}>
+      {/* Botón que abre el menú */}
       <div
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-1.5 rounded-full transition"
       >
         <User className="w-5 h-5 text-gray-700" />
-        <span className="text-sm text-gray-800 font-medium">Usuario</span>
+        <span className="text-sm text-gray-800 font-medium">{user?.username || "Usuario"}</span>
       </div>
 
       {/* Dropdown animado */}
       {open && (
-        <div
-          className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-50
-          animate-fadeInMenu origin-top-right"
-        >
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-50 animate-fadeInMenu origin-top-right">
           <ul className="py-1" role="menu" aria-label="Opciones de usuario">
             <li
               onClick={() => navigate("/perfil")}
@@ -47,7 +47,6 @@ export default function UserMenu() {
             >
               <User className="w-4 h-4" /> Perfil
             </li>
-
             <li
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
               role="menuitem"
@@ -66,7 +65,6 @@ export default function UserMenu() {
         </div>
       )}
 
-      {/* Animación personalizada */}
       <style>
         {`
           @keyframes fadeInMenu {

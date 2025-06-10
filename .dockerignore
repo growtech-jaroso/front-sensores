@@ -1,0 +1,9 @@
+.env
+.env.template
+.editorconfig
+.git
+.gitignore
+.idea
+.vscode
+bun.lock
+node_modules

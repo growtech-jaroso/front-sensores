@@ -19,9 +19,41 @@ services:
       JWT_EXP_TIME: ${BACKEND_JWT_EXP_TIME}
       MONGO_USERNAME: ${BACKEND_MONGO_USERNAME}
       MONGO_PASSWORD: ${BACKEND_MONGO_PASSWORD}
+      ADMIN_EMAIL: ${BACKEND_ADMIN_EMAIL}
+      ADMIN_USERNAME: ${BACKEND_ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${BACKEND_ADMIN_PASSWORD}
       MONGO_HOST: "mongo" # This should be the name of the mongo service
       MONGO_PORT: "27017" # Internal port of the mongo service
       MONGO_DATABASE: ${BACKEND_MONGO_DATABASE}
+      MQTT_BROKER_URL: ${BACKEND_MQTT_BROKER_URL}
+      MQTT_CLIENT_ID: ${BACKEND_MQTT_CLIENT_ID}
+      MQTT_PASSWORD: ${BACKEND_MQTT_PASSWORD}
       MONGO_AUTH_DATABASE: ${BACKEND_MONGO_AUTH_DATABASE}
     depends_on:
       - mongo
+  nodered:
+    image: nodered/node-red:4.0.9
+    restart: unless-stopped
+    ports:
+      - "${NODERED_PORT:-1880}:1880"
+    volumes:
+      - nodered-data:/data
+    environment:
+      - TZ=Europe/Madrid
+
+  mosquitto:
+    image: eclipse-mosquitto:openssl
+    restart: unless-stopped
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-logs:/mosquitto/log
+    ports:
+      - "${MOSQUITTO_PORT:-1883}:1883"
+    environment:
+      - TZ=Europe/Madrid
+
+volumes:
+  nodered-data:
+  mosquitto-data:
+  mosquitto-logs:

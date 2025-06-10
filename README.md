@@ -1,57 +1,31 @@
-# 🌱 Growtech Jaroso - Frontend
+# Web de sensores GrowTech Jaroso
 
-Este es el repositorio del **frontend** del proyecto **Growtech Jaroso**. Aquí encontrarás todo lo necesario para levantar el entorno de desarrollo local utilizando [Vite](https://vitejs.dev/) y [Bun](https://bun.sh/).
+## Development
 
-## 🧰 Requisitos previos
+### Requisitos
+- Docker
+- Docker Compose
+- Node.js
+- bun
 
-- Tener instalado **[Bun](https://bun.sh/docs/installation)**.
-- Tener acceso al archivo `.env` que contiene las variables de entorno necesarias para ejecutar el proyecto.
-- Tener acceso a Docker Hub con las credenciales necesarias.
-
----
-
-## ⚙️ Pasos para poner en funcionamiento el proyecto
-
-### 1. Clonar el repositorio
-
+### Instalación
+- Clonar el repositorio
 ```bash
-git clone https://github.com/growtech-jaroso/front-sensores.git
-cd front-sensores
+  git clone https://github.com/growtech-jaroso/front-sensores.git && cd front-sensores
 ```
 
-### 2. Añadir el archivo .env
+- Instalar dependencias
 ```bash
-cp .env-template .env
-```
-- Luego, edita .env con las variables correspondientes.
-
-### 3. Cambiar a la rama develop
-```bash
-git checkout develop
+  bun install
 ```
 
-### 4. Instalar dependencias con Bun
+- Configurar variables de entorno
 ```bash
-bun install
+  cp .env.template .env
 ```
-### 5. Conectar con Docker Hub para instalar la imagen actual
+
+- Editar las variables de entorno del .env
+- Ejecutar el proyecto
 ```bash
-docker login docker.project.comparitiko.dev
+  docker compose up -d && bun run dev
 ```
-- Poner las credenciales que se te han otorgado
-
-### 6. Poner en marcha los contenedores
-```bash
-docker compose up -d
-```
-- Instalará todo lo necesario para que la base de datos y el backend funcionen
-
-### 7. Ejecutar el proyecto en desarrollo
-```bash
-bun dev
-```
-- Esto iniciará el servidor de desarrollo en http://localhost:5173
-
-
-
-

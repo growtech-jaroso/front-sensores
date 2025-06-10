@@ -1,6 +1,7 @@
 export enum IndicatorStatus {
   TOTAL = "Total",
-  ACTIVE = "Activa",
-  INACTIVE = "Inactiva",
-  ALERT = "Alerta",
+  ONLINE = "Activa",
+  OFFLINE = "Inactiva",
 }
+
+export type IndicatorStatusType = keyof typeof IndicatorStatus;

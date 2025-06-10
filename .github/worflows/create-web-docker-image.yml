@@ -1,0 +1,45 @@
+name: build sensors react web image
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-sensors-web-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: Get latest tag
+        id: tag
+        run: |
+          TAG=$(git fetch --tags && git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Using tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Install buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: latest
+
+      - name: Log in to the registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{secrets.DOCKER_REGISTRY}}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build sensors web docker image and push to the registry
+        env:
+          IMAGE_VERSION: ${{steps.tag.outputs.tag}}
+          IMAGE_NAME: ${{ secrets.DOCKER_REGISTRY }}/sensors-web
+        run: |
+          docker buildx build --push \
+            --target production \
+            --tag ${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}} \
+            --platform linux/amd64,linux/arm64 .
+          docker buildx build --push \
+            --target production \
+            --tag ${{env.IMAGE_NAME}}:latest \
+            --platform linux/amd64,linux/arm64 .
