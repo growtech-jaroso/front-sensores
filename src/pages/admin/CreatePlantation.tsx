@@ -86,7 +86,7 @@ export default function CreatePlantation() {
             disabled={submitting}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
           >
-            {submitting ? "Creando..." : "Crear Usuario"}
+            {submitting ? "Creando..." : "Crear Plantación"}
           </button>
 
           {message && (
