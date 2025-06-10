@@ -76,6 +76,9 @@ export default function CreatePlantation() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
           <InputText register={register("name")} errors={errors.name} label="Nombre de la plantación" />
+          <InputText register={register("country")} errors={errors.country} label="País" />
+          <InputText register={register("province")} errors={errors.province} label="Provincia" />
+          <InputText register={register("city")} errors={errors.city} label="Ciudad" />
           <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
 
           <button
