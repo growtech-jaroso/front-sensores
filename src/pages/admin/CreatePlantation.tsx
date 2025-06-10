@@ -7,6 +7,7 @@ import {CheckCircle, XCircle} from "lucide-react";
 import {CreatePlantationFormType, CreatePlantationSchema} from "../../schemas/create-plantation.schema.ts";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
 import InputSelect from "../../components/Inputs/InputSelect.tsx";
+import InputText from "../../components/Inputs/InputText.tsx";
 
 export default function CreatePlantation() {
   const [usersEmails, setUsersEmails] = useState<{ value: string; label: string }[]>([]);
@@ -14,7 +15,12 @@ export default function CreatePlantation() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
-
+    axiosClient.get("/users/emails")
+        .then(res => {
+          const data = res.data.data as string[];
+          const emails = data.map(email => ({value: email, label: email}))
+          setUsersEmails(emails);
+        })
   }, []);
 
   const {
@@ -69,6 +75,7 @@ export default function CreatePlantation() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
+          <InputText register={register("name")} errors={errors.name} label="Nombre de la plantación" />
           <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
 
           <button

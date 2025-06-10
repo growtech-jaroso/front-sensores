@@ -8,7 +8,7 @@ import {EditPlantationFormType, EditPlantationSchema} from "../schemas/edit-plan
 import {Plantation} from "../interfaces/Plantation.ts";
 import Layout from "../layout/Layout.tsx";
 import GoBackButton from "../components/Button/GoBackButton.tsx";
-import InputEditForm from "../components/Inputs/InputEditForm.tsx";
+import InputText from "../components/Inputs/InputText.tsx";
 
 export default function EditPlantation() {
   const navigate = useNavigate();
@@ -95,8 +95,8 @@ export default function EditPlantation() {
           <p className="text-center text-gray-500">Cargando plantación...</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <InputEditForm register={register("name")} errors={errors.name} label="Nombre de la plantación" />
-            <InputEditForm register={register("type")} errors={errors.type} label="Tipo de la plantación" />
+            <InputText register={register("name")} errors={errors.name} label="Nombre de la plantación" />
+            <InputText register={register("type")} errors={errors.type} label="Tipo de la plantación" />
             <button
               type="submit"
               disabled={submitting}
