@@ -1,16 +1,15 @@
-import {Sensor} from "../../interfaces/Sensor.ts";
-import {SensorType} from "../../types/sensorType.ts";
-import {Droplets, HelpCircle, Thermometer, Zap} from "lucide-react";
-import {SensorUnit} from "../../types/sensorUnit.ts";
+import { Sensor } from "../../interfaces/Sensor.ts";
+import { SensorType } from "../../types/sensorType.ts";
+import { Droplets, HelpCircle, Thermometer, Zap } from "lucide-react";
+import { SensorUnit } from "../../types/sensorUnit.ts";
 
 interface Props {
-  sensor: Sensor
-  selectSensor: (sensor: Sensor) => void
-  selected?: boolean
+  sensor: Sensor;
+  selectSensor: (sensor: Sensor) => void;
+  selected?: boolean;
 }
 
-export default function SensorCard({sensor, selectSensor, selected = false}: Props) {
-
+export default function SensorCard({ sensor, selectSensor, selected = false }: Props) {
   const getIcon = (type: SensorType | null) => {
     switch (type) {
       case SensorType.AMBIENT_TEMPERATURE:
@@ -36,7 +35,7 @@ export default function SensorCard({sensor, selectSensor, selected = false}: Pro
       default:
         return "Sensor desconocido";
     }
-  }
+  };
 
   // Function to get the unit label based on the sensor unit
   const getUnitLabel = (unit: SensorUnit) => {
@@ -50,7 +49,7 @@ export default function SensorCard({sensor, selectSensor, selected = false}: Pro
       default:
         return "";
     }
-  }
+  };
 
   return (
     <div
@@ -61,11 +60,11 @@ export default function SensorCard({sensor, selectSensor, selected = false}: Pro
       `}
     >
       <div className="flex items-center gap-4 mb-3">
-        {getIcon(sensor.type)}
-        <h3 className="text-lg font-semibold text-gray-800">{getTypeLabel(sensor.type)}</h3>
+        {getIcon(sensor.type as SensorType)}
+        <h3 className="text-lg font-semibold text-gray-800">{getTypeLabel(sensor.type as SensorType)}</h3>
       </div>
       <p className="text-sm text-gray-500">
-        Unidad de medida: <span className="font-medium">{getUnitLabel(sensor.unit)}</span>
+        Unidad de medida: <span className="font-medium">{getUnitLabel(sensor.unit as SensorUnit)}</span>
       </p>
     </div>
   );
