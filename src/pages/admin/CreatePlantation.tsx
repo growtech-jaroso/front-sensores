@@ -79,8 +79,6 @@ export default function CreatePlantation() {
           <InputText register={register("country")} errors={errors.country} label="País" />
           <InputText register={register("province")} errors={errors.province} label="Provincia" />
           <InputText register={register("city")} errors={errors.city} label="Ciudad" />
-          <InputText register={register("latitude")} errors={errors.latitude} label={"Latitud"} type="number" />
-          <InputText register={register("longitude")} errors={errors.longitude} label={"Longitud"} type="number" />
           <InputText register={register("type")} errors={errors.type} label="Tipo de cultivo" />
           <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
 
