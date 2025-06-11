@@ -1,44 +1,45 @@
-import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-import {Plantation} from "../interfaces/Plantation.ts";
-import {Sensor} from "../interfaces/Sensor.ts";
-import {getPlantationById} from "../services/plantationService.ts";
-import {getDevicesByPlantation} from "../services/sensorService.ts";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Plantation } from "../interfaces/Plantation.ts";
+import { Sensor } from "../interfaces/Sensor.ts";
+import { getPlantationById } from "../services/plantationService.ts";
+import { getDevicesByPlantation } from "../services/sensorService.ts";
 import SensorCard from "../components/Sensor/SensorCard.tsx";
-import {SensorValue} from "../interfaces/SensorValue.ts";
+import { SensorValue } from "../interfaces/SensorValue.ts";
 import axiosClient from "../api/axiosClient.ts";
-import {Actuator} from "../interfaces/Actuator.ts";
-import {DeviceType} from "../types/deviceType.ts";
-import {IndicatorStatus, IndicatorStatusType} from "../types/indicatorStatus.ts";
+import { Actuator } from "../interfaces/Actuator.ts";
+import { DeviceType } from "../types/deviceType.ts";
+import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
+import SensorDetail from "../components/Sensor/SensorDetails.tsx";
 
 type SelectedSensorValues = {
   sensor: Sensor;
   values: SensorValue[];
-}
+};
 
 type SensorAndActuators = {
   sensors: Sensor[];
   actuators: Actuator[];
-}
+};
 
 export default function Sensors() {
   const { plantationId } = useParams();
   const [plantation, setPlantation] = useState<Plantation | null>(null);
-  const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({sensors: [], actuators: []});
+  const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({ sensors: [], actuators: [] });
   const [error, setError] = useState<string | null>(null);
   const [selectedSensorValues, setSelectedSensorValues] = useState<SelectedSensorValues | null>(null);
 
   const getSensorValues = (sensor: Sensor) => {
-    axiosClient.get(`/plantations/${plantationId}/sensors/${sensor.id}/values`)
+    axiosClient
+      .get(`/plantations/${plantationId}/sensors/${sensor.id}/values`)
       .then((response) => {
         setSelectedSensorValues({
           sensor,
-          values: response.data.data
+          values: response.data.data,
         });
       })
       .catch(() => setError("No se pudieron cargar los valores de los sensores."));
   };
-
 
   useEffect(() => {
     if (!plantationId) return;
@@ -47,9 +48,9 @@ export default function Sensors() {
       .catch(() => setError("No se pudo cargar la información de la plantación."));
     getDevicesByPlantation(plantationId)
       .then((devices) => {
-        const sensors = devices.filter(device => device.device_type === DeviceType.SENSOR) as Sensor[];
-        const actuators = devices.filter(device => device.device_type === DeviceType.ACTUATOR) as Actuator[];
-        setSensorsActuators({sensors, actuators});
+        const sensors = devices.filter((device) => device.device_type === DeviceType.SENSOR) as Sensor[];
+        const actuators = devices.filter((device) => device.device_type === DeviceType.ACTUATOR) as Actuator[];
+        setSensorsActuators({ sensors, actuators });
       })
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
@@ -68,7 +69,9 @@ export default function Sensors() {
           </p>
           <p className="text-sm text-gray-500">
             Cultivo: <strong>{plantation.type}</strong> — Estado:{" "}
-            <span className="text-green-600 font-medium">{IndicatorStatus[plantation.status as IndicatorStatusType]}</span>
+            <span className="text-green-600 font-medium">
+              {IndicatorStatus[plantation.status as IndicatorStatusType]}
+            </span>
           </p>
         </section>
       )}
@@ -77,13 +80,16 @@ export default function Sensors() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sensorsActuators.sensors.map((sensor) => (
-          <SensorCard sensor={sensor} selectSensor={getSensorValues} key={sensor.id} selected={selectedSensorValues?.sensor.id === sensor.id} />
+          <SensorCard
+            sensor={sensor}
+            selectSensor={getSensorValues}
+            key={sensor.id}
+            selected={selectedSensorValues?.sensor.id === sensor.id}
+          />
         ))}
       </div>
-      { selectedSensorValues && (
-        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10">
-          {JSON.stringify(selectedSensorValues)}
-        </div>
+      {selectedSensorValues && (
+        <SensorDetail sensor={selectedSensorValues.sensor} values={selectedSensorValues.values} />
       )}
     </div>
   );
