@@ -68,12 +68,6 @@ export default function Sensors() {
         const sensors = devices.filter((device) => device.device_type === DeviceType.SENSOR) as Sensor[];
         const actuators = devices.filter((device) => device.device_type === DeviceType.ACTUATOR) as Actuator[];
         setSensorsActuators({ sensors, actuators });
-
-        console.log({
-          sensors,
-          actuators,
-          sensorsActuators
-        })
       })
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
