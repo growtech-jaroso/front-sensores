@@ -1,10 +1,10 @@
-import SensorDetail from "./Sensor/SensorDetails.tsx";
-import {Sensor} from "../interfaces/Sensor.ts";
+import SensorDetail from "./SensorDetails.tsx";
+import {Sensor} from "../../interfaces/Sensor.ts";
 import {useEffect, useState} from "react";
-import axiosClient from "../api/axiosClient.ts";
-import {SensorValue} from "../interfaces/SensorValue.ts";
-import {TimeFrame} from "../interfaces/time-frames.ts";
-import {defaultTimeFrames, getAfterDate} from "../utils/utils.ts";
+import axiosClient from "../../api/axiosClient.ts";
+import {SensorValue} from "../../interfaces/SensorValue.ts";
+import {TimeFrame} from "../../interfaces/time-frames.ts";
+import {defaultTimeFrames, getBeforeDate} from "../../utils/utils.ts";
 
 interface Props {
   selectedSensor: Sensor
@@ -24,10 +24,9 @@ export default function SensorGraph({selectedSensor}: Props) {
       try {
         const response = await axiosClient.get(`/plantations/${selectedSensor.plantation_id}/sensors/${selectedSensor.id}/values`, {
           params: {
-            after: getAfterDate(timeFrames.find(frame => frame.selected)!)
+            before: getBeforeDate(timeFrames.find(frame => frame.selected)!)
           }
         });
-        console.log(response)
         setValues(response.data.data)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {

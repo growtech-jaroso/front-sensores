@@ -11,7 +11,7 @@ export const defaultTimeFrames: TimeFrame[] = [
  * @param timeFrame - The selected time frame.
  * @return The date after which the data should be fetched in ISO format.
  */
-export const getAfterDate = (timeFrame: TimeFrame): string => {
+export const getBeforeDate = (timeFrame: TimeFrame): string => {
   const value = timeFrame.value
   const actualTime = new Date().getTime()
 

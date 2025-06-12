@@ -4,7 +4,7 @@ import { SensorType } from "../../types/sensorType";
 import { SensorUnit } from "../../types/sensorUnit";
 import PlantationChart from "../Plantation/PlantationChart";
 import InputSelect from "../Inputs/InputSelect.tsx";
-import {ChangeEvent, Dispatch, SetStateAction} from "react";
+import {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from "react";
 import {TimeFrame} from "../../interfaces/time-frames.ts";
 
 const getTypeLabel = (type: SensorType) => {
@@ -33,6 +33,13 @@ const getUnitLabel = (unit: SensorUnit) => {
   }
 };
 
+interface ChartData {
+  id: string;
+  name: string;
+  time: string;
+  value: number;
+}
+
 type Props = {
   sensor: Sensor;
   values?: SensorValue[];
@@ -41,6 +48,8 @@ type Props = {
 };
 
 export default function SensorDetail({ sensor, values = [], timeFrames, setSelectedTimeFrame }: Props) {
+
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   const handleTimeFrameChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
@@ -53,12 +62,16 @@ export default function SensorDetail({ sensor, values = [], timeFrames, setSelec
     setSelectedTimeFrame(updatedTimeFrames);
   }
 
-  const chartData = values.map((entry) => ({
-    id: entry.id,
-    name: sensor.type,
-    time: new Date(entry.reading_timestamp).toLocaleString(),
-    value: entry.value,
-  }));
+  useEffect(() => {
+    const chartData = values.map((entry) => ({
+      id: entry.id,
+      name: sensor.type,
+      time: entry.reading_timestamp,
+      value: entry.value,
+    }));
+
+    setChartData(chartData)
+  }, []);
 
   return (
     <div className="mt-10 bg-white border border-gray-100 rounded-2xl shadow p-6">

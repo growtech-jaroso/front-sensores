@@ -11,7 +11,7 @@ import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.t
 import { useAuth } from "../hooks/useAuth";
 import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
 import { deleteSensor } from "../services/sensorService.ts";
-import SensorGraph from "../components/SensorGraph.tsx";
+import SensorGraph from "../components/Sensor/SensorGraph.tsx";
 
 type SensorAndActuators = {
   sensors: Sensor[];
