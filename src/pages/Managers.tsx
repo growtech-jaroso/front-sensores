@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { CheckCircle, XCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axiosClient from "../api/axiosClient.ts";
-import {EditPlantationFormType, EditPlantationSchema} from "../schemas/edit-plantation.schema.ts";
-import {Plantation} from "../interfaces/Plantation.ts";
 import Layout from "../layout/Layout.tsx";
 import GoBackButton from "../components/Button/GoBackButton.tsx";
 import InputText from "../components/Inputs/InputText.tsx";
+import {CheckCircle, XCircle} from "lucide-react";
+import axiosClient from "../api/axiosClient.ts";
+import {useEffect, useState} from "react";
+import {Plantation} from "../interfaces/Plantation.ts";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useNavigate, useParams} from "react-router-dom";
+import {ManageManagersFormType, ManageManagersSchema} from "../schemas/manage-managers.schema.ts";
 
-export default function EditPlantation() {
+export default function Managers() {
+
   const navigate = useNavigate();
   const { plantationId } = useParams();
 
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [plantation, setPlantation] = useState<Plantation | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -23,8 +25,8 @@ export default function EditPlantation() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<EditPlantationFormType>({
-    resolver: zodResolver(EditPlantationSchema),
+  } = useForm<ManageManagersFormType>({
+    resolver: zodResolver(ManageManagersSchema),
   });
 
   useEffect(() => {
@@ -39,9 +41,8 @@ export default function EditPlantation() {
         }
 
         const plantation = res.data?.data as Plantation;
+        setPlantation(plantation);
 
-        setValue("name", plantation.name ?? "");
-        setValue("type", plantation.type ?? "");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_) {
         setMessage({ type: "error", text: "Error al cargar la plantación." });
@@ -53,20 +54,20 @@ export default function EditPlantation() {
     if (plantationId) fetchPlantation();
   }, [navigate, plantationId, setValue]);
 
-  const onSubmit = async (data: EditPlantationFormType) => {
+  const onSubmit: SubmitHandler<ManageManagersFormType> = async (data) => {
     setMessage(null);
     setSubmitting(true);
 
     try {
-      await axiosClient.put(`/plantations/${plantationId}`, data);
-      setMessage({ type: "success", text: "Plantación actualizada correctamente." });
+      await axiosClient.post(`/plantations/${plantationId}/assistants`, data);
+      setMessage({ type: "success", text: "Manager añadido correctamente." });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      const rawMessage = error?.response?.data?.message || "Error al actualizar la plantación.";
-      let customMessage = rawMessage;
+      const rawMessage = error?.response?.data?.message ?? "Error al añadir el manager.";
+      let customMessage;
 
-      if (rawMessage.toLowerCase().includes("name")) customMessage = "El nombre de la plantación ya está registrado en la misma empresa.";
-      else customMessage = "Error al actualizar la plantación.";
+      if (rawMessage.toLowerCase().includes("email")) customMessage = "El correo electrónico no existe";
+      else customMessage = "Error al añadir el manager.";
 
       setMessage({ type: "error", text: customMessage });
     } finally {
@@ -89,21 +90,23 @@ export default function EditPlantation() {
 
         <GoBackButton />
 
-        <h2 className="text-2xl font-bold text-green-700 mb-6">✏️ Editar Plantación</h2>
+        <h2 className="text-2xl font-bold text-green-700 mb-6">Administrar managers de la plantación {plantation?.name}</h2>
 
         {loading ? (
-          <p className="text-center text-gray-500">Cargando plantación...</p>
+          <p className="text-center text-gray-500">Cargando información de la plantación...</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <InputText register={register("name")} errors={errors.name} label="Nombre de la plantación" />
-            <InputText register={register("type")} errors={errors.type} label="Tipo de la plantación" />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition disabled:opacity-50"
-            >
-              {submitting ? "Guardando..." : "Guardar Cambios"}
-            </button>
+            <InputText register={register("manager_email")} errors={errors.manager_email} label="Correo electrónico del manager" type="email" />
+            <section className="flex gap-4 flex-wrap">
+              <button
+                type="submit"
+                name="add"
+                disabled={submitting}
+                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition disabled:opacity-50"
+              >
+                {submitting ? "Añadiendo..." : "Añadir Manager"}
+              </button>
+            </section>
 
             {message && (
               <div

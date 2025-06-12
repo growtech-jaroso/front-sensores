@@ -1,22 +1,20 @@
 import { SensorType } from "../types/sensorType";
 import { SensorUnit } from "../types/sensorUnit";
 import { DeviceType } from "../types/deviceType";
-import { ActuatorStatus } from "../types/actuatorStatus";
 
 
 export interface Coordinate {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
 }
 
 export interface Sensor {
   id: string;
-  type: SensorType | null;
+  type: SensorType;
   device_type: DeviceType;
-  unit: SensorUnit | null;
-  status?: ActuatorStatus;
+  unit: SensorUnit;
   plantation_id: string;
-  threshold_min_alert: number | null;
-  threshold_max_alert: number | null;
+  threshold_min_alert?: number;
+  threshold_max_alert?: number;
   coordinates: Coordinate[];
 }

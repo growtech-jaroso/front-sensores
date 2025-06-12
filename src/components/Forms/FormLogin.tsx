@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginSchema, LoginType } from "../../schemas/login.schema";
 import InputPassword from "../Inputs/InputPassword";
-import InputText from "../Inputs/InputText.tsx";
+import InputLoginText from "../Inputs/InputLoginText.tsx";
 import { authService } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { showAlert } from "../Alert/AlertService.tsx";
@@ -59,7 +59,7 @@ const FormLogin = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md flex flex-col space-y-5" noValidate>
-      <InputText
+      <InputLoginText
         register={register("email")}
         errors={errors.email}
         placeholder="Correo electrónico"

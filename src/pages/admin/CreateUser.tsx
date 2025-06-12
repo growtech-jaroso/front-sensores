@@ -7,6 +7,7 @@ import axiosClient from "../../api/axiosClient";
 import { useState } from "react";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
+import InputText from "../../components/Inputs/InputText.tsx";
 
 export default function CreateUser() {
   const [submitting, setSubmitting] = useState(false);
@@ -63,25 +64,9 @@ export default function CreateUser() {
         <h2 className="text-2xl font-bold text-green-700 mb-6">👤 Crear nuevo usuario</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de usuario</label>
-            <input
-              type="text"
-              {...register("username")}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-            />
-            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>}
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-            <input
-              type="email"
-              {...register("email")}
-              className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-            />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-          </div>
+          <InputText register={register("username")} errors={errors.username} label="Nombre de usuario" />
+          <InputText register={register("email")} errors={errors.email} label="Correo electrónico" type="email" />
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>

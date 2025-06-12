@@ -1,14 +1,24 @@
-import axios from "axios";
+import axiosClient from "../api/axiosClient";
 import { Sensor } from "../interfaces/Sensor";
+import {DeviceType} from "../types/deviceType.ts";
 
-// Obtener sensores por ID de plantación
-export const getSensorsByPlantation = async (plantationId: string, page = 1, limit = 10): Promise<Sensor[]> => {
-  const res = await axios.get(`/plantations/${plantationId}/sensors?page=${page}&limit=${limit}`);
-  return res.data?.data ?? [];
+type Device = {
+  device_type: DeviceType;
+}
+
+// Obtener devices por ID de plantación
+export const getDevicesByPlantation = async (plantationId: string): Promise<Device[]> => {
+  const res = await axiosClient.get(`/plantations/${plantationId}/sensors`);
+  return res.data?.data as Device[];
 };
 
 // Obtener lecturas de un sensor específico
 export const getSensorValuesById = async (sensorId: string) => {
-  const response = await axios.get(`/sensors/${sensorId}/values`);
-  return response.data;
+  const response = await axiosClient.get(`/sensors/${sensorId}/values`);
+  return response.data.data as Sensor[];
+};
+
+// Eliminar un sensor
+export const deleteSensor = async (plantationId: string, sensorId: string): Promise<void> => {
+  await axiosClient.delete(`/plantations/${plantationId}/sensors/${sensorId}`);
 };

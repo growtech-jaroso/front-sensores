@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import InputPasswordUser from "../../components/Inputs/InputPasswordUser";
 import {EditUserFormType, EditUserSchema} from "../../schemas/edit-user.schema.ts";
 import GoBackButton from "../../components/Button/GoBackButton.tsx";
-import InputEditForm from "../../components/Inputs/InputEditForm.tsx";
+import InputText from "../../components/Inputs/InputText.tsx";
 import InputSelect from "../../components/Inputs/InputSelect.tsx";
 
 export default function EditUser() {
@@ -94,8 +94,8 @@ export default function EditUser() {
           <p className="text-center text-gray-500">Cargando usuario...</p>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <InputEditForm register={register("username")} errors={errors.username} label="Nombre de usuario" />
-            <InputEditForm register={register("email")} errors={errors.email} label="Correo electrónico" />
+            <InputText register={register("username")} errors={errors.username} label="Nombre de usuario" />
+            <InputText register={register("email")} errors={errors.email} label="Correo electrónico" />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nueva contraseña</label>
@@ -120,19 +120,6 @@ export default function EditUser() {
               {value: "SUPPORT", label: "Soporte"},
               {value: "ADMIN", label: "Administrador"},
             ]} />
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
-              <select
-                {...register("role")}
-                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
-              >
-                <option value="USER">Usuario</option>
-                <option value="SUPPORT">Soporte</option>
-                <option value="ADMIN">Administrador</option>
-              </select>
-              {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>}
-            </div>
 
             <button
               type="submit"

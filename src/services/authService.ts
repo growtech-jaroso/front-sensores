@@ -17,13 +17,14 @@ export const authService = {
 
       const response = await axiosClient.post("/auth/login", { email, password });
 
-      const { token, role, username, email: userEmail } = response.data.data;
+      const { token, role, username, email: userEmail, id: userId } = response.data.data;
 
       if (!token || !role) {
         throw new Error("Faltan datos en la respuesta del servidor.");
       }
 
       const userData: User = {
+        id: userId,
         token,
         role: role,
         username: username,

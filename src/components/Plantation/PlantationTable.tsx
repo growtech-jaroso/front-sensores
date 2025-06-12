@@ -1,9 +1,10 @@
-import { Eye } from "lucide-react";
+import {Eye, User} from "lucide-react";
 import { IndicatorStatus, IndicatorStatusType } from "../../types/indicatorStatus";
 import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
 import {Dispatch, SetStateAction} from "react";
 import {Link} from "react-router-dom";
+import {authService} from "../../services/authService.ts";
 
 const getBadgeStyle = (status: IndicatorStatus) => {
   switch (status) {
@@ -42,6 +43,8 @@ export default function PlantationTable({
   const handlePrevious = () => {
     if (!loading && currentPage > 1) onPageChange(currentPage - 1);
   };
+
+  const userId = authService.getUserData()!.id;
 
   const handleNext = () => {
     if (!loading && currentPage < totalPages) onPageChange(currentPage + 1);
@@ -94,7 +97,7 @@ export default function PlantationTable({
               <th className="py-3 px-4 text-left">Provincia</th>
               <th className="py-3 px-4 text-left">Ciudad</th>
               <th className="py-3 px-4 text-left">Tipo</th>
-              <th className="py-3 px-4 text-center">Mapa</th>
+              <th className="py-3 px-4 text-center">Managers</th>
               <th className="py-3 px-4 text-center">Sensor</th>
             </tr>
           </thead>
@@ -131,14 +134,13 @@ export default function PlantationTable({
                   <td className="py-3 px-4">{p.city}</td>
                   <td className="py-3 px-4">{p.type}</td>
                   <td className="py-3 px-4 text-center">
-                    <button
-                      disabled={!p.hasMap}
-                      className={`inline-flex gap-1 text-xs px-3 py-1.5 rounded-full text-white transition ${
-                        p.hasMap ? "bg-blue-600 hover:bg-blue-700 cursor-pointer" : "bg-blue-400 cursor-not-allowed"
-                      }`}
+                    <Link
+                      to={`/dashboard/plantacion/${p.id}/managers`}
+                      hidden={userId !== p.owner_id}
+                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition"
                     >
-                      <Eye size={16} /> Ver Mapa
-                    </button>
+                      <User size={16} /> Managers
+                    </Link>
                   </td>
                   <td className="py-3 px-4 text-center">
                     <Link
@@ -187,14 +189,12 @@ export default function PlantationTable({
                 <strong>Tipo:</strong> {p.type}
               </p>
               <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                <button
-                  disabled={!p.hasMap}
-                  className={`w-full text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition ${
-                    p.hasMap ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-400 cursor-not-allowed"
-                  }`}
+                <Link
+                  to={`/dashboard/plantacion/${p.id}/managers`}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition"
                 >
-                  <Eye size={14} /> Mapa
-                </button>
+                  <User size={14} /> Managers
+                </Link>
                 <Link
                   to={`/dashboard/plantacion/${p.id}`}
                   className="w-full bg-green-600 hover:bg-green-700 text-white text-xs py-1.5 rounded-full flex justify-center items-center gap-1 transition"

@@ -3,7 +3,7 @@ import plantationService from "../services/plantationService";
 import PlantationTable from "../components/Plantation/PlantationTable";
 import SummaryCard from "../components/DashboardWidgets/SummaryCard";
 import LoadingPlantations from "../components/Plantation/LoadingPlantations";
-import { IndicatorStatus } from "../types/indicatorStatus";
+import {IndicatorStatus, IndicatorStatusType} from "../types/indicatorStatus";
 import type { Plantation } from "../interfaces/Plantation";
 import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
@@ -63,12 +63,12 @@ const Dashboard = () => {
     fetchPlantations();
   }, [currentPage, firstLoadDone, debouncedSearch, filterStatus]);
 
-  const countbystate = (estado: IndicatorStatus): number => plantations.filter((p) => p.status === estado).length;
+  const countbystate = (estado: IndicatorStatusType): number => plantations.filter((p) => p.status === estado).length;
 
   const resumenes = [
     { titulo: "Totales", valor: meta.total_items.toString(), type: IndicatorStatus.TOTAL },
-    { titulo: "Activas", valor: countbystate(IndicatorStatus.ONLINE).toString(), type: IndicatorStatus.ONLINE },
-    { titulo: "En Alerta", valor: countbystate(IndicatorStatus.OFFLINE).toString(), type: IndicatorStatus.OFFLINE },
+    { titulo: "Activas", valor: countbystate("ONLINE").toString(), type: IndicatorStatus.ONLINE },
+    { titulo: "En Alerta", valor: countbystate("OFFLINE").toString(), type: IndicatorStatus.OFFLINE },
   ];
 
   return (
