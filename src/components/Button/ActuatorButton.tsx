@@ -1,4 +1,3 @@
-import {DeviceType} from "../../types/deviceType.ts";
 import {useState} from "react";
 import axiosClient from "../../api/axiosClient.ts";
 import {Actuator} from "../../interfaces/Actuator.ts";
