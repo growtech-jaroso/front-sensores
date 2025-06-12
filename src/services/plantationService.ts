@@ -1,5 +1,5 @@
 import axiosClient from "../api/axiosClient";
-import { Plantation } from "../interfaces/Plantation";
+import {Plantation} from "../interfaces/Plantation";
 import {IndicatorStatus} from "../types/indicatorStatus.ts";
 
 interface MetaData {
@@ -23,8 +23,11 @@ interface Params {
 }
 
 const getPlantations = async ({ page = 1, limit = 10, search, status }: Params): Promise<PlantationResponse> => {
+
+  const statusParam = status === IndicatorStatus.ONLINE ? "ONLINE" : status === IndicatorStatus.OFFLINE ? "OFFLINE" : "";
+
   const response = await axiosClient.get("/plantations", {
-    params: { page, limit, search, status },
+    params: { page, limit, search, status: statusParam },
   });
   
 
