@@ -1,7 +1,10 @@
 import SensorDetail from "./Sensor/SensorDetails.tsx";
 import {Sensor} from "../interfaces/Sensor.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import axiosClient from "../api/axiosClient.ts";
+import {SensorValue} from "../interfaces/SensorValue.ts";
+import {TimeFrame} from "../interfaces/time-frames.ts";
+import {defaultTimeFrames, getAfterDate} from "../utils/utils.ts";
 
 interface Props {
   selectedSensor: Sensor
@@ -9,21 +12,47 @@ interface Props {
 
 export default function SensorGraph({selectedSensor}: Props) {
 
+  const [error, setError] = useState<string | null>(null)
+  const [values, setValues] = useState<SensorValue[]>([])
+  const [isLoading, setIsLoading] = useState(true);
+  const [timeFrames, setTimeFrames] = useState<TimeFrame[]>(defaultTimeFrames);
+
   useEffect(() => {
-    axiosClient
-      .get(`/plantations/${plantationId}/sensors/${sensor.id}/values`)
-      .then((response) => {
-        setSelectedSensorValues({
-          sensor,
-          values: response.data.data,
+    const getSensorValues = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const response = await axiosClient.get(`/plantations/${selectedSensor.plantation_id}/sensors/${selectedSensor.id}/values`, {
+          params: {
+            after: getAfterDate(timeFrames.find(frame => frame.selected)!)
+          }
         });
-      })
-      .catch(() => setError("No se pudieron cargar los valores de los sensores."));
-  }, [selectedSensor])
+        console.log(response)
+        setValues(response.data.data)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+        setError("No se pudieron cargar los valores de los sensores.")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    getSensorValues()
+  }, [selectedSensor, timeFrames])
+
+  if (isLoading) {
+    return <div className="text-center text-gray-500">Cargando...</div>;
+  }
 
   return (
-    <div>
-      <SensorDetail sensor={selectedSensorValues.sensor} values={selectedSensorValues.values} />
-    </div>
+    <>
+      {error && <div className="text-red-500 text-center">{error}</div>}
+      <SensorDetail
+        timeFrames={timeFrames}
+        setSelectedTimeFrame={setTimeFrames}
+        sensor={selectedSensor}
+        values={values}
+      />
+    </>
   );
 }

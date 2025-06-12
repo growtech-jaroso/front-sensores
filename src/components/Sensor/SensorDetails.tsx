@@ -3,43 +3,60 @@ import { SensorValue } from "../../interfaces/SensorValue";
 import { SensorType } from "../../types/sensorType";
 import { SensorUnit } from "../../types/sensorUnit";
 import PlantationChart from "../Plantation/PlantationChart";
+import InputSelect from "../Inputs/InputSelect.tsx";
+import {ChangeEvent, Dispatch, SetStateAction} from "react";
+import {TimeFrame} from "../../interfaces/time-frames.ts";
+
+const getTypeLabel = (type: SensorType) => {
+  switch (type) {
+    case SensorType.ATMOSPHERIC_PRESSURE:
+      return "Presión atmosférica";
+    case SensorType.AMBIENT_TEMPERATURE:
+      return "Temperatura ambiental";
+    case SensorType.AMBIENT_HUMIDITY:
+      return "Humedad ambiental";
+    default:
+      return "Sensor desconocido";
+  }
+};
+
+const getUnitLabel = (unit: SensorUnit) => {
+  switch (unit) {
+    case SensorUnit.CELSIUS:
+      return "°C";
+    case SensorUnit.MBAR:
+      return "mbars";
+    case SensorUnit.PERCENTAGE:
+      return "%";
+    default:
+      return "-";
+  }
+};
 
 type Props = {
   sensor: Sensor;
   values?: SensorValue[];
+  timeFrames: TimeFrame[];
+  setSelectedTimeFrame: Dispatch<SetStateAction<TimeFrame[]>>
 };
 
-export default function SensorDetail({ sensor, values = [] }: Props) {
-  const getTypeLabel = (type: SensorType) => {
-    switch (type) {
-      case SensorType.ATMOSPHERIC_PRESSURE:
-        return "Presión atmosférica";
-      case SensorType.AMBIENT_TEMPERATURE:
-        return "Temperatura ambiental";
-      case SensorType.AMBIENT_HUMIDITY:
-        return "Humedad ambiental";
-      default:
-        return "Sensor desconocido";
-    }
-  };
+export default function SensorDetail({ sensor, values = [], timeFrames, setSelectedTimeFrame }: Props) {
 
-  const getUnitLabel = (unit: SensorUnit) => {
-    switch (unit) {
-      case SensorUnit.CELSIUS:
-        return "°C";
-      case SensorUnit.MBAR:
-        return "mbars";
-      case SensorUnit.PERCENTAGE:
-        return "%";
-      default:
-        return "-";
-    }
-  };
+  const handleTimeFrameChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+
+    const updatedTimeFrames = timeFrames.map(option => ({
+      ...option,
+      selected: option.value === selectedValue
+    }));
+
+    setSelectedTimeFrame(updatedTimeFrames);
+  }
 
   const chartData = values.map((entry) => ({
     id: entry.id,
     name: sensor.type,
-    time: entry.reading_timestamp,
+    time: new Date(entry.reading_timestamp).toLocaleString(),
     value: entry.value,
   }));
 
@@ -47,13 +64,20 @@ export default function SensorDetail({ sensor, values = [] }: Props) {
     <div className="mt-10 bg-white border border-gray-100 rounded-2xl shadow p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">📋 Información del sensor</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600 mb-6">
+      <div className="grid justify-items-center grid-cols-1 sm:grid-cols-3 items-center gap-4 text-sm text-gray-600 mb-6">
         <p>
           <strong>Tipo:</strong> {getTypeLabel(sensor.type)}
         </p>
         <p>
           <strong>Unidad:</strong> {getUnitLabel(sensor.unit)}
         </p>
+        <div className="flex gap-2 items-center">
+          <strong>Tramo:</strong>
+          <InputSelect
+            options={timeFrames}
+            onChange={handleTimeFrameChange}
+          />
+        </div>
       </div>
 
       {chartData.length > 0 ? (

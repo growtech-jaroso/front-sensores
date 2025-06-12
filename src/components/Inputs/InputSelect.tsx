@@ -5,7 +5,7 @@ import {ChangeEvent} from "react";
 interface Props {
   register?: UseFormRegisterReturn;
   errors?: FieldError | undefined;
-  label: string;
+  label?: string;
   options: { value: string; label: string, selected?: boolean }[];
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -13,7 +13,7 @@ interface Props {
 export default function InputSelect({ register, errors, label, options, onChange }: Props) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+      {label && <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>}
       <select
         className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-400"
         {...register}

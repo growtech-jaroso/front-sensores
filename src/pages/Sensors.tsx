@@ -5,13 +5,13 @@ import { Sensor } from "../interfaces/Sensor.ts";
 import { getPlantationById } from "../services/plantationService.ts";
 import { getDevicesByPlantation } from "../services/sensorService.ts";
 import SensorCard from "../components/Sensor/SensorCard.tsx";
-import axiosClient from "../api/axiosClient.ts";
 import { Actuator } from "../interfaces/Actuator.ts";
 import { DeviceType } from "../types/deviceType.ts";
 import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
 import { useAuth } from "../hooks/useAuth";
 import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
 import { deleteSensor } from "../services/sensorService.ts";
+import SensorGraph from "../components/SensorGraph.tsx";
 
 type SensorAndActuators = {
   sensors: Sensor[];
@@ -45,8 +45,8 @@ export default function Sensors() {
         sensors: prev.sensors.filter((s) => s.id !== sensor.id),
       }));
 
-      if (selectedSensor.sensor.id === sensor.id) {
-        setSelectedSensorValues(null);
+      if (selectedSensor && selectedSensor.id === sensor.id) {
+        setSelectedSensor(null);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,6 +68,10 @@ export default function Sensors() {
       })
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
+
+  const selectSensor = (sensor: Sensor) => {
+    setSelectedSensor(sensor);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
@@ -93,20 +97,19 @@ export default function Sensors() {
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔎 Sensores disponibles</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sensorsActuators.sensors.length === 0 && <p>No hay sensores disponibles.</p>}
         {sensorsActuators.sensors.map((sensor) => (
           <SensorCard
             key={sensor.id}
             sensor={sensor}
-            selectSensor={getSensorValues}
-            selected={selectedSensorValues?.sensor.id === sensor.id}
+            selectSensor={selectSensor}
+            selected={selectedSensor?.id === sensor.id}
             userRole={role ?? undefined}
             onDelete={handleDeleteSensor}
           />
         ))}
       </div>
-      {sele && (
-
-      )}
+      {selectedSensor && <SensorGraph selectedSensor={selectedSensor} />}
     </div>
   );
 }
