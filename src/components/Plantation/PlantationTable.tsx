@@ -4,6 +4,7 @@ import type { Plantation } from "../../interfaces/Plantation";
 import { motion } from "framer-motion";
 import {Dispatch, SetStateAction} from "react";
 import {Link} from "react-router-dom";
+import {authService} from "../../services/authService.ts";
 
 const getBadgeStyle = (status: IndicatorStatus) => {
   switch (status) {
@@ -42,6 +43,8 @@ export default function PlantationTable({
   const handlePrevious = () => {
     if (!loading && currentPage > 1) onPageChange(currentPage - 1);
   };
+
+  const userId = authService.getUserData()!.id;
 
   const handleNext = () => {
     if (!loading && currentPage < totalPages) onPageChange(currentPage + 1);
@@ -133,6 +136,7 @@ export default function PlantationTable({
                   <td className="py-3 px-4 text-center">
                     <Link
                       to={`/dashboard/plantacion/${p.id}/managers`}
+                      hidden={userId !== p.owner_id}
                       className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition"
                     >
                       <User size={16} /> Managers

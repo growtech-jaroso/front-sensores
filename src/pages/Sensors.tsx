@@ -108,9 +108,10 @@ export default function Sensors() {
                 <span className="flex items-center gap-1">
                   Estado:{" "}
                   <span
-                    className={`inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm ${
-                      plantation.status === "active" ? "bg-green-100 text-green-700" : "bg-green-100 text-green-700"
-                    }`}
+                    className={`inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm 
+                    ${plantation.status === "ONLINE" && "bg-green-100 text-green-700"}
+                    ${plantation.status === "OFFLINE" && "bg-red-100 text-red-700"}
+                   `}
                   >
                     <span className="w-2 h-2 rounded-full bg-current"></span>
                     {IndicatorStatus[plantation.status as IndicatorStatusType]}
