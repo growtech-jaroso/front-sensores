@@ -66,12 +66,12 @@ export default function SensorDetail({ sensor, values = [], timeFrames, setSelec
     const chartData = values.map((entry) => ({
       id: entry.id,
       name: sensor.type,
-      time: entry.reading_timestamp,
+      time: new Date(new Date(entry.reading_timestamp).getTime() + 1000 * 60 * 60 * 2).toISOString(), // Ajuste para UTC+2 (España)
       value: entry.value,
     }));
 
     setChartData(chartData)
-  }, []);
+  }, [values]);
 
   return (
     <div className="mt-10 bg-white border border-gray-100 rounded-2xl shadow p-6">
