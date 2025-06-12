@@ -10,7 +10,7 @@ import InputSelect from "../../components/Inputs/InputSelect.tsx";
 import InputText from "../../components/Inputs/InputText.tsx";
 
 export default function CreatePlantation() {
-  const [usersEmails, setUsersEmails] = useState<{ value: string; label: string }[]>([]);
+  const [usersEmails, setUsersEmails] = useState<{ value: string; label: string, selected?: boolean }[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -80,7 +80,10 @@ export default function CreatePlantation() {
           <InputText register={register("province")} errors={errors.province} label="Provincia" />
           <InputText register={register("city")} errors={errors.city} label="Ciudad" />
           <InputText register={register("type")} errors={errors.type} label="Tipo de cultivo" />
-          <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
+          {
+            usersEmails.length !== 0 &&
+            <InputSelect register={register("user_email")} errors={errors.user_email} label="Email del propietario" options={usersEmails} />
+          }
 
           <button
             type="submit"
