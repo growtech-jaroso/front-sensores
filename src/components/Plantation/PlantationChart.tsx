@@ -16,8 +16,10 @@ type Props = {
 const formatTimeToSpanish = (iso: string) => {
   const date = new Date(iso);
   return date.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Madrid', // UTC+2 en verano
+    hour12: false
   });
 };
 

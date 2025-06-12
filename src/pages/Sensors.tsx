@@ -5,22 +5,15 @@ import { Sensor } from "../interfaces/Sensor.ts";
 import { getPlantationById } from "../services/plantationService.ts";
 import { getDevicesByPlantation } from "../services/sensorService.ts";
 import SensorCard from "../components/Sensor/SensorCard.tsx";
-import { SensorValue } from "../interfaces/SensorValue.ts";
-import axiosClient from "../api/axiosClient.ts";
 import { Actuator } from "../interfaces/Actuator.ts";
 import { DeviceType } from "../types/deviceType.ts";
 import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
-import SensorDetail from "../components/Sensor/SensorDetails.tsx";
 import ActuatorButton from "../components/Button/ActuatorButton.tsx";
 import { useAuth } from "../hooks/useAuth";
 import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
-import { deleteSensor } from "../services/sensorService.ts"; // asegúrate de que esté implementado
+import SensorGraph from "../components/Sensor/SensorGraph.tsx";
+import { deleteSensor } from "../services/sensorService.ts";
 import { Droplet, Leaf, MapPin } from "lucide-react";
-
-type SelectedSensorValues = {
-  sensor: Sensor;
-  values: SensorValue[];
-};
 
 type SensorAndActuators = {
   sensors: Sensor[];
@@ -32,20 +25,8 @@ export default function Sensors() {
   const [plantation, setPlantation] = useState<Plantation | null>(null);
   const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({ sensors: [], actuators: [] });
   const [error, setError] = useState<string | null>(null);
-  const [selectedSensorValues, setSelectedSensorValues] = useState<SelectedSensorValues | null>(null);
+  const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const { role } = useAuth();
-
-  const getSensorValues = (sensor: Sensor) => {
-    axiosClient
-      .get(`/plantations/${plantationId}/sensors/${sensor.id}/values`)
-      .then((response) => {
-        setSelectedSensorValues({
-          sensor,
-          values: response.data.data,
-        });
-      })
-      .catch(() => setError("No se pudieron cargar los valores de los sensores."));
-  };
 
   const handleDeleteSensor = async (sensor: Sensor) => {
     if (!plantationId) return;
@@ -66,8 +47,8 @@ export default function Sensors() {
         sensors: prev.sensors.filter((s) => s.id !== sensor.id),
       }));
 
-      if (selectedSensorValues?.sensor.id === sensor.id) {
-        setSelectedSensorValues(null);
+      if (selectedSensor && selectedSensor.id === sensor.id) {
+        setSelectedSensor(null);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,6 +70,10 @@ export default function Sensors() {
       })
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
+
+  const selectSensor = (sensor: Sensor) => {
+    setSelectedSensor(sensor);
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
@@ -153,20 +138,19 @@ export default function Sensors() {
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔎 Sensores disponibles</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sensorsActuators.sensors.length === 0 && <p>No hay sensores disponibles.</p>}
         {sensorsActuators.sensors.map((sensor) => (
           <SensorCard
-            sensor={sensor}
-            selectSensor={getSensorValues}
             key={sensor.id}
-            selected={selectedSensorValues?.sensor.id === sensor.id}
+            sensor={sensor}
+            selectSensor={selectSensor}
+            selected={selectedSensor?.id === sensor.id}
             userRole={role ?? undefined}
             onDelete={handleDeleteSensor}
           />
         ))}
       </div>
-      {selectedSensorValues && (
-        <SensorDetail sensor={selectedSensorValues.sensor} values={selectedSensorValues.values} />
-      )}
+      {selectedSensor && <SensorGraph selectedSensor={selectedSensor} />}
     </div>
   );
 }
