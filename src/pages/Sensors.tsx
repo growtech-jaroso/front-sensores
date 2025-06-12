@@ -11,6 +11,7 @@ import { Actuator } from "../interfaces/Actuator.ts";
 import { DeviceType } from "../types/deviceType.ts";
 import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
 import SensorDetail from "../components/Sensor/SensorDetails.tsx";
+import ActuatorButton from "../components/Button/ActuatorButton.tsx";
 
 type SelectedSensorValues = {
   sensor: Sensor;
@@ -62,18 +63,25 @@ export default function Sensors() {
       )}
 
       {plantation && (
-        <section className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10">
-          <h1 className="text-4xl font-extrabold text-green-700 mb-2">🌿 {plantation.name}</h1>
-          <p className="text-gray-600 text-lg mb-1">
-            📍 {plantation.city}, {plantation.province}, {plantation.country}
-          </p>
-          <p className="text-sm text-gray-500">
-            Cultivo: <strong>{plantation.type}</strong> — Estado:{" "}
-            <span className="text-green-600 font-medium">
-              {IndicatorStatus[plantation.status as IndicatorStatusType]}
-            </span>
-          </p>
-        </section>
+        <>
+          <section className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10 flex justify-center gap-60 items-center">
+            <div>
+              <h1 className="text-4xl font-extrabold text-green-700 mb-2">🌿 {plantation.name}</h1>
+              <p className="text-gray-600 text-lg mb-1">
+                📍 {plantation.city}, {plantation.province}, {plantation.country}
+              </p>
+              <p className="text-sm text-gray-500">
+                Cultivo: <strong>{plantation.type}</strong> — Estado:{" "}
+                <span className="text-green-600 font-medium">
+                  {IndicatorStatus[plantation.status as IndicatorStatusType]}
+                </span>
+              </p>
+            </div>
+            <div>
+              <ActuatorButton actuator={sensorsActuators.actuators[0]}></ActuatorButton>
+            </div>
+          </section>
+        </>
       )}
 
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔎 Sensores disponibles</h2>
