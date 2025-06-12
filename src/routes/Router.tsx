@@ -7,6 +7,7 @@ import PrivateRoute from "./ProtectedRoutes";
 import PublicOnlyRoute from "./PublicOnlyRoute";
 import NotFound from "../pages/NotFound";
 import { lazy } from "react";
+import Managers from "../pages/Managers.tsx";
 
 const Sensors = lazy(() => import("../pages/Sensors.tsx"));
 const AdminRouter = lazy(() => import("./AdminRouter"));
@@ -50,6 +51,14 @@ export default function AppRouter() {
             </Layout>
           }
         />
+
+        <Route
+          path="/dashboard/plantacion/:plantationId/managers"
+          element={
+            <Managers />
+          }
+        />
+        
         <Route
           path="/perfil"
           element={
