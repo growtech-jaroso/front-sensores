@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { User, LogOut, Settings } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
 import useUser from "../../hooks/useUser.tsx";
@@ -46,12 +46,6 @@ export default function UserMenu() {
               role="menuitem"
             >
               <User className="w-4 h-4" /> Perfil
-            </li>
-            <li
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition"
-              role="menuitem"
-            >
-              <Settings className="w-4 h-4" /> Configuración
             </li>
             <hr className="my-1 border-gray-200" />
             <li
