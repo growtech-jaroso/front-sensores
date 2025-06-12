@@ -43,7 +43,7 @@ export default function SensorCard({ sensor, selectSensor, selected = false }: P
       case SensorUnit.CELSIUS:
         return "°C";
       case SensorUnit.MBAR:
-        return "mbars";
+        return "mbar";
       case SensorUnit.PERCENTAGE:
         return "%";
       default:
