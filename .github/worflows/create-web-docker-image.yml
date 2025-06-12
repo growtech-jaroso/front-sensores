@@ -37,9 +37,11 @@ jobs:
         run: |
           docker buildx build --push \
             --target production \
+            --build-arg BACKEND_URL=${{secrets.BACKEND_URL}} \
             --tag ${{env.IMAGE_NAME}}:${{env.IMAGE_VERSION}} \
             --platform linux/amd64,linux/arm64 .
           docker buildx build --push \
             --target production \
             --tag ${{env.IMAGE_NAME}}:latest \
+            --build-arg BACKEND_URL=${{secrets.BACKEND_URL}} \
             --platform linux/amd64,linux/arm64 .
