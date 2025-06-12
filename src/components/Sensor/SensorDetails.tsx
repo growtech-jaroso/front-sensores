@@ -2,10 +2,10 @@ import { Sensor } from "../../interfaces/Sensor";
 import { SensorValue } from "../../interfaces/SensorValue";
 import { SensorType } from "../../types/sensorType";
 import { SensorUnit } from "../../types/sensorUnit";
-import PlantationChart from "../Plantation/PlantationChart";
 import InputSelect from "../Inputs/InputSelect.tsx";
 import {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from "react";
 import {TimeFrame} from "../../interfaces/time-frames.ts";
+import SensorValuesChart from "./SensorValuesChart.tsx";
 
 const getTypeLabel = (type: SensorType) => {
   switch (type) {
@@ -94,7 +94,7 @@ export default function SensorDetail({ sensor, values = [], timeFrames, setSelec
       </div>
 
       {chartData.length > 0 ? (
-        <PlantationChart
+        <SensorValuesChart
           data={chartData}
           type={sensor.type} // para saber qué línea pintar (temperatura, humedad, etc.)
         />

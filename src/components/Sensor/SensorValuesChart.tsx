@@ -1,5 +1,5 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { SensorType } from "../../types/sensorType";
+import { type SensorType } from "../../types/sensorType.ts";
 
 type ChartEntry = {
   id: string;
@@ -23,7 +23,7 @@ const formatTimeToSpanish = (iso: string) => {
   });
 };
 
-export default function PlantationChart({ data, type }: Props) {
+export default function SensorValuesChart({ data, type }: Props) {
   const colorMap: Record<SensorType, string> = {
     AMBIENT_TEMPERATURE: "red",
     AMBIENT_HUMIDITY: "#3b82f6",
