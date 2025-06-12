@@ -15,6 +15,7 @@ import ActuatorButton from "../components/Button/ActuatorButton.tsx";
 import { useAuth } from "../hooks/useAuth";
 import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
 import { deleteSensor } from "../services/sensorService.ts"; // asegúrate de que esté implementado
+import { Droplet, Leaf, MapPin } from "lucide-react";
 
 type SelectedSensorValues = {
   sensor: Sensor;
@@ -96,25 +97,57 @@ export default function Sensors() {
       )}
 
       {plantation && (
-        <>
-          <section className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 mb-10 flex justify-center gap-60 items-center">
-            <div>
-              <h1 className="text-4xl font-extrabold text-green-700 mb-2">🌿 {plantation.name}</h1>
-              <p className="text-gray-600 text-lg mb-1">
-                📍 {plantation.city}, {plantation.province}, {plantation.country}
-              </p>
-              <p className="text-sm text-gray-500">
-                Cultivo: <strong>{plantation.type}</strong> — Estado:{" "}
-                <span className="text-green-600 font-medium">
-                  {IndicatorStatus[plantation.status as IndicatorStatusType]}
+        <section className="relative bg-gradient-to-br from-[#f8fefc] via-white to-[#f0fbf6] p-8 rounded-3xl shadow-xl border border-gray-100 mb-10 overflow-hidden">
+          <div className="absolute -top-10 -left-10 w-48 h-48 bg-green-200 rounded-full blur-3xl opacity-20"></div>
+          <div className="absolute -bottom-6 right-0 w-32 h-32 bg-green-100 rounded-full blur-2xl opacity-10"></div>
+
+          {/* Contenido principal */}
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div className="flex-1 space-y-8 text-center md:text-left">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-green-700 flex items-center justify-center md:justify-start gap-2">
+                <Leaf className="w-7 h-7 text-green-600" />
+                {plantation.name}
+              </h1>
+
+              <div className="flex items-center justify-center md:justify-start gap-2 text-gray-600 text-base md:text-lg">
+                <MapPin className="w-5 h-5 text-red-500" />
+                {plantation.city}, {plantation.province}, {plantation.country}
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-center md:justify-start gap-2 text-sm text-gray-500">
+                <span>
+                  Cultivo: <span className="font-semibold text-gray-700">{plantation.type}</span>
                 </span>
-              </p>
+                <span className="hidden sm:inline">•</span>
+                <span className="flex items-center gap-1">
+                  Estado:{" "}
+                  <span
+                    className={`inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-xs font-semibold shadow-sm ${
+                      plantation.status === "active" ? "bg-green-100 text-green-700" : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-current"></span>
+                    {IndicatorStatus[plantation.status as IndicatorStatusType]}
+                  </span>
+                </span>
+              </div>
             </div>
-            <div>
-              <ActuatorButton actuator={sensorsActuators.actuators[0]}></ActuatorButton>
+            <div className="w-full md:w-auto">
+              <div className="bg-white border border-gray-200 shadow-lg rounded-2xl px-6 py-5 w-full sm:w-80 text-center space-y-4 hover:shadow-xl transition-shadow">
+                <div className="flex justify-center">
+                  <div className="bg-green-100 p-2 rounded-full mb-1">
+                    <Droplet className="w-5 h-5 text-green-700" />
+                  </div>
+                </div>
+                <h3 className="text-md font-semibold text-gray-800">Control de riego</h3>
+                <p className="text-sm text-gray-500 leading-snug px-1">
+                  Gestiona el sistema de riego para esta plantación en tiempo real.
+                </p>
+                <ActuatorButton actuator={sensorsActuators.actuators[0]} />
+              </div>
             </div>
-          </section>
-        </>
+          </div>
+        </section>
       )}
 
       <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔎 Sensores disponibles</h2>
