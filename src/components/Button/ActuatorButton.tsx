@@ -9,8 +9,7 @@ type Props = {
 
 export default function ActuatorButton({ actuator }: Props) {
   const [loading, setLoading] = useState(false);
-  const {currentStatus, setCurrentStatus} = useState(actuator.status);
-  console.log("ACTUATOOOOOOOR: ", actuator);
+  const [currentStatus, setCurrentStatus] = useState<"ON" | "OFF">(actuator.status);
 
   const handleClick = async () => {
     setLoading(true);
