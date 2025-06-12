@@ -18,8 +18,7 @@ export default function ActuatorButton({ actuator }: Props) {
       if (response.data) {
         setCurrentStatus(newStatus);
       } else {
-        const errorData = await response;
-        console.error("Error al actualizar el estado del actuador):", errorData);
+        console.error("Error al actualizar el estado del actuador):");
       }
     } catch (error) {
       console.error("Error de red:", error);

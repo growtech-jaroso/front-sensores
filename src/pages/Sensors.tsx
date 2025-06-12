@@ -23,7 +23,7 @@ type SensorAndActuators = {
 export default function Sensors() {
   const { plantationId } = useParams();
   const [plantation, setPlantation] = useState<Plantation | null>(null);
-  const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({ sensors: [], actuators: [] });
+  const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({sensors: [], actuators: []});
   const [error, setError] = useState<string | null>(null);
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const { role } = useAuth();
@@ -59,6 +59,7 @@ export default function Sensors() {
 
   useEffect(() => {
     if (!plantationId) return;
+
     getPlantationById(plantationId)
       .then(setPlantation)
       .catch(() => setError("No se pudo cargar la información de la plantación."));
@@ -67,6 +68,12 @@ export default function Sensors() {
         const sensors = devices.filter((device) => device.device_type === DeviceType.SENSOR) as Sensor[];
         const actuators = devices.filter((device) => device.device_type === DeviceType.ACTUATOR) as Actuator[];
         setSensorsActuators({ sensors, actuators });
+
+        console.log({
+          sensors,
+          actuators,
+          sensorsActuators
+        })
       })
       .catch(() => setError("No se pudieron cargar los sensores."));
   }, [plantationId]);
@@ -128,7 +135,7 @@ export default function Sensors() {
                 <p className="text-sm text-gray-500 leading-snug px-1">
                   Gestiona el sistema de riego para esta plantación en tiempo real.
                 </p>
-                <ActuatorButton actuator={sensorsActuators.actuators[0]} />
+                {sensorsActuators.actuators.length > 0 && <ActuatorButton actuator={sensorsActuators.actuators[0]} />}
               </div>
             </div>
           </div>
