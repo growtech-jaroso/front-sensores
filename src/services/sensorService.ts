@@ -17,3 +17,8 @@ export const getSensorValuesById = async (sensorId: string) => {
   const response = await axiosClient.get(`/sensors/${sensorId}/values`);
   return response.data.data as Sensor[];
 };
+
+// Eliminar un sensor
+export const deleteSensor = async (plantationId: string, sensorId: string): Promise<void> => {
+  await axiosClient.delete(`/plantations/${plantationId}/sensors/${sensorId}`);
+};
