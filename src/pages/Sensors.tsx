@@ -5,20 +5,13 @@ import { Sensor } from "../interfaces/Sensor.ts";
 import { getPlantationById } from "../services/plantationService.ts";
 import { getDevicesByPlantation } from "../services/sensorService.ts";
 import SensorCard from "../components/Sensor/SensorCard.tsx";
-import { SensorValue } from "../interfaces/SensorValue.ts";
 import axiosClient from "../api/axiosClient.ts";
 import { Actuator } from "../interfaces/Actuator.ts";
 import { DeviceType } from "../types/deviceType.ts";
 import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
-import SensorDetail from "../components/Sensor/SensorDetails.tsx";
 import { useAuth } from "../hooks/useAuth";
 import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
-import { deleteSensor } from "../services/sensorService.ts"; // asegúrate de que esté implementado
-
-type SelectedSensorValues = {
-  sensor: Sensor;
-  values: SensorValue[];
-};
+import { deleteSensor } from "../services/sensorService.ts";
 
 type SensorAndActuators = {
   sensors: Sensor[];
@@ -30,20 +23,8 @@ export default function Sensors() {
   const [plantation, setPlantation] = useState<Plantation | null>(null);
   const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({ sensors: [], actuators: [] });
   const [error, setError] = useState<string | null>(null);
-  const [selectedSensorValues, setSelectedSensorValues] = useState<SelectedSensorValues | null>(null);
+  const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const { role } = useAuth();
-
-  const getSensorValues = (sensor: Sensor) => {
-    axiosClient
-      .get(`/plantations/${plantationId}/sensors/${sensor.id}/values`)
-      .then((response) => {
-        setSelectedSensorValues({
-          sensor,
-          values: response.data.data,
-        });
-      })
-      .catch(() => setError("No se pudieron cargar los valores de los sensores."));
-  };
 
   const handleDeleteSensor = async (sensor: Sensor) => {
     if (!plantationId) return;
@@ -64,7 +45,7 @@ export default function Sensors() {
         sensors: prev.sensors.filter((s) => s.id !== sensor.id),
       }));
 
-      if (selectedSensorValues?.sensor.id === sensor.id) {
+      if (selectedSensor.sensor.id === sensor.id) {
         setSelectedSensorValues(null);
       }
 
@@ -123,8 +104,8 @@ export default function Sensors() {
           />
         ))}
       </div>
-      {selectedSensorValues && (
-        <SensorDetail sensor={selectedSensorValues.sensor} values={selectedSensorValues.values} />
+      {sele && (
+
       )}
     </div>
   );
