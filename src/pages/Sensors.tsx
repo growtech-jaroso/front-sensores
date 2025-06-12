@@ -12,6 +12,9 @@ import { DeviceType } from "../types/deviceType.ts";
 import { IndicatorStatus, IndicatorStatusType } from "../types/indicatorStatus.ts";
 import SensorDetail from "../components/Sensor/SensorDetails.tsx";
 import ActuatorButton from "../components/Button/ActuatorButton.tsx";
+import { useAuth } from "../hooks/useAuth";
+import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
+import { deleteSensor } from "../services/sensorService.ts"; // asegúrate de que esté implementado
 
 type SelectedSensorValues = {
   sensor: Sensor;
@@ -29,6 +32,7 @@ export default function Sensors() {
   const [sensorsActuators, setSensorsActuators] = useState<SensorAndActuators>({ sensors: [], actuators: [] });
   const [error, setError] = useState<string | null>(null);
   const [selectedSensorValues, setSelectedSensorValues] = useState<SelectedSensorValues | null>(null);
+  const { role } = useAuth();
 
   const getSensorValues = (sensor: Sensor) => {
     axiosClient
@@ -40,6 +44,35 @@ export default function Sensors() {
         });
       })
       .catch(() => setError("No se pudieron cargar los valores de los sensores."));
+  };
+
+  const handleDeleteSensor = async (sensor: Sensor) => {
+    if (!plantationId) return;
+
+    const confirmed = await AlertDelete({
+      title: "¿Eliminar sensor?",
+      text: `¿Estás seguro de que quieres eliminar este sensor? Esta acción no se puede deshacer.`,
+      confirmButtonText: "Sí, eliminar",
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await deleteSensor(plantationId, sensor.id);
+
+      setSensorsActuators((prev) => ({
+        ...prev,
+        sensors: prev.sensors.filter((s) => s.id !== sensor.id),
+      }));
+
+      if (selectedSensorValues?.sensor.id === sensor.id) {
+        setSelectedSensorValues(null);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setError("No se pudo eliminar el sensor.");
+    }
   };
 
   useEffect(() => {
@@ -93,6 +126,8 @@ export default function Sensors() {
             selectSensor={getSensorValues}
             key={sensor.id}
             selected={selectedSensorValues?.sensor.id === sensor.id}
+            userRole={role ?? undefined}
+            onDelete={handleDeleteSensor}
           />
         ))}
       </div>
