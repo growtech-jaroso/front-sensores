@@ -15,6 +15,7 @@ import SensorGraph from "../components/Sensor/SensorGraph.tsx";
 import { deleteSensor } from "../services/sensorService.ts";
 import { Droplet, Leaf, MapPin } from "lucide-react";
 import GoBackButton from "../components/Button/GoBackButton.tsx";
+import WateringProgressBar from "../components/DashboardWidgets/WateringProgressBar.tsx";
 
 type SensorAndActuators = {
   sensors: Sensor[];
@@ -28,6 +29,20 @@ export default function Sensors() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const { role } = useAuth();
+
+  const changeActuatorStatus = (status: "ON" | "OFF") => {
+    if (sensorsActuators.actuators.length === 0) return;
+
+    const updatedActuator = {
+      ...sensorsActuators.actuators[0],
+      status,
+    };
+
+    setSensorsActuators((prev) => ({
+      ...prev,
+      actuators: [updatedActuator],
+    }));
+  }
 
   const handleDeleteSensor = async (sensor: Sensor) => {
     if (!plantationId) return;
@@ -130,9 +145,14 @@ export default function Sensors() {
                 <p className="text-sm text-gray-500 leading-snug px-1">
                   Gestiona el sistema de riego para esta plantación en tiempo real.
                 </p>
-                {sensorsActuators.actuators.length > 0 && <ActuatorButton actuator={sensorsActuators.actuators[0]} />}
+                {sensorsActuators.actuators.length > 0 && <ActuatorButton actuator={sensorsActuators.actuators[0]} changeStatus={changeActuatorStatus} />}
               </div>
             </div>
+          </div>
+          <div className={'mt-6'}>
+            <WateringProgressBar
+              isIrrigating={sensorsActuators.actuators.length > 0 && sensorsActuators.actuators[0].status === "ON"}
+            />
           </div>
         </section>
       )}

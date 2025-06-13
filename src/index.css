@@ -9,3 +9,16 @@ body,
     overflow: hidden;
     background-color: #f3f4f6;
 }
+
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-wave {
+  animation: wave 2s linear infinite;
+}
