@@ -14,6 +14,7 @@ import { AlertDelete } from "../components/Alert/AlertDelete.tsx";
 import SensorGraph from "../components/Sensor/SensorGraph.tsx";
 import { deleteSensor } from "../services/sensorService.ts";
 import { Droplet, Leaf, MapPin } from "lucide-react";
+import GoBackButton from "../components/Button/GoBackButton.tsx";
 
 type SensorAndActuators = {
   sensors: Sensor[];
@@ -84,11 +85,10 @@ export default function Sensors() {
 
       {plantation && (
         <section className="relative bg-gradient-to-br from-[#f8fefc] via-white to-[#f0fbf6] p-8 rounded-3xl shadow-xl border border-gray-100 mb-10 overflow-hidden">
-          <div className="absolute -top-10 -left-10 w-48 h-48 bg-green-200 rounded-full blur-3xl opacity-20"></div>
-          <div className="absolute -bottom-6 right-0 w-32 h-32 bg-green-100 rounded-full blur-2xl opacity-10"></div>
 
+          <GoBackButton className="mb-3 md:-mb-2" />
           {/* Contenido principal */}
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="relative flex flex-col md:flex-row justify-evenly items-center gap-10">
             <div className="flex-1 space-y-8 text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-extrabold text-green-700 flex items-center justify-center md:justify-start gap-2">
                 <Leaf className="w-7 h-7 text-green-600" />

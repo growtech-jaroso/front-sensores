@@ -29,7 +29,7 @@ export default function ActuatorButton({ actuator }: Props) {
 
   return (
     <button
-      className={`px-4 py-2 rounded-lg shadow transition ${
+      className={`px-4 py-2 rounded-lg shadow transition cursor-pointer ${
         currentStatus === "ON" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
       } text-white`}
       onClick={handleClick}
