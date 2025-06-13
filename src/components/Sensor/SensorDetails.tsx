@@ -74,7 +74,7 @@ export default function SensorDetail({ sensor, values = [], timeFrames, setSelec
   }, [values]);
 
   return (
-    <div className="mt-10 bg-white border border-gray-100 rounded-2xl shadow p-6">
+    <div className="mt-10 bg-white border border-gray-100 rounded-2xl shadow p-6 w-auto min-h-52">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">📋 Información del sensor</h2>
 
       <div className="grid justify-items-center grid-cols-1 sm:grid-cols-3 items-center gap-4 text-sm text-gray-600 mb-6">
