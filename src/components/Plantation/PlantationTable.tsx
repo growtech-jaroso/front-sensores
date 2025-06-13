@@ -136,8 +136,7 @@ export default function PlantationTable({
                   <td className="py-3 px-4 text-center">
                     <Link
                       to={`/dashboard/plantacion/${p.id}/managers`}
-                      hidden={userId !== p.owner_id}
-                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full text-white cursor-pointer bg-blue-600 hover:bg-blue-700 transition"
+                      className={`inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition ${p.owner_id !== userId ? "pointer-events-none bg-gray-300 cursor-not-allowed" : "cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"}`}
                     >
                       <User size={16} /> Managers
                     </Link>
