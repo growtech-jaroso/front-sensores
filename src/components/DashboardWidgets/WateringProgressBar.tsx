@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 interface WaterProgressBarProps {
   isIrrigating: boolean;
   duration?: number; // Duración del riego en segundos
 }
 
-const WaterProgressBar: React.FC<WaterProgressBarProps> = ({ isIrrigating, duration = 3, }) => {
+const WaterProgressBar = ({ isIrrigating, duration = 3, }: WaterProgressBarProps ) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
