@@ -171,13 +171,17 @@ export default function AdminDashboard() {
                       : "Selecciona un propietario para ver sus plantaciones"
                   }
                 </h2>
-                <Link
-                  to='/admin/crear-plantacion'
-                  className="inline-flex items-center gap-1 text-sm mb-3 font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
-                >
-                  <Plus className="w-5 h-5" />
-                  <span className="ml-2 text-sm">Plantación</span>
-                </Link>
+                {
+                  user.role === "ADMIN" && (
+                    <Link
+                      to='/admin/crear-plantacion'
+                      className="inline-flex items-center gap-1 text-sm mb-3 font-medium bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition cursor-pointer"
+                    >
+                      <Plus className="w-5 h-5" />
+                      <span className="ml-2 text-sm">Plantación</span>
+                    </Link>
+                  )
+                }
               </section>
               {/* Filtros */}
               <div className="flex flex-wrap gap-2 mb-4">
